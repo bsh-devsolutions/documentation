@@ -13,9 +13,9 @@ Generate a plugin from a template.
 <Tabs items={['npm', 'npx']}>
     <Tabs.Tab title="npm">
     ```bash
-    bshg plugins generate <plugin-dir> [options]
+    bsh plugins generate <plugin-dir> [options]
     # or
-    bshg p g <plugin-dir> [options]
+    bsh p g <plugin-dir> [options]
     ```
     </Tabs.Tab>
     <Tabs.Tab title="npx">
@@ -55,9 +55,9 @@ this cmd will generate a new directory with specified name and will create a `__
 <Tabs items={['npm', 'npx']}>
     <Tabs.Tab title="npm">
     ```bash
-    bshg plugins generate manifest <name>
+    bsh plugins generate manifest <name>
     # or
-    bshg p g m <name>
+    bsh p g m <name>
     ```
     </Tabs.Tab>
     <Tabs.Tab title="npx">
@@ -85,9 +85,9 @@ Generate a new content file inside a manifest directory
 <Tabs items={['npm', 'npx']}>
     <Tabs.Tab title="npm">
     ```bash
-    bshg plugins generate content <name> -m <manifest>
+    bsh plugins generate content <name> -m <manifest>
     # or
-    bshg p g c <name> -m <manifest>
+    bsh p g c <name> -m <manifest>
     ```
     </Tabs.Tab>
     <Tabs.Tab title="npx">
@@ -134,9 +134,9 @@ Install a plugin from a directory.
 <Tabs items={['npm', 'npx']}>
     <Tabs.Tab title="npm">
     ```bash
-    bshg plugins install <plugin-dir> [options]
+    bsh plugins install <plugin-dir> [options]
     # or
-    bshg p i <plugin-dir> [options]
+    bsh p i <plugin-dir> [options]
     ```
     </Tabs.Tab>
     <Tabs.Tab title="npx">
@@ -163,7 +163,7 @@ Install a plugin from a directory.
 <Tabs items={['npm', 'npx']}>
     <Tabs.Tab title="npm">
     ```bash
-    bshg plugins install ./path/to/plugin \
+    bsh plugins install ./path/to/plugin \
       --host https://instance-host.com \
       --api-key <api-key>
     ```
@@ -184,9 +184,9 @@ Validate the plugin.
 <Tabs items={['npm', 'npx']}>
     <Tabs.Tab title="npm">
     ```bash
-    bshg plugins validate <plugin-dir> [options]
+    bsh plugins validate <plugin-dir> [options]
     # or
-    bshg p v <plugin-dir> [options]
+    bsh p v <plugin-dir> [options]
     ```
     </Tabs.Tab>
     <Tabs.Tab title="npx">
