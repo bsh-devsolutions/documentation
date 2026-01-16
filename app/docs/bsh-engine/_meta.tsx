@@ -11,10 +11,10 @@ export default {
   'settings': 'Engine Settings',
   'caching': <Title title='Caching' badge='planned' />,
   'websocket': <Title title='WebSocket' badge='planned' />,
-  'packaging': <Title title='Packaging' badge='new' />,
+  'packaging': 'Packaging',
   'search': 'BSH Search',
   'api': 'API Reference',
   'sdk': 'SDK',
-  'cli': <Title title='CLI' badge='new' />,
+  'cli': 'CLI',
   'changelog': 'Changelog',
 }
