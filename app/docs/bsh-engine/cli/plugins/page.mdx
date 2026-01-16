@@ -75,8 +75,9 @@ this cmd will generate a new directory with specified name and will create a `__
 
 | Option | Description | Required | Default |
 |--------|-------------|----------|---------|
-| `-t, --target <path>` | Target Entity | no | `name` argument |
+| `--target <target>` | Target Entity | no | `name` argument |
 | `-d, --dependencies <dependencies>` | Dependencies | no | `BshEntities` |
+| `-f, --force` | Override existing manifest directory if it exists | no | false |
 
 ### `content`
 
@@ -107,7 +108,7 @@ Generate a new content file inside a manifest directory
 |--------|-------------|----------|---------|
 | `-m, --manifest <manifest>` | Manifest directory name where the file will be created | yes | ~ |
 | `-e, --entity <entity>` | Entity name to get the JSON structure from | no | `manifest` option value |
-| `-o, --override` | Override existing content file if it exists | no | false |
+| `-f, --force` | Override existing content file if it exists | no | false |
 | `--skipprompts` | Skip interactive prompts and use default values only | no | false |
 | `-h, --help` | display help for command | no | false |
 
