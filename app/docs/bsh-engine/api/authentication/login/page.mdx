@@ -10,6 +10,10 @@ Authenticate a user with email and password.
 POST /api/auth/login
 ```
 
+<Callout type='info'>
+  The system will automatically set authentication cookies `bsh_access_token` and `bsh_refresh_token` with the generated tokens upon login.
+</Callout>
+
 ## Request Body
 
 ```json

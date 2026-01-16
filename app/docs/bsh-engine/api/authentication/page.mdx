@@ -13,6 +13,10 @@ The Authentication API provides endpoints for user authentication, token managem
 /api/auth
 ```
 
+<Callout type='info'>
+  The system will automatically set authentication cookies with the generated tokens upon login or refresh. You usually don't need to handle the tokens manually unless your use-case is purely token-based.
+</Callout>
+
 <Cards>
     <Cards.Card 
       icon={<PostmanIcon />}
