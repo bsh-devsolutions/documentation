@@ -31,6 +31,7 @@ The Authentication API provides endpoints for user authentication, token managem
 | [POST](/docs/bsh-engine/api/authentication/refresh-token) | `/api/auth/refresh` | Refresh expired access token |
 | [POST](/docs/bsh-engine/api/authentication/forgot-password) | `/api/auth/forget-password` | Request password reset code via email |
 | [POST](/docs/bsh-engine/api/authentication/reset-password) | `/api/auth/reset-password` | Reset password using verification code |
+| [POST](/docs/bsh-engine/api/authentication/resend-activation-email) | `/api/auth/resend-activation-email` | Resend activation email to the user |
 
 ## Token Usage
 
@@ -45,6 +46,8 @@ Authorization: Bearer {{accessToken}}
 ```mermaid
 flowchart TD
     X[Register] --> Y[Activate Account]
+    X --> Z[Resend Activation Email]
+    Z --> Y
     Y --> A[Login]
     A[Login] --> B{Tokens Received?}
     B -- Yes --> C[Store tokens]
