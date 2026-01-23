@@ -59,7 +59,7 @@ export function AccordionItem({ id, title, description, children }: AccordionIte
   const isOpen = openItems.has(id);
 
   return (
-    <div className={styles.item}>
+    <div className={styles.item} id={id}>
       <button
         type="button"
         className={styles.trigger}
