@@ -11,13 +11,21 @@ Track all notable changes to BSH Engine.
 **Added:**
 - Cookie-based authentication (tokens in cookies).
 - `/api/users/invite`: admin can invite users with roles.
-- `/api/auth/resend-activation-email`: request new activation email.
 - Triggers can run dynamic `JavaScript` code.
+- `/api/auth/resend-activation-email`: request new activation email.
+- add `?generatePassword=true` to `/api/users/init` to generate a random password.
+- generate random password when inviting a new user.
+- Build React starter project for integrating the engine. visit [Templates Docs](/docs/bsh-engine/templates).
+- Verfy user password before updating.
+- Better error handling and a better explained error messages.
 
 **Changed:**
+- Use UUID for user IDs.
 - Dashboard loads faster (smaller bundles).
 - Dashboard UI/UX improved.
+- Improvements in authentication email templates.
 - Security improvements in both API and Dashboard.
+- Fix bugs with cookie-based authentication.
 
 ## 0.0.3 - 08 Jan 2026
 

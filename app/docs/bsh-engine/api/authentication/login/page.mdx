@@ -14,6 +14,14 @@ POST /api/auth/login
   The system will automatically set authentication cookies `bsh_access_token` and `bsh_refresh_token` with the generated tokens upon login.
 </Callout>
 
+<Callout type='important'>
+  Password requirements:
+  - Length: 6-12 characters.
+  - At least one uppercase letter.
+  - At least one lowercase letter.
+  - At least one number.
+</Callout>
+
 ## Request Body
 
 ```json
@@ -36,3 +44,13 @@ POST /api/auth/login
   ...
 }
 ```
+
+## User Status
+
+| Status | Description | can login |
+|--------|-------------|-------------|
+| `ACTIVATED` | User account is activated. | Yes |
+| `REQUIRED_ACTIVATION` | User account is not activated. | No |
+| `REQUIRED_RESET_PASSWORD` | User need to reset the password. | No |
+| `DISABLED` | User account is disabled. | No |
+| `LOCKED` | User account is locked. | No |
