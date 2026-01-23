@@ -33,186 +33,201 @@ for the authentication operations templates, you can access the user information
 ```handlebars
 Hello {{profile.firstName}} {{profile.lastName}},
 Welcome to our application.
-Your login URL is: https://app.example.com/login
+Your email is: {{email}} and temporary password is: {{password}}
 If you have any questions, please contact us at support@example.com.
 ```
 
 <Callout type='info'>
     When using a templates with variables to send emails, you must pass the `data` object with the variables values.<br/>
-    Read more about the [Send Email](/docs/bsh-engine/api/mailing/send-email) endpoint.
+    Read more about [Send Email](/docs/bsh-engine/api/mailing/send-email) endpoint.
 </Callout>
 
 ## Authentication Templates
 
 Bsh Engine provides default email templates for authentication operations (activation, reset password, etc.). You can edit them to customize the content of the emails.
 
+<Accordion defaultOpen={['activate-account']}>
+  <AccordionItem
+    id="activate-account"
+    title="ActivateAccountTemplate"
+    description="Email template containing an activation link for users to verify their account"
+  >
+    **Sent when:**
+    - User registers themselves
+    - Admin initializes a user with a password
 
-### ActivateAccountTemplate
+    **Data Object:**
 
-**Definition:** Email template containing an activation link for users to verify their account.
-
-**When Used:**
-- User registers themselves
-- Admin initializes a user with a password
-
-**Data Object:**
-
-```json
-{
-    "userId": "<user-id>",
-    "status": "REQUIRED_ACTIVATION",
-    "email": "<user-email>",
-    "roles": ["<user-roles>"],
-    "profile": {
-        "firstName": "<user-first-name>",
-        "lastName": "<user-last-name>",
-        "...": "..."
-    },
-    "activationCode": "<activation-code>"
-}
-```
-
-### ActivateAccountWithPasswordTemplate
-
-**Definition:** Email template containing an activation link along with an auto-generated password for the user.
-
-**When Used:**
-- Admin initializes a user with an auto-generated password
-
-**Data Object:**
-
-```json
-{
-    "userId": "<user-id>",
-    "status": "REQUIRED_ACTIVATION",
-    "email": "<user-email>",
-    "roles": ["<user-roles>"],
-    "profile": {
-        "firstName": "<user-first-name>",
-        "lastName": "<user-last-name>",
-        "...": "..."
-    },
-    "activationCode": "<activation-code>",
-    "password": "<generated-password>"
-}
-```
-
-### AccountActivatedTemplate
-
-**Definition:** Confirmation email sent when a user's account has been successfully activated.
-
-**When Used:**
-- User activates their account
-
-**Data Object:**
-
-```json
-{
-    "userId": "<user-id>",
-    "status": "ACTIVATED",
-    "email": "<user-email>",
-    "roles": ["<user-roles>"],
-    "profile": {
-        "firstName": "<user-first-name>",
-        "lastName": "<user-last-name>",
-        "...": "..."
+    ```json
+    {
+        "userId": "<user-id>",
+        "status": "REQUIRED_ACTIVATION",
+        "email": "<user-email>",
+        "roles": ["<user-roles>"],
+        "profile": {
+            "firstName": "<user-first-name>",
+            "lastName": "<user-last-name>",
+            "...": "..."
+        },
+        "activationCode": "<activation-code>"
     }
-}
-```
+    ```
+  </AccordionItem>
 
-### ActivationCodeTemplate
+  <AccordionItem
+    id="activate-account-with-password"
+    title="ActivateAccountWithPasswordTemplate"
+    description="Email template containing an activation link along with an auto-generated password"
+  >
+    **Sent when:**
+    - Admin initializes a user with an auto-generated password
 
-**Definition:** Email template containing a new activation code for account verification.
+    **Data Object:**
 
-**When Used:**
-- User requests a new activation code
-
-**Data Object:**
-
-```json
-{
-    "userId": "<user-id>",
-    "status": "REQUIRED_ACTIVATION",
-    "email": "<user-email>",
-    "roles": ["<user-roles>"],
-    "profile": {
-        "firstName": "<user-first-name>",
-        "lastName": "<user-last-name>",
-        "...": "..."
-    },
-    "activationCode": "<activation-code>"
-}
-```
-
-### ResetPasswordTemplate
-
-**Definition:** Email template containing a link for users to reset their password.
-
-**When Used:**
-- User requests a password reset
-
-**Data Object:**
-
-```json
-{
-    "userId": "<user-id>",
-    "status": "REQUIRED_RESET_PASSWORD",
-    "email": "<user-email>",
-    "roles": ["<user-roles>"],
-    "profile": {
-        "firstName": "<user-first-name>",
-        "lastName": "<user-last-name>",
-        "...": "..."
-    },
-    "resetPasswordCode": "<reset-password-code>"
-}
-```
-
-### PasswordChangedTemplate
-
-**Definition:** Notification email sent to inform users that their password has been successfully changed.
-
-**When Used:**
-- User resets their password via the reset password flow
-- User changes their password from their profile page
-
-**Data Object:**
-
-```json
-{
-    "userId": "<user-id>",
-    "status": "ACTIVATED",
-    "email": "<user-email>",
-    "roles": ["<user-roles>"],
-    "profile": {
-        "firstName": "<user-first-name>",
-        "lastName": "<user-last-name>",
-        "...": "..."
+    ```json
+    {
+        "userId": "<user-id>",
+        "status": "REQUIRED_ACTIVATION",
+        "email": "<user-email>",
+        "roles": ["<user-roles>"],
+        "profile": {
+            "firstName": "<user-first-name>",
+            "lastName": "<user-last-name>",
+            "...": "..."
+        },
+        "activationCode": "<activation-code>",
+        "password": "<generated-password>"
     }
-}
-```
+    ```
+  </AccordionItem>
 
-### UserInvitationTemplate
+  <AccordionItem
+    id="account-activated"
+    title="AccountActivatedTemplate"
+    description="Confirmation email sent when a user's account has been successfully activated"
+  >
+    **Sent when:**
+    - User activates their account
 
-**Definition:** Email template sent to invite new users to join the application.
+    **Data Object:**
 
-**When Used:**
-- Admin invites a new user
+    ```json
+    {
+        "userId": "<user-id>",
+        "status": "ACTIVATED",
+        "email": "<user-email>",
+        "roles": ["<user-roles>"],
+        "profile": {
+            "firstName": "<user-first-name>",
+            "lastName": "<user-last-name>",
+            "...": "..."
+        }
+    }
+    ```
+  </AccordionItem>
 
-**Data Object:**
+  <AccordionItem
+    id="activation-code"
+    title="ActivationCodeTemplate"
+    description="Email template containing a new activation code for account verification"
+  >
+    **Sent when:**
+    - User requests a new activation code
 
-```json
-{
-    "userId": "<user-id>",
-    "status": "REQUIRED_ACTIVATION",
-    "email": "<user-email>",
-    "roles": ["<user-roles>"],
-    "profile": {
-        "firstName": "<user-first-name>",
-        "lastName": "<user-last-name>",
-        "...": "..."
-    },
-    "activationCode": "<activation-code>",
-    "password": "<generated-password>"
-}
-```
+    **Data Object:**
+
+    ```json
+    {
+        "userId": "<user-id>",
+        "status": "REQUIRED_ACTIVATION",
+        "email": "<user-email>",
+        "roles": ["<user-roles>"],
+        "profile": {
+            "firstName": "<user-first-name>",
+            "lastName": "<user-last-name>",
+            "...": "..."
+        },
+        "activationCode": "<activation-code>"
+    }
+    ```
+  </AccordionItem>
+
+  <AccordionItem
+    id="reset-password"
+    title="ResetPasswordTemplate"
+    description="Email template containing a link for users to reset their password"
+  >
+    **Sent when:**
+    - User requests a password reset
+
+    **Data Object:**
+
+    ```json
+    {
+        "userId": "<user-id>",
+        "status": "REQUIRED_RESET_PASSWORD",
+        "email": "<user-email>",
+        "roles": ["<user-roles>"],
+        "profile": {
+            "firstName": "<user-first-name>",
+            "lastName": "<user-last-name>",
+            "...": "..."
+        },
+        "resetPasswordCode": "<reset-password-code>"
+    }
+    ```
+  </AccordionItem>
+
+  <AccordionItem
+    id="password-changed"
+    title="PasswordChangedTemplate"
+    description="Notification email sent when a password has been successfully changed"
+  >
+    **Sent when:**
+    - User resets their password via the reset password flow
+    - User changes their password from their profile page
+
+    **Data Object:**
+
+    ```json
+    {
+        "userId": "<user-id>",
+        "status": "ACTIVATED",
+        "email": "<user-email>",
+        "roles": ["<user-roles>"],
+        "profile": {
+            "firstName": "<user-first-name>",
+            "lastName": "<user-last-name>",
+            "...": "..."
+        }
+    }
+    ```
+  </AccordionItem>
+
+  <AccordionItem
+    id="user-invitation"
+    title="UserInvitationTemplate"
+    description="Email template sent to invite new users to join the application"
+  >
+    **Sent when:**
+    - Admin invites a new user
+
+    **Data Object:**
+
+    ```json
+    {
+        "userId": "<user-id>",
+        "status": "REQUIRED_ACTIVATION",
+        "email": "<user-email>",
+        "roles": ["<user-roles>"],
+        "profile": {
+            "firstName": "<user-first-name>",
+            "lastName": "<user-last-name>",
+            "...": "..."
+        },
+        "activationCode": "<activation-code>",
+        "password": "<generated-password>"
+    }
+    ```
+  </AccordionItem>
+</Accordion>
