@@ -1,0 +1,86 @@
+.templatesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.templateCard {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  text-decoration: none;
+  transition: border-color 0.2s ease;
+}
+
+.templateCard:hover {
+  border-color: #3b82f6;
+}
+
+:global(html.dark) .templateCard {
+  border-color: #374151;
+  background-color: #171717;
+}
+
+:global(html.dark) .templateCard:hover {
+  border-color: #3b82f6;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 0.5rem;
+  background-color: #f3f4f6;
+  margin-bottom: 1rem;
+}
+
+:global(html.dark) .iconWrapper {
+  background-color: #262626;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+:global(html.dark) .title {
+  color: #e5e7eb;
+}
+
+.description {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+:global(html.dark) .description {
+  color: #9ca3af;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.tag {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+:global(html.dark) .tag {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+}

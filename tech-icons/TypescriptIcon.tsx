@@ -1,13 +1,13 @@
 import React from 'react';
 
-interface TypescripticonIconProps {
+interface TypescriptIconProps {
   width?: number | string;
   height?: number | string;
   className?: string;
   style?: React.CSSProperties;
 }
 
-const TypescripticonIcon: React.FC<TypescripticonIconProps> = ({ 
+const TypescriptIcon: React.FC<TypescriptIconProps> = ({ 
   width = 24, 
   height = 24, 
   className,
@@ -29,4 +29,4 @@ const TypescripticonIcon: React.FC<TypescripticonIconProps> = ({
   );
 };
 
-export default TypescripticonIcon;
+export default TypescriptIcon;

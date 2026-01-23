@@ -16,5 +16,6 @@ export default {
   'api': 'API Reference',
   'sdk': 'SDK',
   'cli': 'CLI',
+  'templates': 'Templates',
   'changelog': 'Changelog',
 }
