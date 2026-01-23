@@ -8,13 +8,18 @@ import { Callout } from 'nextra/components';
 
 Initialize a new user account with profile data.<br/>
 
-<Callout type='info'>
+<Callout type='default'>
     This endpoint is for admins to add new users to the system.
 </Callout>
 
 ```bash
 POST /api/user/init
 ```
+
+<Callout type='info'>
+  To generate a random password, you can use the param `?generate_password=true`.<br/>
+  This will send an email with generated password to the user.
+</Callout>
 
 ## Request Body
 
