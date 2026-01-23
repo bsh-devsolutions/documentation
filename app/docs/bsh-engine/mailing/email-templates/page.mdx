@@ -41,3 +41,178 @@ If you have any questions, please contact us at support@example.com.
     When using a templates with variables to send emails, you must pass the `data` object with the variables values.<br/>
     Read more about the [Send Email](/docs/bsh-engine/api/mailing/send-email) endpoint.
 </Callout>
+
+## Authentication Templates
+
+Bsh Engine provides default email templates for authentication operations (activation, reset password, etc.). You can edit them to customize the content of the emails.
+
+
+### ActivateAccountTemplate
+
+**Definition:** Email template containing an activation link for users to verify their account.
+
+**When Used:**
+- User registers themselves
+- Admin initializes a user with a password
+
+**Data Object:**
+
+```json
+{
+    "userId": "<user-id>",
+    "status": "REQUIRED_ACTIVATION",
+    "email": "<user-email>",
+    "roles": ["<user-roles>"],
+    "profile": {
+        "firstName": "<user-first-name>",
+        "lastName": "<user-last-name>",
+        "...": "..."
+    },
+    "activationCode": "<activation-code>"
+}
+```
+
+### ActivateAccountWithPasswordTemplate
+
+**Definition:** Email template containing an activation link along with an auto-generated password for the user.
+
+**When Used:**
+- Admin initializes a user with an auto-generated password
+
+**Data Object:**
+
+```json
+{
+    "userId": "<user-id>",
+    "status": "REQUIRED_ACTIVATION",
+    "email": "<user-email>",
+    "roles": ["<user-roles>"],
+    "profile": {
+        "firstName": "<user-first-name>",
+        "lastName": "<user-last-name>",
+        "...": "..."
+    },
+    "activationCode": "<activation-code>",
+    "password": "<generated-password>"
+}
+```
+
+### AccountActivatedTemplate
+
+**Definition:** Confirmation email sent when a user's account has been successfully activated.
+
+**When Used:**
+- User activates their account
+
+**Data Object:**
+
+```json
+{
+    "userId": "<user-id>",
+    "status": "ACTIVATED",
+    "email": "<user-email>",
+    "roles": ["<user-roles>"],
+    "profile": {
+        "firstName": "<user-first-name>",
+        "lastName": "<user-last-name>",
+        "...": "..."
+    }
+}
+```
+
+### ActivationCodeTemplate
+
+**Definition:** Email template containing a new activation code for account verification.
+
+**When Used:**
+- User requests a new activation code
+
+**Data Object:**
+
+```json
+{
+    "userId": "<user-id>",
+    "status": "REQUIRED_ACTIVATION",
+    "email": "<user-email>",
+    "roles": ["<user-roles>"],
+    "profile": {
+        "firstName": "<user-first-name>",
+        "lastName": "<user-last-name>",
+        "...": "..."
+    },
+    "activationCode": "<activation-code>"
+}
+```
+
+### ResetPasswordTemplate
+
+**Definition:** Email template containing a link for users to reset their password.
+
+**When Used:**
+- User requests a password reset
+
+**Data Object:**
+
+```json
+{
+    "userId": "<user-id>",
+    "status": "REQUIRED_RESET_PASSWORD",
+    "email": "<user-email>",
+    "roles": ["<user-roles>"],
+    "profile": {
+        "firstName": "<user-first-name>",
+        "lastName": "<user-last-name>",
+        "...": "..."
+    },
+    "resetPasswordCode": "<reset-password-code>"
+}
+```
+
+### PasswordChangedTemplate
+
+**Definition:** Notification email sent to inform users that their password has been successfully changed.
+
+**When Used:**
+- User resets their password via the reset password flow
+- User changes their password from their profile page
+
+**Data Object:**
+
+```json
+{
+    "userId": "<user-id>",
+    "status": "ACTIVATED",
+    "email": "<user-email>",
+    "roles": ["<user-roles>"],
+    "profile": {
+        "firstName": "<user-first-name>",
+        "lastName": "<user-last-name>",
+        "...": "..."
+    }
+}
+```
+
+### UserInvitationTemplate
+
+**Definition:** Email template sent to invite new users to join the application.
+
+**When Used:**
+- Admin invites a new user
+
+**Data Object:**
+
+```json
+{
+    "userId": "<user-id>",
+    "status": "REQUIRED_ACTIVATION",
+    "email": "<user-email>",
+    "roles": ["<user-roles>"],
+    "profile": {
+        "firstName": "<user-first-name>",
+        "lastName": "<user-last-name>",
+        "...": "..."
+    },
+    "activationCode": "<activation-code>",
+    "password": "<generated-password>"
+}
+```
