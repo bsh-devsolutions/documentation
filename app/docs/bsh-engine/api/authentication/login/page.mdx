@@ -22,6 +22,11 @@ POST /api/auth/login
   - At least one number.
 </Callout>
 
+<Callout type="error">
+  The system uses the secret `env:jwt.secret` to generate access tokens.  
+  Before starting the instance, make sure to provide your JWT secret via environment variables as described [here](/docs/bsh-engine/settings#secrets).
+</Callout>
+
 ## Request Body
 
 ```json

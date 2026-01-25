@@ -39,9 +39,10 @@ For sensitive data that needs to be stored securely, you can use secrets to mana
    Those secret are currently only used for `BshProviderConfigs` entity. This one is used to store the configuration for [Emails](/docs/bsh-engine/mailing/configurations) and [Storage](/docs/bsh-engine/files/configurations).
 </Callout>
 
-### Mailing and Storage Configurations
+### Used Secrets
 
-To configure mailing and storage services, pass the configuration object as the `BSH_ENV_VAR` environment variable when creating the engine instance. The engine will use these variables when sending emails or storing files.
+The engine uses built-in secrets to configure various services (mailing, storage, JWT) via environment variables.<br/>
+Pass the configuration object through the BSH_ENV_VAR environment variable when creating the engine instance.
 
 ```json
 {
@@ -54,6 +55,9 @@ To configure mailing and storage services, pass the configuration object as the 
     "apiSecret": "",
     "cloudName": "",
     "folder": ""
+  },
+  "jwt": {
+    "secret": ""
   }
 }
 ```

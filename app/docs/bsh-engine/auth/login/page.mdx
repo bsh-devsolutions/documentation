@@ -11,3 +11,8 @@ To access the BSH Engine admin panel or protected APIs, users must authenticate 
 <Callout type='info'>
     For detailed request and response formats, refer to the [Authentication API Documentation](/docs/bsh-engine/api/authentication/forgot-password).
 </Callout>
+
+<Callout type="error">
+  The system uses the secret `env:jwt.secret` to generate access tokens.  
+  Before starting the instance, make sure to provide your JWT secret via environment variables as described [here](/docs/bsh-engine/settings#secrets).
+</Callout>
