@@ -17,7 +17,13 @@ Track all notable changes to BSH Engine.
 - Dynamic JavaScript execution in triggers for advanced automation.
 - React starter template for quick engine integration. See [Templates Docs](/docs/bsh-engine/templates).
 - Embedded Password verification.
-- Api Keys Emails on `create`, `revoke` and `delete`.
+- Api Keys Emails on `create`, `revoke` and `delete`
+
+- implement /api/status and view /status to show if the setup is good or is there any thing messing
+- support `{{host}}` as internal variable to email templates
+- Centrallize engine config in one JSON object passeed through `BSH_CONFIG` env variable
+- install a plugin as zip file via `/api/plugins/install/zip` and track the installation history
+
 
 **Changed:**
 - User IDs now use UUID format for better uniqueness and security.
