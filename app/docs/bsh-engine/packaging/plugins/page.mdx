@@ -47,4 +47,17 @@ located anywhere within component directories (supports nested structure). it co
 
 ## Plugin Installation
 
-To install a plugin, you can use the `plugins install` command from the [CLI](/docs/bsh-engine/cli/plugins#install).
+<Tabs items={['CLI', 'UI', 'API']}>
+   <Tabs.Tab>
+   To install a plugin via CLI, use the  command [`plugins install`](/docs/bsh-engine/cli/plugins#install).
+   </Tabs.Tab>
+   <Tabs.Tab>
+   or use UI in `/plugins/install`<br/><br/>
+   ![install plugin](/images/bsh-egnine/packaging/plugins/install.png)
+   </Tabs.Tab>
+   <Tabs.Tab>
+   To install a plugin via API, use the [Plugins API](/docs/bsh-engine/api/plugins):
+   - [`POST /api/plugins/install/zip`](/docs/bsh-engine/api/plugins/install-zip) - Install from ZIP file
+   - [`POST /api/plugins/install/core`](/docs/bsh-engine/api/plugins/install-core) - Reinstall core plugin
+   </Tabs.Tab>
+</Tabs>

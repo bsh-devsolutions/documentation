@@ -1,0 +1,32 @@
+---
+title: Plugins API
+asIndexPage: true
+---
+
+import { Callout } from 'nextra/components';
+
+# Plugins API
+
+The Plugins API provides endpoints for installing and managing plugins in the BSH Engine. Plugins allow extending the engine with custom entities, schemas, configurations, and data.
+
+<Callout type="info">
+  Plugins can be loaded from ZIP files uploaded via the API or from JAR resources bundled with the engine (e.g., the core plugin).
+</Callout>
+
+## Base Endpoint
+
+```bash
+/api/plugins
+```
+
+## Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| [POST](/docs/bsh-engine/api/plugins/install-zip) | `/api/plugins/install/zip` | Install a plugin from an uploaded ZIP file |
+| [POST](/docs/bsh-engine/api/plugins/install-core) | `/api/plugins/install/core` | Reinstall the built-in core plugin |
+
+## See Also
+
+- [Plugin Structure](/docs/bsh-engine/packaging/plugins) - How to create and structure plugins
+- [Plugin CLI Commands](/docs/bsh-engine/cli/plugins) - Managing plugins via CLI
