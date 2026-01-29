@@ -2,6 +2,7 @@ import { Title } from "../../../components";
 
 export default {
   'installation': 'Installation',
+  'environment': 'Environment',
   'auth': 'Authentication',
   'modeling': 'Modeling',
   'security': 'Security',
