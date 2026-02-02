@@ -46,6 +46,23 @@ POST /api/user/init
     The `profile` object is customizable; define any fields you want to include in a user's profile. This allows you to tailor user data storage to your application's specific requirements.
 </Callout>
 
+## Generate Password
+
+To generate a random password for the new user, append the query parameter `?generatePassword=true` to the endpoint:
+
+```bash
+POST /api/user/init?generatePassword=true
+```
+
+When `generatePassword=true` is set, the following will occur:
+
+- The engine will automatically generate a secure random password for the user.
+- An [Activation Email with Password](/docs/bsh-engine/mailing/email-templates#activate-account-with-password) will be sent to the user's provided email address, containing the generated password.
+
+<Callout type='important'>
+  If `generatePassword=true` is not set and no `password` is provided, the user account will be created without a usable password until one is set manually, or via **Reset Password** flow.
+</Callout>
+
 ## Response
 
 ```json
