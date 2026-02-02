@@ -6,33 +6,50 @@ title: Changelog
 
 Track all notable changes to BSH Engine.
 
-## 0.0.4 - Upcoming
+## 0.0.4 - 02 Feb 2026
 
-**Added:**
-- Activation email resend endpoint: `/api/auth/resend-activation-email`.
-- Password generation option: add `?generatePassword=true` to `/api/users/init` to generate the password.
-- User invitation system: admins can invite users with specific roles via `/api/users/invite`.
-- Secret management for secure storage of sensitive data. See [Secrets Docs](/docs/bsh-engine/settings#secrets).
+**Highlights**
+- Centralized engine configuration using a single JSON object passed via the [`BSH_CONFIG`](/docs/bsh-engine/environment) environment variable.
+- [Secret management system](/docs/bsh-engine/settings#secrets) for secure storage of sensitive data.
 - Cookie-based authentication with secure token storage.
-- Dynamic JavaScript execution in triggers for advanced automation.
-- React starter template for quick engine integration. See [Templates Docs](/docs/bsh-engine/templates).
-- Embedded Password verification.
-- Api Keys Emails on `create`, `revoke` and `delete`
+- New system health checks via `/api/status` and `/status` view to verify setup integrity.
+- Move docker repository from `bshg/engine` to [`bshsolutions/engine`](https://hub.docker.com/r/bshsolutions/engine)
 
-- implement /api/status and view /status to show if the setup is good or is there any thing messing
-- support `{{host}}` as internal variable to email templates
-- Centrallize engine config in one JSON object passeed through `BSH_CONFIG` env variable
-- install a plugin as zip file via `/api/plugins/install/zip` and track the installation history
-
-
-**Changed:**
-- User IDs now use UUID format for better uniqueness and security.
-- Add expiration dates to activation/reset codes (10min).
-- Dashboard performance improved with smaller bundles and faster load times.
-- Dashboard UI/UX enhancements for better user experience.
-- Authentication email templates redesigned for clarity.
+**Authentication & Security**
+- Cookie-based authentication with secure token storage.
+- Embedded password verification.
+- Activation and password reset codes now expire after **10 minutes**.
+- Default authentication email templates redesigned for clarity.
 - Security improvements across both API and Dashboard.
-- Enhanced error handling with more descriptive error messages.
+
+**Users & Access Management**
+- User IDs now use **UUID** format for improved uniqueness and security.
+- Admin user invitation system with role assignment via [`/api/users/invite`](/docs/bsh-engine/api/users/invite-user).
+- Password auto-generation option using [`?generatePassword=true`](/docs/bsh-engine/api/users/init-user#generate-password) on `/api/users/init`.
+- Activation email resend endpoint: [`/api/auth/resend-activation-email`](/docs/bsh-engine/api/authentication/resend-activation-email).
+
+**Email & Notifications**
+- API key [notification emails](/docs/bsh-engine/mailing/email-templates#authentication-templates) sent on **create**, **revoke**, and **delete** actions.
+- Support for [`{{host}}`](/docs/bsh-engine/mailing/email-templates#host-variable) as an internal variable in email templates.
+
+**Plugins & Extensibility**
+- Install plugins as ZIP files via [`/api/plugins/install/zip`](/docs/bsh-engine/api/plugins/install-zip).
+- Reinstall the core plugin via [`/api/plugins/install/core`](/docs/bsh-engine/api/plugins/install-core).
+- Plugin installation history tracking.
+- Dynamic JavaScript (ES6) execution in triggers for advanced logic.
+
+**API & System**
+- New `/api/status` endpoint for system and setup health checks.
+- Improved error handling with clearer and more descriptive error messages.
+
+**Dashboard & UI**
+- Improved dashboard performance with smaller bundles and faster load times.
+- UI/UX enhancements for a smoother user experience.
+
+**Developer Experience**
+- React starter template for faster engine integration. See [Templates Docs](/docs/bsh-engine/templates).
+- Add [`docker`](/docs/bsh-engine/cli/docker) command to CLI to generate compose files.
+
 
 ## 0.0.3 - 08 Jan 2026
 
