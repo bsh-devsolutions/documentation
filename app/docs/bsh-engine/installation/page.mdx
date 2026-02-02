@@ -20,24 +20,24 @@ Create a new file called `docker-compose.yml` in the root of your project
 ```yaml filename="docker-compose.yml" {3}
 services:
   backend:
-    image: 'bshg/engine:latest'
+    image: 'bshsolutions/engine:latest'
     container_name: 'engine-backend'
     ports:
       - '7071:7071'
-    env_file:
-      - .env
+    environment:
+      - 'BSH_CONFIG={}'
 ```
     </Tabs.Tab>
     <Tabs.Tab title="Database Included">
 ```yaml filename="docker-compose.yml" {3} {15}
 services:
   backend:
-    image: 'bshg/engine:latest'
+    image: 'bshsolutions/engine:latest'
     container_name: 'engine-backend'
     ports:
       - '7071:7071'
-    env_file:
-      - .env
+    environment:
+      - 'BSH_CONFIG={}'
     depends_on:
       - postgres
     networks:
@@ -79,27 +79,7 @@ volumes:
 
 ### Environment Variables
 
-Create a new file called `.env` in the root of your project and copy the following code into it:
-
-```dotenv filename=".env"
-BSH_DB_URL=jdbc:postgresql://engine-postgres:5432/engine
-BSH_DB_USER=engine
-BSH_DB_PASSWORD=password
-BSH_DB_DRIVER=org.postgresql.Driver
-
-BSH_PORT=7071 # optional
-BSH_FRONTEND_HOST=http://localhost:*
-
-BSH_ADMIN_USERNAME=admin@engine.com
-BSH_ADMIN_PASSWORD=password
-```
-
-adjust the environment variables to your needs.
-
-<Callout type="warning">
-    - `BSH_FRONTEND_HOST` should be the same as the frontend host or any other host that you want to access the engine from.
-    - `BSH_ADMIN_USERNAME` and `BSH_ADMIN_PASSWORD` are the credentials for the admin user. It will be created automatically when the engine starts.
-</Callout>
+The engine requires one env variable `BSH_CONFIG`, read [this](/docs/bsh-engine/environment) docs for more details.
 
 ### Run the Engine
 
@@ -110,8 +90,12 @@ docker compose up -d
 ```
 
 <Callout type="info">
-    The engine will be available at `http://localhost:7071`
+    The engine will be available at `http://localhost:7071` or any domain you configured.
 </Callout>
+
+### Check status
+
+After the engine is run, check the its status in `http://localhost:7071/status` to make sure every thing is well configured before you start using it.
 
 ### Explore the Endpoints
 
