@@ -230,6 +230,63 @@ Bsh Engine provides default email templates for authentication operations (activ
     }
     ```
   </AccordionItem>
+
+  <AccordionItem
+    id="api-key-created"
+    title="ApiKeyCreatedTemplate"
+    description="Email template sent when a new API key is created on the account"
+  >
+    **Sent when:**
+    - A new API key is created
+
+    **Data Object:**
+  ```json
+    {
+        "id": "<api-key-id>",
+        "name": "<api-key-name>",
+        "type": "<api-key-type>",
+        "status": "<api-key-status>"
+    }
+  ```
+  </AccordionItem>
+
+  <AccordionItem
+    id="api-key-revoked"
+    title="ApiKeyRevokedTemplate"
+    description="Email template sent when an API key is revoked and can no longer be used"
+  >
+    **Sent when:**
+    - An API key is revoked
+
+    **Data Object:**
+  ```json
+    {
+        "id": "<api-key-id>",
+        "name": "<api-key-name>",
+        "type": "<api-key-type>",
+        "status": "<api-key-status>"
+    }
+  ```
+  </AccordionItem>
+
+  <AccordionItem
+    id="api-key-deleted"
+    title="ApiKeyDeletedTemplate"
+    description="Email template sent when an API key is permanently deleted from the account"
+  >
+    **Sent when:**
+    - An API key is deleted
+
+    **Data Object:**
+  ```json
+    {
+        "id": "<api-key-id>",
+        "name": "<api-key-name>",
+        "type": "<api-key-type>",
+        "status": "<api-key-status>"
+    }
+  ```
+  </AccordionItem>
 </Accordion>
 
 ## Host Variable
