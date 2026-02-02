@@ -1,0 +1,91 @@
+---
+title: Install Core Plugin
+---
+
+import { Callout, Tabs } from 'nextra/components';
+
+# Install Core Plugin
+
+Reinstall the built-in core plugin. This endpoint is useful for:
+
+- Resetting core entities/schemas to default
+- Applying updates after engine upgrade
+- Development and testing
+
+<Callout type="info">
+  The core plugin contains the base entities, schemas, and configurations required for the BSH Engine to function properly.
+</Callout>
+
+## Endpoint
+
+```bash
+POST /api/plugins/install/core
+Content-Type: multipart/form-data
+```
+
+<Callout>
+  No request body is required for this endpoint.
+</Callout>
+
+## Example Request
+
+<Tabs items={['cURL', 'JavaScript']}>
+<Tabs.Tab>
+```bash
+curl -X POST "http://localhost:7071/api/plugins/install/core"
+```
+</Tabs.Tab>
+<Tabs.Tab>
+```javascript
+const response = await fetch('/api/plugins/install/core', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+});
+
+const result = await response.json();
+```
+</Tabs.Tab>
+</Tabs>
+
+## Response
+
+### Success Response (200 OK)
+
+```json
+{
+  "status": 200,
+  "message": "Plugin installed",
+  "data": {
+    "history": 12346,
+    "pluginId": "core",
+    "pluginName": "BSH Core Plugin",
+    "totalFiles": 25,
+    "successCount": 25,
+    "failedCount": 0
+  }
+}
+```
+
+## Configuration
+
+The core plugin installation behavior can be configured via `bshconfig.json`:
+
+```json
+{
+  "plugin": {
+    "coreInstallMode": "Once"
+  }
+}
+```
+
+| Setting | Values | Description |
+|---------|--------|-------------|
+| `coreInstallMode` | `Once` | Core plugin installed only on first startup |
+| | `Always` | Core plugin reinstalled on every startup |
+
+## See Also
+
+- [Configuration Guide](/docs/bsh-engine/configurations) - Engine configuration options
+- [Plugin Structure](/docs/bsh-engine/packaging/plugins) - Understanding plugin structure

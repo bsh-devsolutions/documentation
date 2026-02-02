@@ -23,3 +23,15 @@ Retrieves a list of available trigger actions that can be executed when triggers
 ```typescript
 await bshEngine.utils.triggerActions();
 ```
+
+### secrets
+
+Retrieves secrets from a specified source. The source defaults to `'env'` if not provided.
+
+```typescript
+// Get secrets from the default 'env' source
+await bshEngine.utils.secrets({});
+
+// Get secrets from a specific source
+await bshEngine.utils.secrets({ source: 'env' });
+```

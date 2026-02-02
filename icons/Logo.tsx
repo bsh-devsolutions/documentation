@@ -6,8 +6,13 @@ export const LogoText = () => (
     </span>
 );
 
-export const LogoIcon = () => (
-    <Image fetchPriority="high" src="/logo/logo.svg" alt="@logo" width={32} height={24.49}/>
+interface LogoIconProps {
+    width?: number;
+    height?: number;
+}
+
+export const LogoIcon = ({ width = 32, height = 24.49 }: LogoIconProps) => (
+    <Image fetchPriority="high" src="/logo/logo.svg" alt="@logo" width={width} height={height}/>
 );
 
 export const Logo = () => (

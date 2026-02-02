@@ -1,0 +1,344 @@
+---
+title: Environment Configuration
+---
+
+import { Tabs, Callout } from 'nextra/components';
+
+# Environment Configuration
+
+The BSH Engine uses a JSON-based configuration system loaded from the `BSH_CONFIG` environment variable.
+
+## How Configuration Works
+
+1. Copy [Configuration Template](#configuration-template) to create your own configuration
+2. Fill in the required values
+3. Set the `BSH_CONFIG` environment variable with the JSON content (stringified)
+4. The engine reads this configuration at startup and Configure your instance.
+
+## Configuration Template
+
+```json
+{
+  "env": "DEV",
+  "datasource": {
+    "url": "",
+    "host": "",
+    "port": 5432,
+    "user": "",
+    "password": "",
+    "database": "",
+    "driverClassName": "org.postgresql.Driver",
+    "pool": {
+      "maximumSize": 10,
+      "minimumIdle": 5,
+      "idleTimeout": 300000,
+      "connectionTimeout": 30000,
+      "maxLifetime": 1800000
+    },
+    "query": {
+      "queryTimeout": 30,
+      "fetchSize": 100
+    },
+    "properties": {
+      "cachePrepStmts": "true",
+      "prepStmtCacheSize": "250",
+      "prepStmtCacheSqlLimit": "2048",
+      "useServerPrepStmts": "true"
+    }
+  },
+  "secrets": {
+    "key": "value"
+  },
+  "origins": {
+    "allowed": [
+      "https://*:*", "http://*:*"
+    ]
+  },
+  "admin": {
+    "email": ""
+  },
+  "plugin": {
+    "coreInstallMode": "Once"
+  }
+}
+```
+
+## Configuration Sections
+
+### Environment (`env`)
+
+```json
+{
+  "env": "DEV"
+}
+```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `env` | string | `"DEV"` | Environment identifier (e.g., `DEV`, `STAGING`, `PROD`) |
+
+
+### Host (`host`)
+
+```json
+{
+  "host": "http://localhost:7071"
+}
+```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `host` | string | `"http://localhost:7071"` | The base URL where the engine is hosted |
+
+
+### Data Source (`datasource`)
+
+Database connection configuration for PostgreSQL.
+
+```json
+{
+  "datasource": {
+    "url": "",
+    "host": "localhost",
+    "port": 5432,
+    "user": "postgres",
+    "password": "secret",
+    "database": "bshengine",
+    "driverClassName": "org.postgresql.Driver",
+    "pool": { ... },
+    "query": { ... },
+    "properties": { ... }
+  }
+}
+```
+
+#### Main Fields
+
+| Field | Type | Default | Required | Description |
+|-------|------|---------|----------|-------------|
+| `url` | string | - | Yes* | Full JDBC URL (e.g., `jdbc:postgresql://host:port/db`) |
+| `host` | string | - | Yes* | Database host |
+| `port` | number | `5432` | No | Database port |
+| `user` | string | - | **Yes** | Database username |
+| `password` | string | - | **Yes** | Database password |
+| `database` | string | - | Yes* | Database name |
+| `driverClassName` | string | `"org.postgresql.Driver"` | No | JDBC driver class |
+
+<Callout type="info">
+You can provide either a full `url` OR the combination of `host`, `port`, and `database`. If `url` is empty, the engine constructs it from the individual fields.
+</Callout>
+
+#### Connection Pool (`pool`)
+
+```json
+{
+  "pool": {
+    "maximumPoolSize": 10,
+    "minimumIdle": 5,
+    "idleTimeout": 300000,
+    "connectionTimeout": 30000,
+    "maxLifetime": 1800000
+  }
+}
+```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `maximumPoolSize` | number | `10` | Maximum number of connections in the pool |
+| `minimumIdle` | number | `5` | Minimum number of idle connections to maintain |
+| `idleTimeout` | number | `300000` | Max time (ms) a connection can sit idle before removal (5 min) |
+| `connectionTimeout` | number | `30000` | Max time (ms) to wait for a connection from pool (30 sec) |
+| `maxLifetime` | number | `1800000` | Max lifetime (ms) of a connection in the pool (30 min) |
+
+#### Query Settings (`query`)
+
+```json
+{
+  "query": {
+    "queryTimeout": 30,
+    "fetchSize": 100
+  }
+}
+```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `queryTimeout` | number | `30` | Query timeout in seconds |
+| `fetchSize` | number | `100` | Number of rows fetched per database round-trip |
+
+#### Connection Properties (`properties`)
+
+```json
+{
+  "properties": {
+    "cachePrepStmts": "true",
+    "prepStmtCacheSize": "250",
+    "prepStmtCacheSqlLimit": "2048",
+    "useServerPrepStmts": "true"
+  }
+}
+```
+
+These are PostgreSQL-specific performance optimizations for prepared statement caching.
+
+
+### Secrets (`secrets`)
+
+Store sensitive credentials that can be referenced elsewhere in the system using the `env:` prefix.<br/>
+for built-in secret, [read this](/docs/bsh-engine/settings#used-secrets)
+
+### CORS Origins (`origins`)
+
+Configure allowed origins for Cross-Origin Resource Sharing (CORS).
+
+```json
+{
+  "origins": {
+    "allowed": [
+      "https://yourdomain.com",
+      "http://localhost:3000"
+    ]
+  }
+}
+```
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `allowed` | string[] | `["https://*:*", "http://*:*"]` | List of allowed origins |
+
+<Callout type="warning">
+The default allows all origins. For production, specify exact domains.
+</Callout>
+
+### Admin (`admin`)
+
+Initial admin user configuration. **Required** for first-time setup.
+
+```json
+{
+  "admin": {
+    "email": "admin@example.com"
+  }
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `email` | string | **Yes** | Admin user email for initial setup |
+| `password` | string | No | Admin password (optional, will be auto-generated) |
+
+### Plugin (`plugin`)
+
+Plugin system configuration.
+
+```json
+{
+  "plugin": {
+    "coreInstallMode": "Once"
+  }
+}
+```
+
+| Field | Type | Default | Options | Description |
+|-------|------|---------|---------|-------------|
+| `coreInstallMode` | string | `"Once"` | `Once`, `Always` | How core plugins are installed |
+
+- **`Once`**: Core plugins are installed only on first startup (recomanded in production)
+- **`Always`**: Core plugins are reinstalled on every startup (useful for development)
+
+## Complete Example
+
+```json filename="bshconfig.json"
+{
+  "env": "PROD",
+  "host": "https://api.yourapp.com",
+  "datasource": {
+    "host": "db.yourapp.com",
+    "port": 5432,
+    "user": "bsh_user",
+    "password": "secure-password-here",
+    "database": "bshengine_prod",
+    "driverClassName": "org.postgresql.Driver",
+    "pool": {
+      "maximumPoolSize": 20,
+      "minimumIdle": 5,
+      "idleTimeout": 300000,
+      "connectionTimeout": 30000,
+      "maxLifetime": 1800000
+    },
+    "query": {
+      "queryTimeout": 30,
+      "fetchSize": 100
+    },
+    "properties": {
+      "cachePrepStmts": "true",
+      "prepStmtCacheSize": "250",
+      "prepStmtCacheSqlLimit": "2048",
+      "useServerPrepStmts": "true"
+    }
+  },
+  "secrets": {
+    "key": "value"
+  },
+  "origins": {
+    "allowed": [
+      "https://yourapp.com",
+      "https://www.yourapp.com"
+    ]
+  },
+  "admin": {
+    "email": "admin@yourapp.com"
+  },
+  "plugin": {
+    "coreInstallMode": "Once"
+  }
+}
+```
+
+## Setting Up the Configuration
+
+<Tabs items={['Environment Variable', 'Docker Compose']}>
+  <Tabs.Tab>
+Stringify your JSON configuration and set it as an environment variable:
+
+```bash
+export BSH_CONFIG='{"env":"PROD","datasource":{...},...}'
+```
+  </Tabs.Tab>
+  <Tabs.Tab>
+```yaml filename="docker-compose.yml"
+services:
+  bshengine:
+    image: bshsolutions/engine:latest
+    environment:
+      - 'BSH_CONFIG={"env":"PROD",...}'
+```
+  </Tabs.Tab>
+</Tabs>
+
+## Validation
+
+The engine validates the configuration at startup. Required fields:
+
+1. **datasource.url** (or host + database combination)
+2. **datasource.user**
+3. **datasource.password**
+4. **admin.email**
+
+<Callout type="error">
+If any required field is missing, the engine will fail to start with a `SERVICE_UNAVAILABLE` error indicating which fields are missing.<br/>
+Make sure to read the logs for these info
+</Callout>
+
+## Security Best Practices
+
+<Callout type="warning">
+Follow these security guidelines when configuring your BSH Engine instance.
+</Callout>
+
+1. **Never commit** your actual configuration with real credentials to version control
+2. Use **environment variables** or secret management tools in production
+3. Restrict **CORS origins** to specific domains in production
+4. Use **strong JWT secrets** (at least 256 bits)
+5. Use **app-specific passwords** for email services
+6. Rotate credentials regularly

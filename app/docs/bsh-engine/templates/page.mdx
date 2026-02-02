@@ -1,0 +1,24 @@
+import { TemplateCard, TemplatesGrid } from '../../../../components';
+import { LogoIcon } from '../../../../icons/Logo';
+import ReactIcon from '../../../../tech-icons/ReactIcon';
+
+# Templates
+
+List of templates you can use to quickly start your applications.
+
+<TemplatesGrid>
+    <TemplateCard
+        icon={<LogoIcon width={32} height={32} />}
+        title="Plugin Template"
+        description="Template for starting BSH Engine plugins"
+        href="https://github.com/bsh-devsolutions/bshengine.plugin.template"
+        tag="Plugin"
+    />
+    <TemplateCard
+        icon={<ReactIcon width={32} height={32} />}
+        title="React Template"
+        description="Sample of integration with React frontend"
+        href="https://github.com/bsh-devsolutions/bshengine.react.template"
+        tag="Frontend"
+    />
+</TemplatesGrid>

@@ -13,6 +13,10 @@ The Authentication API provides endpoints for user authentication, token managem
 /api/auth
 ```
 
+<Callout type='info'>
+  The system will automatically set authentication cookies with the generated tokens upon login or refresh. You usually don't need to handle the tokens manually unless your use-case is purely token-based.
+</Callout>
+
 <Cards>
     <Cards.Card 
       icon={<PostmanIcon />}
@@ -31,20 +35,38 @@ The Authentication API provides endpoints for user authentication, token managem
 | [POST](/docs/bsh-engine/api/authentication/refresh-token) | `/api/auth/refresh` | Refresh expired access token |
 | [POST](/docs/bsh-engine/api/authentication/forgot-password) | `/api/auth/forget-password` | Request password reset code via email |
 | [POST](/docs/bsh-engine/api/authentication/reset-password) | `/api/auth/reset-password` | Reset password using verification code |
+| [POST](/docs/bsh-engine/api/authentication/resend-activation-email) | `/api/auth/resend-activation-email` | Resend activation email to the user |
 
 ## Token Usage
 
-Include the access token in the Authorization header:
+The Engine API supports two methods of authentication. You can use either one depending on your use case.
 
-```
-Authorization: Bearer {{accessToken}}
-```
+<Tabs items={['bearer', 'cookies', 'ApiKeys']}>
+  <Tabs.Tab>
+  Include the access token in the `Authorization` header:
+  ```
+  Authorization: Bearer {{accessToken}}
+  ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+  Authentication can be handled automatically via `cookies`. This is useful when making requests from a browser where the session cookie is already present.
+  </Tabs.Tab>
+  <Tabs.Tab>
+  Include your API key in the [`X-BSH-APIKEY`](/docs/bsh-engine/security/api-keys#using-your-api-key) header for all API requests:
+  ```
+  X-BSH-APIKEY: {{ApiKey}}
+  ```
+  </Tabs.Tab>
+</Tabs>
+
 
 ## Authentication Flow
 
 ```mermaid
 flowchart TD
     X[Register] --> Y[Activate Account]
+    X --> Z[Resend Activation Email]
+    Z --> Y
     Y --> A[Login]
     A[Login] --> B{Tokens Received?}
     B -- Yes --> C[Store tokens]

@@ -8,13 +8,18 @@ import { Callout } from 'nextra/components';
 
 Initialize a new user account with profile data.<br/>
 
-<Callout type='info'>
+<Callout type='default'>
     This endpoint is for admins to add new users to the system.
 </Callout>
 
 ```bash
 POST /api/user/init
 ```
+
+<Callout type='info'>
+  To generate a random password, you can use the param `?generatePassword=true`.<br/>
+  This will send an email with generated password to the user.
+</Callout>
 
 ## Request Body
 
@@ -41,6 +46,23 @@ POST /api/user/init
     The `profile` object is customizable; define any fields you want to include in a user's profile. This allows you to tailor user data storage to your application's specific requirements.
 </Callout>
 
+## Generate Password
+
+To generate a random password for the new user, append the query parameter `?generatePassword=true` to the endpoint:
+
+```bash
+POST /api/user/init?generatePassword=true
+```
+
+When `generatePassword=true` is set, the following will occur:
+
+- The engine will automatically generate a secure random password for the user.
+- An [Activation Email with Password](/docs/bsh-engine/mailing/email-templates#activate-account-with-password) will be sent to the user's provided email address, containing the generated password.
+
+<Callout type='important'>
+  If `generatePassword=true` is not set and no `password` is provided, the user account will be created without a usable password until one is set manually, or via **Reset Password** flow.
+</Callout>
+
 ## Response
 
 ```json
@@ -64,5 +86,6 @@ POST /api/user/init
 ```
 
 <Callout type='info'>
-  User initialization creates a new user account with the specified profile data and roles. The system will send and email to the user to notify him.
+  User initialization creates a new user account with the specified profile data and roles.
+  The system will send an [Activation Email](/docs/bsh-engine/mailing/email-templates#activate-account) or [Activation Email with Password](/docs/bsh-engine/mailing/email-templates#activate-account-with-password) to the user to notify him.
 </Callout>

@@ -1,0 +1,52 @@
+---
+title: Invite User
+---
+
+# Invite User
+
+Invite a new user with email and roles.<br/>
+
+```bash
+POST /api/user/invite
+```
+
+<Callout type='info'>
+    This endpoint is for admins to invite new users to the system.<br/>
+    This will generate a random password and send an email to notify the user.
+</Callout>
+
+## Request Body
+
+```json
+{
+  "email": "user@example.com",
+  "roles": ["DEV_USER"]
+}
+```
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `email` | string | yes | The email address of the user. |
+| `roles` | array | no | The roles of the user. |
+
+## Response
+
+```json
+{
+  "data": [
+    {
+      "userId": "user-123",
+      "email": "user@example.com",
+      "roles": ["DEV_USER"]
+    }
+  ],
+  "status": "OK",
+  "code": 200,
+  "timestamp": 1234567890,
+  "meta": {}
+}
+```
+
+<Callout type='info'>
+  User invitation sends an [Invitation Email](/docs/bsh-engine/mailing/email-templates#user-invitation) to notify the user.
+</Callout>

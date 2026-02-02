@@ -20,3 +20,44 @@ Engine settings are used to configure the behavior of the BSH Engine.
 |---------|---------|---------|-------------|
 | **Show SQL** | boolean | true | Show the SQL queries in the responses |
 | **Enable Register** | boolean | true | Allow users to register themselves |
+
+## Secrets
+
+![Engine Secrets](/images/bsh-egnine/settings/secrets.png)
+
+For sensitive data that needs to be stored securely, you can use secrets to manage where to retrieve them from:
+
+| Source | Prefix | Description |
+|--------|--------|-------------|
+| **Environment** | `env:` | Variable object passed via `BSH_ENV_VAR` environment variable |
+
+<Callout type='info'>
+    To reference a secret from the environment, prefix the secret name with `env:`: `env:<field>.<subfield>`
+</Callout>
+
+<Callout type='important'>
+  These secrets are currently only used for `BshProviderConfigs` entity. This one is used to store the configuration for [Emails](/docs/bsh-engine/mailing/configurations) and [Storage](/docs/bsh-engine/files/configurations).
+</Callout>
+
+### Used Secrets
+
+The engine uses built-in secrets to configure various services (mailing, storage, JWT) via environment variables.<br/>
+See [environment secrets](/docs/bsh-engine/environment#secrets) to learn how to pass those secrets to the engine.
+
+```json
+{
+  "gmail": {
+    "email": "",
+    "password": ""
+  },
+  "cloudinary": {
+    "apiKey": "",
+    "apiSecret": "",
+    "cloudName": "",
+    "folder": ""
+  },
+  "jwt": {
+    "secret": ""
+  }
+}
+```

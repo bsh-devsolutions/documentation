@@ -12,9 +12,9 @@ export const metadata = {
   }
 }
 
-const banner = <Banner storageKey="0.0.3-release">
-<a href="/docs/bsh-engine/changelog#003">
-  🎉 New release with new features and improvements! V0.0.3 Release →
+const banner = <Banner storageKey="0.0.4-release">
+<a href="/docs/bsh-engine/changelog#004">
+  🎉 New release with new features and improvements! V0.0.4 Release →
 </a>
 </Banner>
 
@@ -71,7 +71,7 @@ export default async function RootLayout({ children }) {
           {children}
         </Layout>
         <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
-        <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
+        <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt="" referrerPolicy="no-referrer-when-downgrade" /></noscript>
       </body>
     </html>
   )

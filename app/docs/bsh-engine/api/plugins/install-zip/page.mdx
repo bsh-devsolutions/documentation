@@ -1,0 +1,127 @@
+---
+title: Install Plugin from ZIP
+---
+
+import { Callout, Tabs } from 'nextra/components';
+
+# Install Plugin from ZIP
+
+Install a plugin from an uploaded ZIP file.
+
+## Endpoint
+
+```bash
+POST /api/plugins/install/zip
+Content-Type: multipart/form-data
+```
+
+## Request Body (Form Data)
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `file` | file | Yes | ZIP file containing the plugin |
+
+## Example Request
+
+<Tabs items={['cURL', 'JavaScript']}>
+<Tabs.Tab>
+```bash
+curl -X POST "http://localhost:7071/api/plugins/install/zip" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@my-plugin.zip"
+```
+</Tabs.Tab>
+<Tabs.Tab>
+```javascript
+const formData = new FormData();
+formData.append('file', fileInput.files[0]);
+
+const response = await fetch('/api/plugins/install/zip', {
+  method: 'POST',
+  body: formData
+});
+
+const result = await response.json();
+```
+</Tabs.Tab>
+</Tabs>
+
+## Response
+
+### Success Response (200 OK)
+
+```json
+{
+  "status": 200,
+  "message": "Plugin installed",
+  "data": {
+    "history": 12345,
+    "pluginId": "com.example.myplugin",
+    "pluginName": "My Custom Plugin",
+    "totalFiles": 15,
+    "successCount": 14,
+    "failedCount": 1
+  }
+}
+```
+
+### Error Response (400 Bad Request)
+
+```json
+{
+  "status": 400,
+  "error": "Plugin file (zip) is required"
+}
+```
+
+## Plugin ZIP Structure
+
+A plugin ZIP file should follow this structure:
+
+```
+my-plugin/
+├── bshplugin.json             # Plugin metadata (required)
+├── BshEntities/               # Entity definitions
+│   ├── __manifest__.json
+│   └── MyEntity.json
+├── BshSchemas/                # Schema definitions
+│   ├── __manifest__.json
+│   └── MyEntity.json
+└── MyEntity/                  # Data files for MyEntity
+    ├── __manifest__.json
+    └── data.json
+```
+
+## Plugin Manifest (`bshplugin.json`)
+
+```json
+{
+  "id": "com.example.myplugin",
+  "name": "My Custom Plugin",
+  "version": "1.0.0",
+  "description": "A custom plugin for BSH Engine",
+  "author": "Your Name"
+}
+```
+
+## Error Handling
+
+### Common Errors
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `Plugin file (zip) is required` | No file uploaded or empty file | Ensure file is attached to request |
+| `Conflict Issue!` | Duplicate record with `insertDuplicate: "Error"` | Check for duplicate primary keys |
+| Missing dependency | Required entity/schema not found | Install dependencies first |
+
+### Partial Failures
+
+<Callout type="warning">
+  A plugin can partially succeed - some files may install while others fail. Check `successCount` and `failedCount` in the response, and use the `history` ID to retrieve detailed error logs.
+</Callout>
+
+## See Also
+
+- [Plugin Structure](/docs/bsh-engine/packaging/plugins) - How to create and structure plugins
+- [Config File](/docs/bsh-engine/packaging/plugins/config-file) - Plugin configuration
+- [Manifest Files](/docs/bsh-engine/packaging/plugins/manifest-files) - Manifest file structure

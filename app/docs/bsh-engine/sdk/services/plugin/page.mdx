@@ -1,0 +1,67 @@
+---
+title: Plugin
+---
+
+# Plugin Service
+
+The Plugin Service provides methods for installing and managing plugins in the BSH Engine.
+
+## Methods
+
+### installZip
+
+Installs a plugin from a ZIP file.
+
+```typescript
+const fileInput = document.querySelector('input[type="file"]');
+const file = fileInput.files[0];
+
+await bshEngine.plugin.installZip({
+  payload: {
+    file: file
+  },
+  onSuccess: (response) => {
+    console.log('Plugin installed:', response.data.pluginName);
+  },
+  onError: (error) => {
+    console.error('Installation failed:', error);
+  }
+});
+```
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `file` | File | yes | The ZIP file containing the plugin |
+
+### installCore
+
+Reinstalls the built-in core plugin. Useful for resetting core entities/schemas to default or applying updates after engine upgrade.
+
+```typescript
+await bshEngine.plugin.installCore({
+  onSuccess: (response) => {
+    console.log('Core plugin installed:', response.data.pluginName);
+  },
+  onError: (error) => {
+    console.error('Installation failed:', error);
+  }
+});
+```
+
+This method does not require any payload parameters.
+
+### install Response:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `history` | number | Unique ID of the installation history record |
+| `pluginId` | string | Unique identifier of the plugin (`core`) |
+| `pluginName` | string | Human-readable name of the plugin |
+| `totalFiles` | number | Total number of files/entities processed |
+| `successCount` | number | Number of successfully processed items |
+| `failedCount` | number | Number of items that failed to process |
+
+## See Also
+
+- [Plugins API](/docs/bsh-engine/api/plugins) - REST API documentation
+- [Plugin Structure](/docs/bsh-engine/packaging/plugins) - How to create and structure plugins

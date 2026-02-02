@@ -1,0 +1,41 @@
+---
+title: Resend Activation Email
+---
+
+import { Callout } from 'nextra/components';
+
+# Resend Activation Email
+
+The **Resend Activation Email** endpoint allows you to resend the account activation email to a user who hasn't activated their account yet.
+
+```bash
+POST /api/auth/resend-activation-email
+```
+
+## Request Body
+
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `email` | string | yes | The email address of the user who needs a new activation email. |
+
+## Response
+
+```json
+{
+  "data": [],
+  "timestamp": 1234567890,
+  "code": 200,
+  "status": "OK",
+  "meta": {}
+}
+```
+
+<Callout type='info'>
+  If the endpoint succeeds, it will send a new [Activation Code Email](/docs/bsh-engine/mailing/email-templates#activation-code) to the email address. The user can then use this code to activate their account.
+</Callout>
