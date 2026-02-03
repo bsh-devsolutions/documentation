@@ -13,7 +13,7 @@ Initialize a new user account with profile data.<br/>
 </Callout>
 
 ```bash
-POST /api/user/init
+POST /api/users/init
 ```
 
 <Callout type='info'>
@@ -51,7 +51,7 @@ POST /api/user/init
 To generate a random password for the new user, append the query parameter `?generatePassword=true` to the endpoint:
 
 ```bash
-POST /api/user/init?generatePassword=true
+POST /api/users/init?generatePassword=true
 ```
 
 When `generatePassword=true` is set, the following will occur:
