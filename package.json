@@ -26,5 +26,8 @@
     "@types/node": "24.9.1",
     "@types/react": "19.2.2",
     "pagefind": "^1.4.0"
+  },
+  "overrides": {
+    "lodash-es": "^4.17.23"
   }
 }
