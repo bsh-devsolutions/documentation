@@ -1,0 +1,109 @@
+---
+title: Trigger Functions
+---
+
+import { TriggerFunction } from "../../../../../components";
+
+# Trigger Functions
+
+Trigger functions are built-in logical blocks that execute custom logic when a trigger event is fired. Each function is designed for a specific category of operations like mapping data, sending emails, or interacting with HTTP endpoints.
+
+## Mapping
+
+<TriggerFunction
+  name="MapRow"
+  category="Mapping"
+  description="Maps a specific row from an entity based on its ID."
+  input={{
+    "entity": "string",
+    "id": "string"
+  }}
+  output={{
+    "status": "number",
+    "data": "object"
+  }}
+/>
+
+## Mailing
+
+<TriggerFunction
+  name="EmailSender"
+  category="Mailing"
+  description="Sends an email based on the trigger event."
+  input={{
+    "to": "string",
+    "template": "string",
+    "bcc": ["string"],
+    "cc": ["string"],
+    "data": "object",
+    "html": "boolean",
+    "subject": "string",
+    "body": "string"
+  }}
+  output={{
+    "status": "number",
+    "data": "object"
+  }}
+/>
+
+## Http
+
+<TriggerFunction
+  name="WebHook"
+  category="Http"
+  description="Executes an HTTP request to a specified URL."
+  input={{
+    "url": "string",
+    "method": "string",
+    "body": "string"
+  }}
+  output={{
+    "status": "string",
+    "body": "string"
+  }}
+/>
+
+## Entities
+
+<TriggerFunction
+  name="DeleteEntityById"
+  category="Entities"
+  description="Deletes a specific entity record by its ID."
+  input={{
+    "entity": "string",
+    "id": "string"
+  }}
+  output={{
+    "status": "number",
+    "data": "object"
+  }}
+/>
+
+<TriggerFunction
+  name="DeleteEntityBySearch"
+  category="Entities"
+  description="Deletes entity records based on search criteria."
+  input={{
+    "entity": "string",
+    "search": "object"
+  }}
+  output={{
+    "status": "number",
+    "data": "object"
+  }}
+/>
+
+## Caching
+
+<TriggerFunction
+  name="ClearCache"
+  category="Caching"
+  description="Clears a specific cache by name."
+  input={{
+    "name": "string"
+  }}
+  output={{
+    "status": "number",
+    "cleared": "number"
+  }}
+/>

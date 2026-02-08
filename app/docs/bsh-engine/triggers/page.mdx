@@ -3,21 +3,313 @@ title: Triggers
 asIndexPage: true
 ---
 
+import {Callout, Tabs} from "nextra/components";
+
 # Triggers
 
-The **Triggers** feature in Bsh Engine enables you to automatically respond to changes in your application's data and entities. With this system, you can configure actions that are executed when specific events occur, such as the **_creation_**, **_update_**, or **_deletion_** of records.<br/>
+<Callout type='important'>
+    This feature is still an **experimental** feature.
+</Callout>
+
+**Triggers** are listeners that watch for changes on your entities and execute custom logic when those changes occur. They enable you to automatically respond to data modifications in your application by configuring actions that execute when specific events happen, such as the **creation**, **update**, or **deletion** of records.
+
 Triggers provide a flexible way to enforce business logic, automate workflows, or integrate with external services without manual intervention.
 
-Key capabilities of the trigger system include:
+<Tabs items={['Docs', 'API']}>
+    <Tabs.Tab>
+        ## Creating a Trigger
 
-- **Event-driven automation**: Run custom logic in response to data changes or user actions.
-- **Fine-grained control**: Specify which entities to watch, and define precisely when your trigger should fire.
-- **Custom actions**: Execute built-in functions, run your own scripts, or call webhooks and APIs as part of your trigger's response.
-- **Extensibility**: Chain multiple triggers and perform conditional checks.
-- ...
+        ![Create Trigger](/images/bsh-egnine/triggers/create-trigger.png)
 
-Whether you're implementing audit trails, sending notifications, cleaning up related data, or enforcing validation rules, the Bsh Engine Triggers system provides a comprehensive toolbox for automating and extending your application's behavior.
+        | Field      | Description                                                                  |
+        |------------|------------------------------------------------------------------------------|
+        | Name       | The unique identifier for the trigger.                                       |
+        | Label      | A human-readable name for the trigger.       |
+        | Entity     | The entity to monitor for changes.                                           |
+        | Trigger On | The event type that activates the trigger: `Insert`, `Update`, or `Delete`. |
+        | Enabled    | Whether the trigger is currently active.                                     |
+        | Criteria   | Conditions that must be met for the trigger to fire.                         |
+        | Events     | Actions to execute when the trigger conditions are met.                  |
 
-<Callout>
-    This feature is in the current version (0.1.0) as a **beta** feature.
-</Callout>
+        ## Trigger Events
+
+        A Trigger can have multiple events, each of which can be configured independently.<br/>
+        Each event represents a specific action to execute when the trigger fires, such as calling a function, updating
+        related records, or integrating with external services.
+
+        ![Trigger Events](/images/bsh-egnine/triggers/trigger-events.png)
+
+        | Event         | Description                                                    |
+        |---------------|----------------------------------------------------------------|
+        | Name          | The identifier for the event.                                  |
+        | Function      | The function to execute when the event is triggered.           |
+        | Enabled       | Whether this specific event is active.                         |
+        | Target Entity | The entity that the event will update.                         |
+        | Criteria      | Additional conditions specific to this event.                  |
+        | Input         | Input parameters passed to the function.                       |
+        | Output        | Output configuration for the function result.                  |
+        | Failed        | Configuration for handling event failures.                     |
+        | infiniteLoop  | Configuration to prevent infinite loop scenarios.              |
+
+        <Callout type="info">
+            `Target Entity` is used only when the event needs to perform update on an entity.
+        </Callout>
+
+        ## Criteria
+
+        Criteria are JavaScript expressions that determine whether a trigger or event should execute. You have access to the following variables in your criteria expressions:
+
+        ```js
+        const payload = {}  // The record that triggered the event
+        const entity = {}   // The BSH entity definition
+        const user = {      // The user triggered the event
+            type: "User|ApiKey",
+            userId: "string",
+            email: "string",
+            profile: {}
+        }
+        ```
+
+        <Callout>
+            **Criteria** is a JavaScript expression that evaluates to a boolean value. For example: `payload.status == 'NEW'` or `user.email.includes('@company.com')`
+        </Callout>
+
+        **Example:**
+        ```js
+        // Check if status changed to active
+        payload.status == 'ACTIVE'
+
+        // Check if user is from a specific domain
+        user.email.endsWith('@company.com')
+
+        // Check if amount is above threshold
+        payload.amount > 1000
+
+        // Complex condition
+        payload.status == 'NEW' && user.type == 'User'
+        ```
+
+        ## Event JSON Configurations
+
+        The `input`, `output`, and `failed` fields are JSON objects that allow you to customize the data flow through your trigger events. Here are the variables available in each context:
+
+        <Tabs items={['Input', 'Output', 'Failed']}>
+            <Tabs.Tab>
+                The input JSON defines what data is passed to your trigger function.
+
+                ```json
+                {
+                    "payload": {},
+                    "entity": {},
+                    "user": {
+                        "type": "User|ApiKey",
+                        "userId": "string",
+                        "email": "string",
+                        "profile": {}
+                    }
+                }
+                ```
+
+                **Example:**
+                ```json
+                {
+                    "recordId": "${payload.id}",
+                    "status": "${payload.status}",
+                    "triggeredBy": "${user.email}",
+                    "entityName": "${entity.name}"
+                }
+                ```
+            </Tabs.Tab>
+
+            <Tabs.Tab>
+                The output JSON defines how to process the function's result. this json will be inserted to the `target entity` if defined.
+
+                ```json
+                {
+                    "payload": {},
+                    "entity": {},
+                    "user": {
+                        "type": "User|ApiKey",
+                        "userId": "string",
+                        "email": "string",
+                        "profile": {}
+                    },
+                    "result": {},
+                    "instance": {},
+                    "error": {}
+                }
+                ```
+
+                **Example:**
+                ```json
+                {
+                    "success": true,
+                    "updatedRecord": "$js(result.data)",
+                    "executionTime": "$js(new Date().toISOString())"
+                }
+                ```
+            </Tabs.Tab>
+
+            <Tabs.Tab>
+                The failed JSON defines how to handle errors when the function fails.
+
+                ```json
+                {
+                    "payload": {},
+                    "entity": {},
+                    "user": {
+                        "type": "User|ApiKey",
+                        "userId": "string",
+                        "email": "string",
+                        "profile": {}
+                    },
+                    "result": {},
+                    "instance": {},
+                    "error": {}
+                }
+                ```
+
+                **Example:**
+                ```json
+                {
+                    "errorMessage": "${error.message}",
+                    "failedRecordId": "${payload.id}",
+                    "timestamp": "$js(new Date().toISOString())",
+                    "notifyAdmin": true
+                }
+                ```
+            </Tabs.Tab>
+        </Tabs>
+
+        ### How to access the variable
+
+        You can access variables in JSON configurations using two methods:
+
+        <Callout type="info">
+            **String Interpolation**: Use `${}` to embed variable values directly
+            ```json
+            "recordId": "${payload.id}"
+            ```
+
+            **JavaScript Expressions**: Use `$js()` to execute JavaScript code
+            ```json
+            "total": "$js(payload.quantity * payload.price)",
+            "isValid": "$js(payload.amount > 0 && payload.status === 'PENDING')"
+            ```
+        </Callout>
+
+        ## Infinite Loop Prevention
+
+        BSHEngine includes built-in protection against infinite loops that can occur when triggers create cascading updates.
+
+        The engine detects and prevents infinite loops using two mechanisms:
+
+        1. **Payload Change Detection**: The trigger stops executing if the payload hasn't changed since the last execution.
+
+        2. **Maximum Depth Limit**: When a trigger repeatedly updates the same entity, the engine uses the `infiniteLoop.maxDeep` setting to limit how many times the trigger can execute before stopping.
+
+        <Callout type="error">
+            Make sure all times to double check the trigger criteria and outputs to ensure they don't create infinite loops.
+        </Callout>
+
+        <Callout type="warning">
+            If you're experiencing issues with triggers stopping unexpectedly, check if you've created a circular trigger dependency. Adjust the `maxDeep` value carefully to balance protection with legitimate use cases.
+        </Callout>
+
+        ## Trigger Functions
+
+        Functions are built-in logical blocks that you can use to execute custom logic within your triggers. These functions provide pre-configured operations that can be called when trigger events fire.
+
+        For a complete list of available trigger functions and their parameters, refer to the [Trigger Functions](/docs/bsh-engine/triggers/functions) documentation.
+
+        ## Best Practices
+        1. **Be Specific with Criteria**: Write precise criteria to avoid unnecessary trigger executions.
+        3. **Handle Failures Gracefully**: Always configure the `failed` JSON to capture and handle errors appropriately.
+        4. **Avoid Circular Dependencies**: Design your trigger logic to prevent one trigger from creating conditions that fire another trigger in a loop.
+        5. **Test Thoroughly**: Test triggers with various scenarios before enabling them in production.
+        6. **Use Meaningful Names**: Give triggers and events descriptive names that explain their purpose.
+
+        ## Common Use Cases
+        - **Notifications**: Send alerts when specific conditions are met
+        - **Data Enrichment**: Automatically populate related fields
+        - **Workflow Automation**: Trigger downstream processes based on data changes
+        - **Integration**: Sync data with external systems
+        - ...
+
+    </Tabs.Tab>
+
+    <Tabs.Tab>
+
+        ## API Reference
+
+        ### BshTrigger Type
+
+        ```ts
+        export type BshTrigger = {
+            name: string
+            label: string
+            criteria?: string
+            entity: string
+            action: ('INSERT' | 'UPDATE' | 'DELETE')[]
+            events: BshTriggerEvent[]
+            enabled: boolean
+            bshPlugin?: string
+        }
+        ```
+
+        ### BshTriggerEvent Type
+
+        ```ts
+        export type BshTriggerEvent = {
+            name: string
+            function: string
+            entity?: string
+            criteria?: string
+            input?: object
+            output?: object
+            failed?: object
+            enabled: boolean
+            infiniteLoop?: {
+                maxDeep: number  // Default: 100
+            }
+        }
+        ```
+
+        ### Example: Creating a Trigger via API
+
+        ```ts
+        const trigger: BshTrigger = {
+            name: "order-status-notification",
+            label: "Send notification on order status change",
+            entity: "Order",
+            action: ["UPDATE"],
+            enabled: true,
+            criteria: "payload.status == 'SHIPPED'",
+            events: [
+                {
+                    name: "send-email",
+                    function: "EmailSender",
+                    enabled: true,
+                    input: {
+                        to: "${user.email}",
+                        orderId: "${payload.id}",
+                        status: "${payload.status}"
+                    },
+                    output: {
+                        emailSent: "$js(result.success)",
+                        sentAt: "$js(new Date().toISOString())"
+                    },
+                    failed: {
+                        error: "${error.message}",
+                        orderId: "${payload.id}"
+                    },
+                    infiniteLoop: {
+                        maxDeep: 50
+                    }
+                }
+            ]
+        }
+        ```
+
+    </Tabs.Tab>
+</Tabs>

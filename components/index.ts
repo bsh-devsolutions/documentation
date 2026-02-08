@@ -6,3 +6,6 @@ export * from './blog/BlogCard';
 export * from './blog/BlogAuthor';
 export * from './blog/authors';
 export * from './templates/TemplateCard';
+export * from './features-map/FeaturesMap';
+export * from './HomePage';
+export * from './trigger-function/TriggerFunction';

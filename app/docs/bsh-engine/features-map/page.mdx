@@ -1,0 +1,134 @@
+---
+title: Features Map
+---
+
+import { FeaturesMap } from '../../../../components';
+
+# Features Map
+
+This page tracks the current progress of Bsh Engine features.
+Each feature includes a short description, its current status, and a link to the related documentation.
+
+<FeaturesMap
+    features={[
+        {
+            title: 'Entity Management',
+            description:
+                'CRUD, batch operations, import/export, counting, and search on your entities.',
+            href: '/docs/bsh-engine/api/entities',
+            status: 'released',
+        },
+        {
+            title: 'Authentication',
+            description:
+                'Login/register, token refresh, account activation, and password reset flows for the API.',
+            href: '/docs/bsh-engine/api/authentication',
+            status: 'released',
+        },
+        {
+            title: 'User Management',
+            description:
+                'Initialize user, invite users, fetch current user, update profile/password/picture.',
+            href: '/docs/bsh-engine/api/users',
+            status: 'released',
+        },
+        {
+            title: 'Security & Access Control',
+            description:
+                'Policies, roles, users, and access rules for securing your engine and entities.',
+            href: '/docs/bsh-engine/security',
+            status: 'released',
+        },
+        {
+            title: 'API Keys',
+            description:
+                'Generate and revoke API keys to authenticate server-to-server or automated clients.',
+            href: '/docs/bsh-engine/api/api-keys',
+            status: 'released',
+        },
+        {
+            title: 'File & Image Management',
+            description:
+                'Upload images/files and manage file-related workflows.',
+            href: '/docs/bsh-engine/api/files',
+            status: 'released',
+        },
+        {
+            title: 'Mailing / Email Management',
+            description:
+                'Send emails and manage mailing capabilities and templates.',
+            href: '/docs/bsh-engine/api/mailing',
+            status: 'released',
+        },
+        {
+            title: 'Modeling',
+            description:
+                'Define schemas, types, derived models, and entities for your backend.',
+            href: '/docs/bsh-engine/modeling',
+            status: 'released',
+        },
+        {
+            title: 'Search',
+            description:
+                'BSH Search features and how to use search capabilities in the engine.',
+            href: '/docs/bsh-engine/search',
+            status: 'released',
+        },
+        {
+            title: 'Plugins (Runtime)',
+            description:
+                'Install plugins into the engine (core/zip) and manage plugin lifecycle.',
+            href: '/docs/bsh-engine/api/plugins',
+            status: 'released',
+        },
+        {
+            title: 'Plugins Packaging',
+            description:
+                'How to package plugins: manifest files, content files, and configuration.',
+            href: '/docs/bsh-engine/packaging/plugins',
+            status: 'released',
+        },
+        {
+            title: 'CLI Tooling',
+            description:
+                'CLI tool for simplifying engine related tasks.',
+            href: '/docs/bsh-engine/cli',
+            status: 'released',
+        },
+        {
+            title: 'SDKs',
+            description:
+                'Use the SDK to call engine APIs from your applications with less boilerplate.',
+            href: '/docs/bsh-engine/sdk',
+            status: 'released',
+        },
+        {
+            title: 'Environment',
+            description:
+                'Environment variables and runtime configuration.',
+            href: '/docs/bsh-engine/environment',
+            status: 'released',
+        },
+        {
+            title: 'Triggers & Events',
+            description:
+                'Trigger entities changes and execute custom logic based on events.',
+            href: '/docs/bsh-engine/triggers',
+            status: 'experimental',
+        },
+        {
+            title: 'WebSocket',
+            description:
+                'Real-time communication layer for pushing updates to clients.',
+            href: '/docs/bsh-engine/websocket',
+            status: 'backlog',
+        },
+        {
+            title: 'Caching',
+            description:
+                'Caching layer to improve performance and reduce load (configuration and usage).',
+            href: '/docs/bsh-engine/caching',
+            status: 'backlog',
+        },
+    ]}
+/>
