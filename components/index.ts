@@ -6,3 +6,4 @@ export * from './blog/BlogCard';
 export * from './blog/BlogAuthor';
 export * from './blog/authors';
 export * from './templates/TemplateCard';
+export * from './features-map/FeaturesMap';

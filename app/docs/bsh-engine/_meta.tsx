@@ -18,5 +18,6 @@ export default {
   'sdk': 'SDK',
   'cli': 'CLI',
   'templates': 'Templates',
+  'features-map': 'Features Map',
   'changelog': 'Changelog',
 }
