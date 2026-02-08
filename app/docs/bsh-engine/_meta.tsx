@@ -8,7 +8,7 @@ export default {
   'security': 'Security',
   'files': 'Files',
   'mailing': 'Mailing',
-  'triggers': <Title title='Triggers' badge='beta' />,
+  'triggers': 'Triggers',
   'settings': 'Engine Settings',
   'caching': <Title title='Caching' badge='planned' />,
   'websocket': <Title title='WebSocket' badge='planned' />,
