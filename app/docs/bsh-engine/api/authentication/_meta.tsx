@@ -1,5 +1,5 @@
 import type { MetaRecord } from 'nextra';
-import { EndpointTitle } from '../../../../../components';
+import { EndpointTitle, Title } from '../../../../../components';
 
 export default {
   'login': <EndpointTitle method='POST' title='Login'/>,
