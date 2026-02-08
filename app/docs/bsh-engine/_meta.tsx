@@ -11,7 +11,7 @@ export default {
   'triggers': 'Triggers',
   'settings': 'Engine Settings',
   'caching': <Title title='Caching' badge='planned' />,
-  'websocket': <Title title='WebSocket' badge='planned' />,
+  'real-time': <Title title='Real-time' badge='planned' />,
   'packaging': 'Packaging',
   'search': 'BSH Search',
   'api': 'API Reference',
