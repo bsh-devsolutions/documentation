@@ -117,10 +117,17 @@ Each feature includes a short description, its current status, and a link to the
             status: 'experimental',
         },
         {
-            title: 'WebSocket',
+            title: 'Derived Entities',
+            description:
+                'Create "virtual" tables used by BshSearch to fetch data without needing a physical database view.',
+            href: '/docs/bsh-engine/modeling/deriveds',
+            status: 'backlog',
+        },
+        {
+            title: 'Real-time',
             description:
                 'Real-time communication layer for pushing updates to clients.',
-            href: '/docs/bsh-engine/websocket',
+            href: '/docs/bsh-engine/real-time',
             status: 'backlog',
         },
         {
@@ -128,6 +135,48 @@ Each feature includes a short description, its current status, and a link to the
             description:
                 'Caching layer to improve performance and reduce load (configuration and usage).',
             href: '/docs/bsh-engine/caching',
+            status: 'backlog',
+        },
+        {
+            title: 'Starter',
+            description:
+                'A website/cli to help you configure your bsh-engine instance with ease and ensure it is well configured.',
+            href: '/docs/bsh-engine/starter',
+            status: 'backlog',
+        },
+        {
+            title: 'API Docs',
+            description:
+                'Generate complete documentation for your entities automatically.',
+            href: '/docs/bsh-engine/api/api-docs',
+            status: 'backlog',
+        },
+        {
+            title: 'PreTrigger',
+            description:
+                'Apply custom logic to your entities before they are saved to the database, allowing you to reject requests or update payloads.',
+            href: '/docs/bsh-engine/triggers/pretrigger',
+            status: 'backlog',
+        },
+        {
+            title: 'Endpoint Rate Limit',
+            description:
+                'Protect your API from abuse by limiting the number of requests per user or IP.',
+            href: '/docs/bsh-engine/api/rate-limit',
+            status: 'backlog',
+        },
+        {
+            title: 'MFA Integration',
+            description:
+                'Second layer of security using MFA apps: Authenticator Apps, OTP, etc.',
+            href: '/docs/bsh-engine/auth/mfa',
+            status: 'backlog',
+        },
+        {
+            title: 'Third-Party Auth',
+            description:
+                'Authenticate users using Google, GitHub, and other OAuth providers.',
+            href: '/docs/bsh-engine/auth/third-party-auth',
             status: 'backlog',
         },
     ]}

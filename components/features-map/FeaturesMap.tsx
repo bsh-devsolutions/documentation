@@ -15,7 +15,7 @@ export type FeatureStatus =
 export type Feature = {
     title: string;
     description: string;
-    href: string;
+    href?: string;
     status: FeatureStatus;
 };
 
@@ -39,8 +39,10 @@ const statusLabel: Record<string, string> = {
 };
 
 const FeatureItem: React.FC<FeatureItemProps> = ({ feature }) => {
-    return (
-        <a href={feature.href} className={styles.card}>
+    const hasLink = feature.href && feature.href !== '#' && feature.href.trim() !== '';
+
+    const content = (
+        <>
             <div className={styles.header}>
                 <h3 className={styles.title}>{feature.title}</h3>
                 <Badge variant={feature.status} label={statusLabel[feature.status] || feature.status} />
@@ -48,10 +50,26 @@ const FeatureItem: React.FC<FeatureItemProps> = ({ feature }) => {
 
             <p className={styles.description}>{feature.description}</p>
 
-            <div className={styles.footer}>
-                <span className={styles.link}>Read docs →</span>
-            </div>
-        </a>
+            {hasLink && (
+                <div className={styles.footer}>
+                    <span className={styles.link}>Read docs →</span>
+                </div>
+            )}
+        </>
+    );
+
+    if (hasLink) {
+        return (
+            <a href={feature.href} className={styles.card}>
+                {content}
+            </a>
+        );
+    }
+
+    return (
+        <div className={styles.card}>
+            {content}
+        </div>
     );
 };
 
@@ -93,8 +111,8 @@ export const FeaturesMap: React.FC<FeaturesMapProps> = ({
             </div>
 
             <div className={styles.grid}>
-                {filteredFeatures.map((feature) => (
-                    <FeatureItem key={feature.href} feature={feature} />
+                {filteredFeatures.map((feature, index) => (
+                    <FeatureItem key={feature.href || `feature-${index}`} feature={feature} />
                 ))}
             </div>
         </div>

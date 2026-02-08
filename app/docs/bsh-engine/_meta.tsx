@@ -17,6 +17,7 @@ export default {
   'api': 'API Reference',
   'sdk': 'SDK',
   'cli': 'CLI',
+  'starter': <Title title='Starter' badge='planned' />,
   'templates': 'Templates',
   'features-map': 'Features Map',
   'changelog': 'Changelog',
