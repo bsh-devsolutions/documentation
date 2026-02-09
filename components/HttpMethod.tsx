@@ -30,10 +30,10 @@ const httpMethodVariants = {
 };
 
 export const HttpMethod: React.FC<HttpMethodProps> = ({
-  method,
-}) => {
+                                                        method,
+                                                      }) => {
   const variantStyles = httpMethodVariants[method];
-  
+
   const httpMethodStyle: React.CSSProperties = {
     color: variantStyles.color,
     background: variantStyles.background,
@@ -42,10 +42,11 @@ export const HttpMethod: React.FC<HttpMethodProps> = ({
     padding: '2px 4px',
     borderRadius: '4px',
     letterSpacing: '0.5px',
+    fontSize: '0.5rem',
   };
 
   return (
-    <span style={httpMethodStyle}>
+      <span style={httpMethodStyle}>
       {method}
     </span>
   );
