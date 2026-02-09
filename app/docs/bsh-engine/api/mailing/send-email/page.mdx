@@ -20,90 +20,69 @@ POST /api/mailing/send
 
 ## Request Body
 
-<Tabs items={['Plain Text', 'HTML', 'Template', 'Bulk Email', 'Attachments']}>
-<Tabs.Tab title="Plain Text">
-  Simple plain text email.
-  ```json
-  {
-    "to": "recipient@example.com",
-    "subject": "Test Email",
-    "body": "This is a test email body",
-    "html": false
-  }
-  ```
-</Tabs.Tab>
-<Tabs.Tab title="HTML">
-  Send an email with HTML content.
-  ```json
-  {
-    "to": "recipient@example.com",
-    "subject": "HTML Test Email",
-    "body": "<h1>Hello World</h1><p>This is an <strong>HTML</strong> email.</p>",
-    "html": true
-  }
-  ```
-</Tabs.Tab>
-<Tabs.Tab title="Template">
-  Use [email templates](/docs/bsh-engine/mailing/email-templates) to send an email.
-  ```json
-  {
-    "to": "recipient@example.com",
-    "template": "welcome-email",
-    "data": {
-      "userName": "John Doe",
-      "loginUrl": "https://app.example.com/login",
-      "supportEmail": "support@example.com"
+Here's the code in markdown format:
+
+<Tabs items={['Direct', 'Template']}>
+  <Tabs.Tab title="Direct">
+    Send a simple plain text or HTML email directly.
+
+    **Plain Text Example:**
+    ```json
+    {
+      "to": "recipient@example.com",
+      "subject": "Test Email",
+      "body": "This is a test email body",
+      "html": false
     }
-  }
-  ```
-</Tabs.Tab>
-<Tabs.Tab title="Attachments">
-  <Callout type="info">
-    This is a planned feature and will be implemented in the future releases.
-  </Callout>
-  ```json
-  {
-    "to": "recipient@example.com",
-    "subject": "Document Attached",
-    "body": "Please find the attached document.",
-    "attachments": [
-      {
-        "fileId": "file-123",
-        "fileName": "document.pdf",
-        "fileType": "application/pdf",
-        "fileSize": 1024
+    ```
+
+    **HTML Example:**
+    ```json
+    {
+      "to": "recipient@example.com",
+      "cc": ["colleague@example.com"],
+      "bcc": ["archive@example.com"],
+      "subject": "Test Email with HTML",
+      "body": "<h1>Welcome</h1><p>This is an HTML email body</p>",
+      "html": true
+    }
+    ```
+  </Tabs.Tab>
+
+  <Tabs.Tab title="Template">
+    Send an email using a predefined [email template](/docs/bsh-engine/mailing/email-templates).
+
+    **Example:**
+    ```json
+    {
+      "to": "newuser@example.com",
+      "cc": ["manager@example.com"],
+      "bcc": ["compliance@example.com"],
+      "template": "welcome-email",
+      "data": {
+        "userName": "John Doe",
+        "loginUrl": "https://app.example.com/login",
+        "supportEmail": "support@example.com"
       }
-    ]
-  }
-  ```
-</Tabs.Tab>
-<Tabs.Tab title="Bulk Email">
-  <Callout type="info">
-    This is a planned feature and will be implemented in the future releases.
-  </Callout>
-  ```json
-  {
-    "to": ["user1@example.com", "user2@example.com", "user3@example.com"],
-    "template": "newsletter",
-    "data": {
-      "userName": "User",
-      "newsletterContent": "Latest updates...",
-      "unsubscribeUrl": "https://app.example.com/unsubscribe"
     }
-  }
-  ```
-</Tabs.Tab>
+    ```
+    <Callout>
+        The `data` object should match the variables defined in your email template. See [email templates documentation](/docs/bsh-engine/mailing/email-templates) for more details.
+    </Callout>
+  </Tabs.Tab>
 </Tabs>
 
 ## Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `to` | string/array | Yes | Recipient email address(es) |
-| `subject` | string | No | Email subject line |
-| `body` | string | No* | Email body content |
-| `html` | boolean | No | Whether body contains HTML (default: false) |
-| `template` | string | No* | Template name for template-based emails |
-| `data` | object | No | Template variables for dynamic content |
+| Parameter  | Type         | Required | Description                                   |
+|------------|--------------|----------|-----------------------------------------------|
+| `to`       | string/array | Yes      | Recipient email address(es)                   |
+| `cc`       | string/array | No       | Carbon copy recipient email address(es)       |
+| `bcc`      | string/array | No       | Blind carbon copy recipient email address(es) |
+| `subject`  | string       | No       | Email subject line                            |
+| `body`     | string       | No*      | Email body content                            |
+| `html`     | boolean      | No       | Whether body contains HTML (default: false)   |
+| `template` | string       | No*      | Template name for template-based emails       |
+| `data`     | object       | No       | Template variables for dynamic content        |
 
-*Either `body` OR `template` must be provided.
+\* Either `body` or `template` is required, but not both.
