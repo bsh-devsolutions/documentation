@@ -39,6 +39,13 @@ export type BshClientFnParams<T = unknown, R = T> = {
         formData?: FormData, // The form data
         queryParams?: Record<string, string>, // The query parameters
         headers?: Record<string, string>, // The headers
+        byPass?: {
+            interceptors?: {
+                pre?: boolean
+                post?: boolean
+                error?: boolean
+            }
+        }
     },
     bshOptions: BshCallbackParams<T, R>,
     api?: string
@@ -58,6 +65,11 @@ export type BshClientFn = <T = unknown>(params: BshClientFnParams<T>) => Promise
 | `options.formData` | The form data | - |
 | `options.queryParams` | The query parameters | - |
 | `options.headers` | The headers | - |
+| `options.byPass` | Bypass options | - |
+| `options.byPass.interceptors` | Bypass interceptors options | - |
+| `options.byPass.interceptors.pre` | Bypass pre-interceptors | `false` |
+| `options.byPass.interceptors.post` | Bypass post-interceptors | `false` |
+| `options.byPass.interceptors.error` | Bypass error-interceptors | `false` |
 | `bshOptions` | The callbacks functions (onSuccess, onError, onDownload) | - |
 | `bshOptions.onSuccess` | The callback function for successful requests | - |
 | `bshOptions.onError` | The callback function for error requests | - |

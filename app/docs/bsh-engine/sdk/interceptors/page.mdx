@@ -19,6 +19,23 @@ Interceptors are useful for:
 - Centralized error handling
 - ...
 
+## Bypassing Interceptors
+
+You can bypass interceptors for a specific request by using the `byPass` option in the request parameters.
+
+```typescript
+const response = await bshEngine.api.users.get({
+    id: '123',
+    byPass: {
+        interceptors: {
+            pre: true,   // Bypass pre-interceptors
+            post: true,  // Bypass post-interceptors
+            error: true  // Bypass error-interceptors
+        }
+    }
+});
+```
+
 <Cards>
     <Cards.Card title="Pre-Interceptors" href="/docs/bsh-engine/sdk/interceptors/pre" arrow={true} />
     <Cards.Card title="Post-Interceptors" href="/docs/bsh-engine/sdk/interceptors/post" arrow={true} />
