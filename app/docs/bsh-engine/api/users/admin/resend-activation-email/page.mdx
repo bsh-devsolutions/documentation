@@ -1,0 +1,33 @@
+---
+title: Resend Activation Email
+---
+
+# Resend Activation Email
+
+Resend the activation email to a user.<br/>
+
+```bash
+POST /api/users/admin/resend-activation-email/{email}
+```
+
+<Callout type='info'>
+    This endpoint is for admins to resend the activation email to a user if they didn't receive it or it expired.
+</Callout>
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `email` | string | yes | The email address of the user. |
+
+## Response
+
+```json
+{
+  "data": true,
+  "status": "OK",
+  "code": 200,
+  "timestamp": 1234567890,
+  "meta": {}
+}
+```

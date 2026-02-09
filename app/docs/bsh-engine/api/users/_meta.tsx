@@ -8,4 +8,5 @@ export default {
   'update-profile': <EndpointTitle method='PUT' title='Update Profile'/>,
   'update-password': <EndpointTitle method='PUT' title='Update Password'/>,
   'update-picture': <EndpointTitle method='POST' title='Update Picture'/>,
+  'admin': 'Admin',
 } satisfies MetaRecord;
