@@ -6,16 +6,18 @@ title: Changelog
 
 Track all notable changes to BSH Engine.
 
-## 0.0.5 - Upcoming
+## 0.0.5 - 12 Apr 2026
 
-- Add admin related user endpoints:
-   - [`/api/users/admin/activate-account/{email}`](/docs/bsh-engine/api/users/admin/activate-account)
-   - [`/api/users/admin/resend-activation-email/{email}`](/docs/bsh-engine/api/users/admin/resend-activation-email)
-   - [`/api/users/admin/forget-password/{email}`](/docs/bsh-engine/api/users/admin/forget-password)
-- First stable version of [Triggers](/docs/bsh-engine/triggers).
-- Fix CVSS in built docker image.
--
-- Dashboard ui/ux improvements
+- Introduced [tenant-based organization](/docs/bsh-engine/security/tenants).
+- Released a stable version of [Triggers](/docs/bsh-engine/triggers).
+- Added support for [file-based configuration](/docs/bsh-engine/environment/setup#pass-configuration).
+- Added admin user management endpoints:
+  - [`/api/users/admin/activate-account/{email}`](/docs/bsh-engine/api/users/admin/activate-account)
+  - [`/api/users/admin/resend-activation-email/{email}`](/docs/bsh-engine/api/users/admin/resend-activation-email)
+  - [`/api/users/admin/forget-password/{email}`](/docs/bsh-engine/api/users/admin/forget-password)
+- Added [API key rotation](/docs/bsh-engine/api/api-keys/rotate).
+- Fixed CVSS findings in the built [Docker image](/docs/bsh-engine/installation).
+- Improved [Dashboard UI/UX](/docs/bsh-engine/settings).
 
 ## 0.0.4 - 02 Feb 2026
 
