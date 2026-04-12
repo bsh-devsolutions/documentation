@@ -6,10 +6,6 @@ import {Callout, Tabs} from "nextra/components";
 
 # Triggers
 
-<Callout type='important'>
-    This feature is still an **experimental** feature.
-</Callout>
-
 **Triggers** are listeners that watch for changes on your entities and execute custom logic when those changes occur. They enable you to automatically respond to data modifications in your application by configuring actions that execute when specific events happen, such as the **creation**, **update**, or **deletion** of records.
 
 Triggers provide a flexible way to enforce business logic, automate workflows, or integrate with external services without manual intervention.
@@ -215,6 +211,22 @@ Triggers provide a flexible way to enforce business logic, automate workflows, o
             If you're experiencing issues with triggers stopping unexpectedly, check if you've created a circular trigger dependency. Adjust the `maxDeep` value carefully to balance protection with legitimate use cases.
         </Callout>
 
+        ## Payload Sanitizer
+
+        The **sanitizer** is a built-in safety feature that lets you automatically remove or mask sensitive fields from the payload before any trigger log is recorded. This helps protect confidential data, such as user emails, credit card numbers, or authentication tokens, from being leaked to logs where they might be accessed by unauthorized users.
+
+        ![Sanitizer](/images/bsh-egnine/triggers/sanitize-trigger.png)
+
+        <Callout type="info">
+            Set up the sanitizer in your trigger configuration by specifying which keys should be masked. Only non-sensitive fields will be stored in the logs, helping you stay compliant with internal security policies and privacy regulations.
+        </Callout>
+
+        **Example use cases:**
+        - Hiding fields like `password`, `apiKey`, or `ssn` in audit logs.
+        - Obscuring personally identifiable information (PII) for compliance purposes.
+        - Ensuring log outputs are safe to be accessed by support or development teams.
+   
+
         ## Trigger Functions
 
         Functions are built-in logical blocks that you can use to execute custom logic within your triggers. These functions provide pre-configured operations that can be called when trigger events fire.
@@ -227,6 +239,7 @@ Triggers provide a flexible way to enforce business logic, automate workflows, o
         4. **Avoid Circular Dependencies**: Design your trigger logic to prevent one trigger from creating conditions that fire another trigger in a loop.
         5. **Test Thoroughly**: Test triggers with various scenarios before enabling them in production.
         6. **Use Meaningful Names**: Give triggers and events descriptive names that explain their purpose.
+        7. **Use Payload Sanitizer**: Configure the sanitizer to mask sensitive fields from the payload before it is stored to the logs.
 
         ## Common Use Cases
         - **Notifications**: Send alerts when specific conditions are met

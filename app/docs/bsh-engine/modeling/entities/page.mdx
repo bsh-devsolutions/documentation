@@ -116,6 +116,12 @@ When creating or editing an entity, you can define the primary key(s) in the con
     **BSH Engine** allows you to use composite primary keys, which means you can use multiple columns as the primary key. 
 </Callout>
 
-> **Best Practice:** When in doubt, use either `AutoIncrement` for numeric keys or `UUID` for string-based keys unless you have a clear need for manual/fixed values or composite keys.
+### Multi Tenant Entities
 
-## 
+Entities can be configured to be multi-tenant, which means that the records are associated with a tenant. so users can only access data which is associated with their tenant.
+
+To configure an entity to be multi-tenant, you can use the **Multi Tenant** checkbox in the entity form.
+
+<Callout type='info'>
+    When a entity is multi-tenant, the engine will add a `tenantId` column to the entity as a primary key.
+</Callout>

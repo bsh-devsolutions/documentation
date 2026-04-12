@@ -1,86 +1,129 @@
 import React from "react";
-import { Zap, Shield, Rocket, Code, Info } from 'lucide-react';
-import styles from './HomePage.module.css';
+import { ArrowRight, CheckCircle2, Code, Rocket, Shield, Zap } from "lucide-react";
+import styles from "./HomePage.module.css";
 
-interface CustomCalloutProps {
-  type?: "info" | "warning" | "error";
-  children: React.ReactNode;
-}
+const features = [
+  {
+    title: "Rapid Development",
+    description:
+      "Ship faster with composable tools that remove boilerplate and keep teams focused on product value.",
+    icon: Zap,
+    iconClass: styles.zapIcon,
+  },
+  {
+    title: "Secure by Default",
+    description:
+      "Use opinionated security defaults for policies, access controls, and safe environment management.",
+    icon: Shield,
+    iconClass: styles.shieldIcon,
+  },
+  {
+    title: "Scalable Architecture",
+    description:
+      "Move from MVP to enterprise workloads with patterns designed for growth and operational reliability.",
+    icon: Rocket,
+    iconClass: styles.rocketIcon,
+  },
+  {
+    title: "Developer First",
+    description:
+      "Get productive quickly through practical docs, clear APIs, and a workflow that favors developer speed.",
+    icon: Code,
+    iconClass: styles.codeIcon,
+  },
+];
 
-const CustomCallout: React.FC<CustomCalloutProps> = ({ type = "info", children }) => (
-  <div className={`${styles.customCallout} ${styles[type]}`}>
-    <div className={styles.customCalloutIcon}>
-      {type === "info" && <Info size={20} />}
-    </div>
-    <div className={styles.customCalloutContent}>{children}</div>
-  </div>
-);
+const pillars = [
+  "Modular architecture for clean boundaries",
+  "Built-in validation and strong typing patterns",
+  "Production-minded defaults from day one",
+];
 
 export const HomePage: React.FC = () => {
   return (
-    <div className={styles.container}>
-      <div className={styles.hero}>
-        <h1 className={styles.title}>BSH Solutions</h1>
-        
-        <p className={styles.description}>
-          <strong>Build, Scale, and Secure your applications with ease.</strong>
-        </p>
+    <main className={styles.container}>
+      <section className={styles.hero}>
+        <span className={styles.eyebrow}>Developer Platform</span>
+        <h1 className={styles.title}>Build, Scale, and Secure with BSH Solutions</h1>
 
-        <p className={styles.subDescription}>
-          BSH Solutions provides a suite of tools and libraries designed to accelerate your development workflow, from robust backend engines to seamless data validation.
+        <p className={styles.description}>
+          A modern toolkit for teams that want to ship dependable software faster.
+          From backend foundations to validation and workflow tooling, BSH Solutions
+          keeps engineering focused on outcomes.
         </p>
 
         <div className={styles.actions}>
           <a href="/docs/bsh-engine/installation" className={styles.primaryButton}>
-            Get Started
+            Start Building
+            <ArrowRight size={18} />
           </a>
-          <a href="https://github.com/bsh-devsolutions" target="_blank" className={styles.secondaryButton}>
-            GitHub
+          <a
+            href="https://github.com/bsh-devsolutions"
+            target="_blank"
+            rel="noreferrer"
+            className={styles.secondaryButton}
+          >
+            View on GitHub
           </a>
         </div>
-      </div>
 
-      <h2 className={styles.sectionTitle}>Why BSH Solutions?</h2>
-
-      <div className={styles.grid}>
-        <div className={styles.featureCard}>
-          <div className={styles.featureHeader}>
-            <Zap className={styles.zapIcon} />
-            <h3 className={styles.featureTitle}>Rapid Development</h3>
+        <div className={styles.statsGrid}>
+          <div className={styles.statCard}>
+            <span className={styles.statValue}>4+</span>
+            <span className={styles.statLabel}>Core building blocks</span>
           </div>
-          <p className={styles.featureDescription}>Reduce boilerplate and focus on your business logic. Our tools are built for speed and efficiency.</p>
-        </div>
-        
-        <div className={styles.featureCard}>
-          <div className={styles.featureHeader}>
-            <Shield className={styles.shieldIcon} />
-            <h3 className={styles.featureTitle}>Secure by Default</h3>
+          <div className={styles.statCard}>
+            <span className={styles.statValue}>100%</span>
+            <span className={styles.statLabel}>Open-source focused</span>
           </div>
-          <p className={styles.featureDescription}>Built-in security policies, roles, and access control to keep your data safe from the ground up.</p>
-        </div>
-
-        <div className={styles.featureCard}>
-          <div className={styles.featureHeader}>
-            <Rocket className={styles.rocketIcon} />
-            <h3 className={styles.featureTitle}>Scalable Architecture</h3>
+          <div className={styles.statCard}>
+            <span className={styles.statValue}>Docs-first</span>
+            <span className={styles.statLabel}>Designed for quick onboarding</span>
           </div>
-          <p className={styles.featureDescription}>Designed to grow with your application, from MVP to enterprise-scale systems.</p>
         </div>
+      </section>
 
-        <div className={styles.featureCard}>
-          <div className={styles.featureHeader}>
-            <Code className={styles.codeIcon} />
-            <h3 className={styles.featureTitle}>Developer Friendly</h3>
-          </div>
-          <p className={styles.featureDescription}>Comprehensive documentation, SDKs, and CLI tools to make your development experience seamless.</p>
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Why Choose BSH Solutions</h2>
+        <p className={styles.sectionDescription}>
+          Built to support fast iteration without compromising maintainability or
+          security.
+        </p>
+
+        <div className={styles.grid}>
+          {features.map((feature) => {
+            const Icon = feature.icon;
+            return (
+              <article key={feature.title} className={styles.featureCard}>
+                <div className={styles.featureHeader}>
+                  <Icon className={feature.iconClass} />
+                  <h3 className={styles.featureTitle}>{feature.title}</h3>
+                </div>
+                <p className={styles.featureDescription}>{feature.description}</p>
+              </article>
+            );
+          })}
         </div>
-      </div>
+      </section>
 
-      <div className={styles.calloutWrapper}>
-        <CustomCallout type="info">
-          BSH Solutions is constantly evolving. Check out our <a href="/docs/bsh-engine/features-map">Features Map</a> to see what's new and what's coming next!
-        </CustomCallout>
-      </div>
-    </div>
+      <section className={styles.bottomSection}>
+        <div className={styles.callout}>
+          <h3 className={styles.calloutTitle}>Built for real-world delivery</h3>
+          <ul className={styles.pillarList}>
+            {pillars.map((item) => (
+              <li key={item} className={styles.pillarItem}>
+                <CheckCircle2 size={18} />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <p className={styles.calloutFooter}>
+            Explore our{" "}
+            <a href="/docs/bsh-engine/features-map">Features Map</a> for upcoming
+            improvements and roadmap updates.
+          </p>
+        </div>
+      </section>
+    </main>
   );
 };

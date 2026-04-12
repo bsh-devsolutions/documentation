@@ -12,7 +12,14 @@ interface LogoIconProps {
 }
 
 export const LogoIcon = ({ width = 32, height = 24.49 }: LogoIconProps) => (
-    <Image fetchPriority="high" src="/logo/logo.svg" alt="@logo" width={width} height={height}/>
+    <Image
+        fetchPriority="high"
+        src="/logo/logo.svg"
+        alt="@logo"
+        width={width}
+        height={height}
+        style={{height: 'auto'}}
+    />
 );
 
 export const Logo = () => (

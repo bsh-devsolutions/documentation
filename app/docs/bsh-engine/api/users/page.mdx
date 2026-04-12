@@ -45,6 +45,10 @@ The Users API provides comprehensive user management operations including profil
 | [DELETE](/docs/bsh-engine/api/entities/delete-entity) | `/api/users/{id}` | Delete a user | Similar to Entities API |
 | [GET](/docs/bsh-engine/api/entities/count-entities) | `/api/users/count` | Count users | Similar to Entities API |
 | [POST](/docs/bsh-engine/api/entities/count-filtered-entities) | `/api/users/count` | Count filtered users | Similar to Entities API |
+| **Admin** ||
+| [POST](/docs/bsh-engine/api/users/admin/activate-account) | `/api/users/admin/activate-account/{email}` | Activate a user account | Admin only |
+| [POST](/docs/bsh-engine/api/users/admin/resend-activation-email) | `/api/users/admin/resend-activation-email/{email}` | Resend activation email | Admin only |
+| [POST](/docs/bsh-engine/api/users/admin/forget-password) | `/api/users/admin/forget-password/{email}` | Trigger forget password flow | Admin only |
 
 ## Security
 
