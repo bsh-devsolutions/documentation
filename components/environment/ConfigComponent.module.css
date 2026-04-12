@@ -1,0 +1,149 @@
+.section {
+  margin: 1rem 0 1rem;
+  padding: 0.8rem 1rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.8rem;
+  background: #ffffff;
+}
+
+.toggle {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #111827;
+}
+
+.key {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  border: 1px solid #dbeafe;
+  font-size: 0.8rem;
+}
+
+.meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.required {
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+}
+
+.optional {
+  color: #1f2937;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+
+.defaultBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0f172a;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.content {
+  margin-top: 0.8rem;
+}
+
+.summary {
+  margin: 0 0 0.65rem;
+  color: #4b5563;
+}
+
+.chevron {
+  width: 1rem;
+  height: 1rem;
+  color: #6b7280;
+  transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+:global(html.dark) .section {
+  background: #111827;
+  border-color: #374151;
+}
+
+:global(html.dark) .title {
+  color: #f3f4f6;
+}
+
+:global(html.dark) .key {
+  background: #1e1b4b;
+  border-color: #312e81;
+  color: #c7d2fe;
+}
+
+:global(html.dark) .required {
+  color: #fecaca;
+  background: #7f1d1d;
+  border-color: #991b1b;
+}
+
+:global(html.dark) .optional {
+  color: #e5e7eb;
+  background: #1f2937;
+  border-color: #374151;
+}
+
+:global(html.dark) .defaultBadge {
+  color: #dbeafe;
+  background: #1e3a8a;
+  border-color: #1d4ed8;
+}
+
+:global(html.dark) .summary {
+  color: #9ca3af;
+}
+
+:global(html.dark) .chevron {
+  color: #9ca3af;
+}

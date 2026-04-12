@@ -11,7 +11,8 @@ import {
   BlogCard,
   BlogAuthor,
   TemplateCard,
-  FeaturesMap
+  FeaturesMap,
+  ConfigComponent
 } from './components'
 
 // Get the default MDX components
@@ -33,6 +34,7 @@ export function useMDXComponents(components) {
     BlogCard,
     BlogAuthor,
     TemplateCard,
-    FeaturesMap
+    FeaturesMap,
+    ConfigComponent
   }
 }

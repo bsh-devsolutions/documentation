@@ -6,213 +6,240 @@ import { Callout } from 'nextra/components';
 
 # Configuration Components
 
-## Environment (`env`)
+Use the cards below to understand each top-level configuration component quickly: key name, whether it is required, default value, and detailed options.
 
-```json
-{
-  "env": "DEV"
-}
-```
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `env` | string | `"DEV"` | Environment identifier (for example: `DEV`, `STAGING`, `PROD`) |
-
-## Data Source (`datasource`)
-
-Database connection configuration for PostgreSQL.
-
-```json
-{
-  "datasource": {
-    "host": "localhost",
-    "port": 5432,
-    "user": "postgres",
-    "password": "secret",
-    "database": "bshengine",
-    "driverClassName": "org.postgresql.Driver",
-    "pool": { ... },
-    "query": { ... },
-    "properties": { ... }
+<ConfigComponent
+  title="Environment"
+  configKey="env"
+  required
+  defaultValue="DEV"
+  summary="Environment identifier used to distinguish contexts such as development, staging, and production."
+>
+  ```json
+  {
+    "env": "DEV"
   }
-}
-```
+  ```
 
-### Main Fields
+  | Field | Type | Default | Description |
+  |-------|------|---------|-------------|
+  | `env` | string | `"DEV"` | Environment identifier (for example: `DEV`, `STAGING`, `PROD`) |
+</ConfigComponent>
 
-| Field | Type | Default | Required | Description |
-|-------|------|---------|----------|-------------|
-| `host` | string | - | **Yes** | Database host |
-| `port` | number | `5432` | No | Database port |
-| `user` | string | - | **Yes** | Database username |
-| `password` | string | - | **Yes** | Database password |
-| `database` | string | - | **Yes** | Database name |
-| `driverClassName` | string | `"org.postgresql.Driver"` | No | JDBC driver class |
-
-<Callout type="info">
-The production setup uses `host`, `port`, and `database` directly.
-</Callout>
-
-### Connection Pool (`pool`)
-
-```json
-{
-  "datasource": {
-    "pool": {
-      "maximumSize": 10,
-      "minimumIdle": 5,
-      "idleTimeout": 300000,
-      "connectionTimeout": 30000,
-      "maxLifetime": 1800000
+<ConfigComponent
+  title="Data Source"
+  configKey="datasource"
+  required
+  summary="Database connection configuration for PostgreSQL, including connection, pool, and query tuning settings."
+>
+  ```json
+  {
+    "datasource": {
+      "host": "localhost",
+      "port": 5432,
+      "user": "postgres",
+      "password": "secret",
+      "database": "bshengine",
+      "driverClassName": "org.postgresql.Driver",
+      "pool": { ... },
+      "query": { ... },
+      "properties": { ... }
     }
   }
-}
-```
+  }
+  ```
 
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `maximumSize` | number | `10` | Maximum number of connections in the pool |
-| `minimumIdle` | number | `5` | Minimum number of idle connections to maintain |
-| `idleTimeout` | number | `300000` | Maximum idle time in milliseconds before removal (5 minutes) |
-| `connectionTimeout` | number | `30000` | Maximum wait time in milliseconds for a pool connection (30 seconds) |
-| `maxLifetime` | number | `1800000` | Maximum connection lifetime in milliseconds (30 minutes) |
+  ### Main Fields
 
-### Query Settings (`query`)
+  | Field | Type | Default | Required | Description |
+  |-------|------|---------|----------|-------------|
+  | `host` | string | - | **Yes** | Database host |
+  | `port` | number | `5432` | No | Database port |
+  | `user` | string | - | **Yes** | Database username |
+  | `password` | string | - | **Yes** | Database password |
+  | `database` | string | - | **Yes** | Database name |
+  | `driverClassName` | string | `"org.postgresql.Driver"` | No | JDBC driver class |
 
-```json
-{
-  "datasource": {
-    "query": {
-      "queryTimeout": 30,
-      "fetchSize": 100
+  <Callout type="info">
+    The production setup uses `host`, `port`, and `database` directly.
+  </Callout>
+
+  ### Connection Pool (`pool`)
+
+  ```json
+  {
+    "datasource": {
+      "pool": {
+        "maximumSize": 10,
+        "minimumIdle": 5,
+        "idleTimeout": 300000,
+        "connectionTimeout": 30000,
+        "maxLifetime": 1800000
+      }
     }
   }
-}
-```
+  ```
 
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `queryTimeout` | number | `30` | Query timeout in seconds |
-| `fetchSize` | number | `100` | Number of rows fetched per database round trip |
+  | Field | Type | Default | Description |
+  |-------|------|---------|-------------|
+  | `maximumSize` | number | `10` | Maximum number of connections in the pool |
+  | `minimumIdle` | number | `5` | Minimum number of idle connections to maintain |
+  | `idleTimeout` | number | `300000` | Maximum idle time in milliseconds before removal (5 minutes) |
+  | `connectionTimeout` | number | `30000` | Maximum wait time in milliseconds for a pool connection (30 seconds) |
+  | `maxLifetime` | number | `1800000` | Maximum connection lifetime in milliseconds (30 minutes) |
 
-### Connection Properties (`properties`)
+  ### Query Settings (`query`)
 
-```json
-{
-  "datasource": {
-    "properties": {
-      "cachePrepStmts": "true",
-      "prepStmtCacheSize": "250",
-      "prepStmtCacheSqlLimit": "2048",
-      "useServerPrepStmts": "true"
+  ```json
+  {
+    "datasource": {
+      "query": {
+        "queryTimeout": 30,
+        "fetchSize": 100
+      }
     }
   }
-}
-```
+  ```
 
-These are PostgreSQL-oriented performance options for prepared statement caching.
+  | Field | Type | Default | Description |
+  |-------|------|---------|-------------|
+  | `queryTimeout` | number | `30` | Query timeout in seconds |
+  | `fetchSize` | number | `100` | Number of rows fetched per database round trip |
 
-## Secrets (`secrets`)
+  ### Connection Properties (`properties`)
 
-Store sensitive credentials that can be referenced elsewhere using the `env:` prefix.  
-For built-in secrets, see [Settings secrets](/docs/bsh-engine/settings#used-secrets).
+  ```json
+  {
+    "datasource": {
+      "properties": {
+        "cachePrepStmts": "true",
+        "prepStmtCacheSize": "250",
+        "prepStmtCacheSqlLimit": "2048",
+        "useServerPrepStmts": "true"
+      }
+    }
+  }
+  ```
 
-```json
-{
-  "secrets": {
-    "mailing": {
-      "provider": "gmail",
-      "email": "your@email.com",
-      "from": "BSH Engine <noreply@yourapp.com>",
-      "password": "mail-app-password"
+  These are PostgreSQL-oriented performance options for prepared statement caching.
+</ConfigComponent>
+
+<ConfigComponent
+  title="Secrets"
+  configKey="secrets"
+  required
+  summary="Stores sensitive credentials that can be referenced elsewhere using the env: prefix."
+>
+  For built-in secrets, see [Settings secrets](/docs/bsh-engine/settings#used-secrets).
+
+  ```json
+  {
+    "secrets": {
+      "mailing": {
+        "provider": "gmail",
+        "email": "your@email.com",
+        "from": "BSH Engine <noreply@yourapp.com>",
+        "password": "mail-app-password"
+      },
+      "cloudinary": {
+        "apiKey": "your-api-key",
+        "apiSecret": "your-api-secret",
+        "cloudName": "your-cloud-name",
+        "folder": "uploads"
+      },
+      "jwt": {
+        "secret": "your-long-random-jwt-secret"
+      }
     },
-    "cloudinary": {
-      "apiKey": "your-api-key",
-      "apiSecret": "your-api-secret",
-      "cloudName": "your-cloud-name",
-      "folder": "uploads"
-    },
-    "jwt": {
-      "secret": "your-long-random-jwt-secret"
+  }
+  ```
+</ConfigComponent>
+
+<ConfigComponent
+  title="CORS Origins"
+  configKey="origins"
+  required
+  summary="Configure allowed origins for Cross-Origin Resource Sharing (CORS)."
+>
+  ```json
+  {
+    "origins": {
+      "allowed": [
+        "https://*",
+        "http://*",
+        "127.0.0.1:*"
+      ]
     }
   }
-}
-```
+  ```
 
-## CORS Origins (`origins`)
+  | Field | Type | Default | Description |
+  |-------|------|---------|-------------|
+  | `allowed` | string[] | `["https://*", "http://*", "127.0.0.1:*"]` | List of allowed origins |
 
-Configure allowed origins for Cross-Origin Resource Sharing (CORS).
+  <Callout type="warning">
+    The default allows all origins. In production, specify exact domains.
+  </Callout>
+</ConfigComponent>
 
-```json
-{
-  "origins": {
-    "allowed": [
-      "https://*",
-      "http://*",
-      "127.0.0.1:*"
-    ]
+<ConfigComponent
+  title="Variables"
+  configKey="variables"
+  summary="Application-level variables that can be reused by templates, flows, or integrations."
+>
+  ```json
+  {
+    "variables": {
+      "host": "https://api.yourapp.com",
+      "key": "value"
+    }
   }
-}
-```
+  ```
 
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `allowed` | string[] | `["https://*", "http://*", "127.0.0.1:*"]` | List of allowed origins |
+  | Field | Type | Required | Description |
+  |-------|------|----------|-------------|
+  | `key` | string | No | Variable name |
+  | `value` | string | No | Variable value |
+</ConfigComponent>
 
-<Callout type="warning">
-The default allows all origins. In production, specify exact domains.
-</Callout>
-
-## Variables (`variables`)
-
-Application-level variables that can be reused by templates, flows, or integrations.
-
-```json
-{
-  "variables": {
-    "host": "https://api.yourapp.com",
-    "key": "value"
+<ConfigComponent
+  title="Admin"
+  configKey="admin"
+  required
+  summary="Initial admin user configuration. Required for first-time setup."
+>
+  ```json
+  {
+    "admin": {
+      "email": "admin@example.com"
+    }
   }
-}
-```
+  ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `key` | string | No | Variable name |
-| `value` | string | No | Variable value |
+  | Field | Type | Required | Description |
+  |-------|------|----------|-------------|
+  | `email` | string | **Yes** | Admin user email for initial setup |
+  | `password` | string | No | Admin password (optional; auto-generated if omitted) |
+</ConfigComponent>
 
-## Admin (`admin`)
-
-Initial admin user configuration. Required for first-time setup.
-
-```json
-{
-  "admin": {
-    "email": "admin@example.com"
+<ConfigComponent
+  title="Plugin"
+  configKey="plugin"
+  defaultValue="coreInstallMode: Once"
+  summary="Plugin system configuration."
+>
+  ```json
+  {
+    "plugin": {
+      "coreInstallMode": "Once"
+    }
   }
-}
-```
+  ```
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `email` | string | **Yes** | Admin user email for initial setup |
-| `password` | string | No | Admin password (optional; auto-generated if omitted) |
+  | Field | Type | Default | Options | Description |
+  |-------|------|---------|---------|-------------|
+  | `coreInstallMode` | string | `"Once"` | `Once`, `Always` | How core plugins are installed |
 
-## Plugin (`plugin`)
-
-Plugin system configuration.
-
-```json
-{
-  "plugin": {
-    "coreInstallMode": "Once"
-  }
-}
-```
-
-| Field | Type | Default | Options | Description |
-|-------|------|---------|---------|-------------|
-| `coreInstallMode` | string | `"Once"` | `Once`, `Always` | How core plugins are installed |
-
-- **`Once`**: Core plugins are installed only on first startup (recommended in production).
-- **`Always`**: Core plugins are reinstalled on every startup (useful in development).
+  - **`Once`**: Core plugins are installed only on first startup (recommended in production).
+  - **`Always`**: Core plugins are reinstalled on every startup (useful in development).
+</ConfigComponent>
