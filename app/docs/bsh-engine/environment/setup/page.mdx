@@ -1,0 +1,72 @@
+---
+title: Setup
+---
+
+import { Tabs, Callout } from 'nextra/components';
+
+# Setup
+
+Use this page to apply your configuration and verify startup.
+
+## Pass Configuration
+
+There are two ways to pass the configuration to the engine:
+
+<Tabs items={['Environment Variable (JSON)', 'File (Docker Compose)']}>
+  <Tabs.Tab>
+Pass the full JSON value directly in `BSH_CONFIG`:
+
+```bash
+export BSH_CONFIG='{"env":"PROD","datasource":{...},...}'
+```
+
+```bash {5}
+services:
+  engine:
+    image: 'bshsolutions/engine'
+    environment:
+      - 'BSH_CONFIG={"env":"PROD","datasource":{...},...}'
+```
+  </Tabs.Tab>
+  <Tabs.Tab>
+```yaml {5,7}
+services:
+  engine:
+    image: 'bshsolutions/engine'
+    environment:
+      - 'BSH_CONFIG=file:/app/config.json'
+    volumes:
+      - ./config.json:/app/config.json # link to local file
+```
+  </Tabs.Tab>
+</Tabs>
+
+<Callout type="important">
+  More secure ways to pass the configuration will be added as development progresses.
+</Callout>
+
+## Validation
+
+The engine validates the configuration at startup. The following fields are required:
+
+1. **datasource.url** (or host + database combination)
+2. **datasource.user**
+3. **datasource.password**
+4. **admin.email**
+
+<Callout type="error">
+If any required field is missing, the engine fails to start with a `SERVICE_UNAVAILABLE` error indicating which fields are missing.
+</Callout>
+
+## Security Best Practices
+
+<Callout type="warning">
+Follow these security guidelines when configuring your BSH Engine instance.
+</Callout>
+
+1. **Never commit** real configuration credentials to version control.
+2. Use **environment variables** or a secret manager in production.
+3. Restrict **CORS origins** to specific domains in production.
+4. Use **strong JWT secrets** (at least 256 bits).
+5. Use **app-specific passwords** for email services.
+6. Rotate credentials regularly.

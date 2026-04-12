@@ -1,0 +1,71 @@
+---
+title: Template
+---
+
+# Configuration Template
+
+Use this as the baseline for your `BSH_CONFIG` value.
+
+```json filename="bshconfig.json"
+{
+  "env": "DEV",
+  "datasource": {
+    "host": "localhost",
+    "port": 5432,
+    "user": "admin",
+    "password": "password",
+    "database": "bshengine",
+    "driverClassName": "org.postgresql.Driver",
+    "pool": {
+      "maximumSize": 10,
+      "minimumIdle": 5,
+      "idleTimeout": 300000,
+      "connectionTimeout": 30000,
+      "maxLifetime": 1800000
+    },
+    "query": {
+      "queryTimeout": 30,
+      "fetchSize": 100
+    },
+    "properties": {
+      "cachePrepStmts": "true",
+      "prepStmtCacheSize": "250",
+      "prepStmtCacheSqlLimit": "2048",
+      "useServerPrepStmts": "true"
+    }
+  },
+  "secrets": {
+    "mailing": {
+      "provider": "gmail",
+      "email": "your@email.com",
+      "from": "BSH Engine <noreply@yourapp.com>",
+      "password": "mail-app-password"
+    },
+    "cloudinary": {
+      "apiKey": "your-api-key",
+      "apiSecret": "your-api-secret",
+      "cloudName": "your-cloud-name",
+      "folder": "uploads"
+    },
+    "jwt": {
+      "secret": "your-long-random-jwt-secret"
+    }
+  },
+  "origins": {
+    "allowed": [
+      "https://*",
+      "http://*",
+      "127.0.0.1:*"
+    ]
+  },
+  "variables": {
+    "host": "https://api.yourapp.com"
+  },
+  "admin": {
+    "email": "admin@yourapp.com"
+  },
+  "plugin": {
+    "coreInstallMode": "Once"
+  }
+}
+```
