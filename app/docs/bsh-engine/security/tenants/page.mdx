@@ -28,3 +28,19 @@ To create a new tenant, you can use the create tenant form:
 The update tenant form allows you to update a tenant's information.
 
 ![Update Tenant](/images/bsh-egnine/security/tenants/update-tenant.png)
+
+## Tenant Status
+
+The tenant status is used to determine if the tenant is active or not.
+
+![Tenant Status](/images/bsh-egnine/security/tenants/tenant-status.png)
+
+| Status | Description |
+|--------|-------------|
+| **Active** | The tenant is active and can be used. |
+| **Inactive** | The tenant is inactive and cannot be used. |
+| **Blocked** | The tenant is blocked and cannot be used. |
+
+<Callout type='info'>
+    When a tenant is `blocked` or `inactive`, all users associated with the tenant will be logged out and will not be able to access the application.
+</Callout>
