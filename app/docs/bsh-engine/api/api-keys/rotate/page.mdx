@@ -1,0 +1,59 @@
+---
+title: Rotate API Key
+---
+
+# Rotate API Key
+
+Rotate an API key for programmatic access to the BSH Engine API.
+
+```bash
+POST /api/api-keys/{id}/rotate
+```
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | number | yes | The unique identifier of the API key to rotate |
+
+## Response
+
+**Success Response (200 OK):**
+
+```json
+{
+  "data": [
+    {
+      "id": 123,
+      "apiKey": "bsh_abcd1234efgh5678ijkl9012mnop3456qrst7890",
+      "name": "My API Key",
+      "type": "MACHINE",
+      "status": "ACTIVE",
+      "duration": 30,
+      "startedAt": "2025-01-15T10:30:00Z",
+      "expiresAt": "2025-02-14T10:30:00Z",
+      "userId": "user-123"
+    }
+  ],
+  "status": "OK",
+  "code": 200,
+  "timestamp": 1234567890,
+  "meta": {}
+}
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | number | Unique identifier for the API key |
+| `apiKey` | string | The full API key value (only shown once after rotation) |
+| `name` | string | The name assigned to the API key |
+| `type` | string | The type of API key (`PERSONAL`, `MACHINE`) |
+| `status` | string | Current status of the key (`ACTIVE`, `REVOKED`, `DISABLED`) |
+| `duration` | number | Expiration period in days |
+| `startedAt` | string | ISO 8601 timestamp when the key was created |
+| `expiresAt` | string | ISO 8601 timestamp when the key will expire |
+| `userId` | string | ID of the user who created the key |
+
+## Important Notes
+
+⚠️ **Save your API key immediately!** The full `apiKey` value is only returned once in the response. After this, the key will be masked as `bsh_********` in all subsequent API calls for security purposes.
