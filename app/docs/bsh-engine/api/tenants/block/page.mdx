@@ -1,0 +1,36 @@
+---
+title: Block Tenant
+---
+
+# Block Tenant
+
+Block a tenant.
+
+```bash
+POST /api/tenants/{id}/block
+```
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | yes | Tenant identifier |
+
+## Response
+
+**Success Response (200 OK):**
+
+```json
+{
+  "data": [
+    {
+      "tenantId": "acme",
+      "status": "Blocked"
+    }
+  ],
+  "status": "OK",
+  "code": 200,
+  "timestamp": 1234567890,
+  "meta": {}
+}
+```

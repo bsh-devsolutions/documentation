@@ -1,7 +1,8 @@
 import type { MetaRecord } from 'nextra';
+import { Title } from '../../../../components';
 
 export default {
-  'tenants': 'Tenants',
+  'tenants': <Title title='Tenants' badge='new' />,
   'users': 'Users',
   'roles': 'Roles',
   'policies': 'Policies',

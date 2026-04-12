@@ -1,0 +1,39 @@
+---
+title: Assign Tenant Admin
+---
+
+# Assign Tenant Admin
+
+Assign an admin user to a tenant.
+
+```bash
+PUT /api/tenants/{id}/admin/{adminId}
+```
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `id` | string | yes | Tenant identifier |
+| `adminId` | string | yes | User identifier to assign as admin |
+
+## Response
+
+**Success Response (200 OK):**
+
+```json
+{
+  "data": [
+    {
+      "tenantId": "acme",
+      "name": "Acme Corp",
+      "status": "Active",
+      "adminId": "user-1"
+    }
+  ],
+  "status": "OK",
+  "code": 200,
+  "timestamp": 1234567890,
+  "meta": {}
+}
+```

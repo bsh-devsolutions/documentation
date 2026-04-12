@@ -1,0 +1,51 @@
+---
+title: Tenants API
+asIndexPage: true
+---
+
+import { Callout } from 'nextra/components';
+
+# Tenants API
+
+The Tenants API provides endpoints for tenant provisioning, lifecycle management, and administration.
+
+<Callout type="info">
+  For dashboard instructions and general information about tenants, see the [Tenants documentation](/docs/bsh-engine/security/tenants).
+</Callout>
+
+## Base Endpoint
+
+```bash
+/api/tenants
+```
+
+## Tenant Type
+
+```ts
+type Tenant = {
+  tenantId: string;
+  name: string;
+  status: 'Active' | 'Inactive' | 'Blocked';
+  description?: string;
+  email?: string;
+  adminId?: string;
+  settings?: Record<string, unknown>;
+}
+```
+
+## Endpoints
+
+| Method | Endpoint | Description | |
+|--------|----------|-------------|-|
+| [POST](/docs/bsh-engine/api/tenants/activate) | `/api/tenants/{id}/activate` | Activate a tenant | |
+| [POST](/docs/bsh-engine/api/tenants/deactivate) | `/api/tenants/{id}/deactivate` | Deactivate a tenant | |
+| [POST](/docs/bsh-engine/api/tenants/block) | `/api/tenants/{id}/block` | Block a tenant | |
+| [PUT](/docs/bsh-engine/api/tenants/assign-admin) | `/api/tenants/{id}/admin/{adminId}` | Assign tenant admin | |
+| [POST](/docs/bsh-engine/api/entities/insert-entity) | `/api/tenants` | Create a tenant | Similar to Entities API |
+| [PUT](/docs/bsh-engine/api/entities/update-entity) | `/api/tenants` | Update a tenant | Similar to Entities API |
+| [GET](/docs/bsh-engine/api/entities/get-entity-by-id) | `/api/tenants/{id}` | Get a tenant by ID | Similar to Entities API |
+| [GET](/docs/bsh-engine/api/entities/search-entities-by-query) | `/api/tenants?page&size&sort&filter` | List and filter by URI parameters | Similar to Entities API |
+| [POST](/docs/bsh-engine/api/entities/search-entities) | `/api/tenants/search` | Search tenants by POST | Similar to Entities API |
+| [DELETE](/docs/bsh-engine/api/entities/delete-entity) | `/api/tenants/{id}` | Delete a tenant | Similar to Entities API |
+| [GET](/docs/bsh-engine/api/entities/count-entities) | `/api/tenants/count` | Count tenants | Similar to Entities API |
+| [POST](/docs/bsh-engine/api/entities/count-filtered-entities) | `/api/tenants/count` | Count filtered tenants | Similar to Entities API |

@@ -5,6 +5,7 @@ export default {
   'persistence-id': 'Persistence ID',
   'authentication': 'Authentication',
   'entities': 'Entities',
+  'tenants': <Title title='Tenants' badge='new' />,
   'users': 'Users',
   'files': 'Files',
   'mailing': 'Mailing',
