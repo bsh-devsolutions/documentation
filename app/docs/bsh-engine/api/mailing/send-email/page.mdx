@@ -26,25 +26,14 @@ Here's the code in markdown format:
   <Tabs.Tab title="Direct">
     Send a simple plain text or HTML email directly.
 
-    **Plain Text Example:**
-    ```json
-    {
-      "to": "recipient@example.com",
-      "subject": "Test Email",
-      "body": "This is a test email body",
-      "html": false
-    }
-    ```
-
-    **HTML Example:**
-    ```json
+    ```json {6,7}
     {
       "to": "recipient@example.com",
       "cc": ["colleague@example.com"],
       "bcc": ["archive@example.com"],
-      "subject": "Test Email with HTML",
-      "body": "<h1>Welcome</h1><p>This is an HTML email body</p>",
-      "html": true
+      "subject": "Test Email",
+      "body": "This is a test email body",
+      "html": false // or true for HTML
     }
     ```
   </Tabs.Tab>
@@ -52,8 +41,7 @@ Here's the code in markdown format:
   <Tabs.Tab title="Template">
     Send an email using a predefined [email template](/docs/bsh-engine/mailing/email-templates).
 
-    **Example:**
-    ```json
+    ```json {5-10}
     {
       "to": "newuser@example.com",
       "cc": ["manager@example.com"],
