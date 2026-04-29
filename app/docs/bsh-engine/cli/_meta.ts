@@ -1,7 +1,7 @@
 import { MetaRecord } from "nextra";
 
 export default {
+    'init': 'Init',
     'plugins': 'Plugins',
-    'docker': 'Docker',
     'docs': 'Docs',
 } satisfies MetaRecord;

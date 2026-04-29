@@ -1,0 +1,38 @@
+---
+title: Init Cmd
+---
+
+# Init Command
+
+The `init` command creates the CLI configuration file at `.bshsolutions/cli.json`.
+
+## `init`
+
+Initialize CLI configuration in the current project.
+
+<Tabs items={['npm', 'npx']}>
+    <Tabs.Tab title="npm">
+    ```bash
+    bsh init
+    ```
+    </Tabs.Tab>
+    <Tabs.Tab title="npx">
+    ```bash
+    npx @bshsolutions/cli init
+    ```
+    </Tabs.Tab>
+</Tabs>
+
+The generated file contains:
+
+```json {filename: ".bshsolutions/cli.json"}
+{
+  "logger": {
+    "level": "info"
+  },
+  "engine": {
+    "host": null,
+    "apiKey": null
+  }
+}
+```

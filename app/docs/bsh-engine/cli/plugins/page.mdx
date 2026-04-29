@@ -6,145 +6,23 @@ title: Plugins Cmd
 
 The `plugins` command enables to manage [BSH Engine plugins](/docs/bsh-engine/packaging/plugins) from the command line.
 
-## `generate`
-
-Generate a plugin from a template.
-
-<Tabs items={['npm', 'npx']}>
-    <Tabs.Tab title="npm">
-    ```bash
-    bsh plugins generate <plugin-dir> [options]
-    # or
-    bsh p g <plugin-dir> [options]
-    ```
-    </Tabs.Tab>
-    <Tabs.Tab title="npx">
-    ```bash
-    npx @bshsolutions/cli plugins generate <plugin-dir> [options]
-    # or
-    npx @bshsolutions/cli p g <plugin-dir> [options]
-    ```
-    </Tabs.Tab>
-</Tabs>
-
-| Option | Description | Required | Default |
-|--------|-------------|----------|---------|
-| `-n, --name <name>` | Name of the plugin | no | `bshplugin` |
-| `-p, --path <path>` | Path to the plugin directory | no | ./ |
-| `-t, --template <template>` | Template to use for the plugin | no | [bshengine.plugin.template](https://github.com/bsh-devsolutions/bshengine.plugin.template)|
-| `-c, --clean` | Remove samples files | no | false |
-
-<Callout type="default">
-    `-template none` allows you to generate a minimal plugin (only `bshplugin.json` file).
-</Callout>
-
-### `manifest`
-
-Generate a new manifest directory<br/>
-this cmd will generate a new directory with specified name and will create a `__manifest__.json` file inside it.
-
-```json {filename: "__manifest__.json"}
-{
-  "target": "<target-entity>",
-  "dependencies": [
-    "BshEntities"
-  ]
-}
-```
-
-<Tabs items={['npm', 'npx']}>
-    <Tabs.Tab title="npm">
-    ```bash
-    bsh plugins generate manifest <name>
-    # or
-    bsh p g m <name>
-    ```
-    </Tabs.Tab>
-    <Tabs.Tab title="npx">
-    ```bash
-    npx @bshsolutions/cli plugins generate manifest <name>
-    # or
-    npx @bshsolutions/cli p g m <name>
-    ```
-    </Tabs.Tab>
-</Tabs>
-
-| Argument | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `<name>` | Name of the manifest directory | yes | ~ |
-
-| Option | Description | Required | Default |
-|--------|-------------|----------|---------|
-| `--target <target>` | Target Entity | no | `name` argument |
-| `-d, --dependencies <dependencies>` | Dependencies | no | `BshEntities` |
-| `-f, --force` | Override existing manifest directory if it exists | no | false |
-
-### `content`
-
-Generate a new content file inside a manifest directory
-
-<Tabs items={['npm', 'npx']}>
-    <Tabs.Tab title="npm">
-    ```bash
-    bsh plugins generate content <name> -m <manifest>
-    # or
-    bsh p g c <name> -m <manifest>
-    ```
-    </Tabs.Tab>
-    <Tabs.Tab title="npx">
-    ```bash
-    npx @bshsolutions/cli plugins generate content <name> -m <manifest>
-    # or
-    npx @bshsolutions/cli p g c <name> -m <manifest>
-    ```
-    </Tabs.Tab>
-</Tabs>
-
-| Argument | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `<name>` | Name of the content file | yes | ~ |
-
-| Option | Description | Required | Default |
-|--------|-------------|----------|---------|
-| `-m, --manifest <manifest>` | Manifest directory name where the file will be created | yes | ~ |
-| `-e, --entity <entity>` | Entity name to get the JSON structure from | no | `manifest` option value |
-| `-f, --force` | Override existing content file if it exists | no | false |
-| `--skipprompts` | Skip interactive prompts and use default values only | no | false |
-| `-h, --help` | display help for command | no | false |
-
-<Callout type='info'>
-When creating a content file, the cmd will ask you for some content of the file, you can skip this by using the `--skipprompts` option.
-</Callout>
-
-<Callout type=''>
-  Available entities to use with `--entity` option:
-  - BshEntities
-  - BshSchemas
-  - BshTypes
-  - BshRoles
-  - BshPolicies
-  - BshTriggers
-  - BshEmailTemplates
-</Callout>
-
-
 ## `install`
 
-Install a plugin from a directory.
+Archive a plugin directory and install it to a BSH Engine instance using the official SDK.
 
 <Tabs items={['npm', 'npx']}>
     <Tabs.Tab title="npm">
     ```bash
-    bsh plugins install <plugin-dir> [options]
+    bsh plugins install <plugin-dir> -H <host> -k <apikey>
     # or
-    bsh p i <plugin-dir> [options]
+    bsh p i <plugin-dir> -H <host> -k <apikey>
     ```
     </Tabs.Tab>
     <Tabs.Tab title="npx">
     ```bash
-    npx @bshsolutions/cli plugins install <plugin-dir> [options]
+    npx @bshsolutions/cli plugins install <plugin-dir> -H <host> -k <apikey>
     # or
-    npx @bshsolutions/cli p i <plugin-dir> [options]
+    npx @bshsolutions/cli p i <plugin-dir> -H <host> -k <apikey>
     ```
     </Tabs.Tab>
 </Tabs>
@@ -155,50 +33,28 @@ Install a plugin from a directory.
 
 | Option | Description | Required | Default |
 |--------|-------------|----------|---------|
-| `-h, --host <host>` | BSH Engine host URL | yes | ~ |
-| `-k, --api-key <key>` | BSH Engine API key | yes | ~ |
-| `--no-verbose` | Disable verbose output (default: verbose enabled) | no | false |
+| `-H, --host <host>` | BSH Engine host URL | no | from `.bshsolutions/cli.json` |
+| `-k, --apikey <apikey>` | BSH Engine API key | no | from `.bshsolutions/cli.json` |
 
-**Usage Example:**
-
-<Tabs items={['npm', 'npx']}>
+<Tabs items={['npm', 'npx', 'cli.json']}>
     <Tabs.Tab title="npm">
     ```bash
     bsh plugins install ./path/to/plugin \
-      --host https://instance-host.com \
-      --api-key <api-key>
+      -H https://instance-host.com \
+      -k <api-key>
     ```
     </Tabs.Tab>
     <Tabs.Tab title="npx">
     ```bash
     npx @bshsolutions/cli plugins install ./path/to/plugin \
-      --host https://instance-host.com \
-      --api-key <api-key>
+      -H https://instance-host.com \
+      -k <api-key>
+    ```
+    </Tabs.Tab>
+    <Tabs.Tab title="cli.json">
+    if `.bshsolutions/cli.json` well configured, it will be used to install the plugin.
+    ```bash
+    npx @bshsolutions/cli plugins install ./path/to/plugin
     ```
     </Tabs.Tab>
 </Tabs>
-
-## `validate`
-
-Validate the plugin.
-
-<Tabs items={['npm', 'npx']}>
-    <Tabs.Tab title="npm">
-    ```bash
-    bsh plugins validate <plugin-dir> [options]
-    # or
-    bsh p v <plugin-dir> [options]
-    ```
-    </Tabs.Tab>
-    <Tabs.Tab title="npx">
-    ```bash
-    npx @bshsolutions/cli plugins validate <plugin-dir> [options]
-    # or
-    npx @bshsolutions/cli p v <plugin-dir> [options]
-    ```
-    </Tabs.Tab>
-</Tabs>
-
-| Argument | Description | Required | Default |
-|----------|-------------|----------|---------|
-| `<plugin-dir>` | Path to the plugin directory | yes | ~ |
