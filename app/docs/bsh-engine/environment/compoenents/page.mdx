@@ -12,18 +12,29 @@ Use the cards below to understand each top-level configuration component quickly
   title="Environment"
   configKey="env"
   required
-  defaultValue="DEV"
-  summary="Environment identifier used to distinguish contexts such as development, staging, and production."
+  defaultValue="Dev"
+  summary="Selects cookie security behavior for auth tokens and is reported in engine status."
 >
   ```json
   {
-    "env": "DEV"
+    "env": "Dev"
   }
   ```
 
   | Field | Type | Default | Description |
   |-------|------|---------|-------------|
-  | `env` | string | `"DEV"` | Environment identifier (for example: `DEV`, `STAGING`, `PROD`) |
+  | `env` | string | `"Dev"` (implicit) | Controls `Secure` and `SameSite` on `bsh_access_token` and `bsh_refresh_token` cookies. |
+
+  Allowed values (case-insensitive):
+
+  | Value | Cookie `Secure` | Cookie `SameSite` | Typical use |
+  |-------|-----------------|-------------------|-------------|
+  | `Dev` | `false` | `Lax` | Local or HTTP development; same-site frontend and API |
+  | `Prod` | `true` | `Lax` | HTTPS production; same-site frontend and API |
+  | `CrossSiteDev` | `false` | `None` | Cross-origin development (frontend and API on different sites) |
+  | `CrossSiteProd` | `true` | `None` | HTTPS production with cross-site frontend and API |
+
+  If `env` is missing or unrecognized, the engine defaults to **`Dev`**.
 </ConfigComponent>
 
 <ConfigComponent
