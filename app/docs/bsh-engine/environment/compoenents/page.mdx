@@ -176,20 +176,21 @@ Use the cards below to understand each top-level configuration component quickly
   {
     "origins": {
       "allowed": [
-        "https://*",
-        "http://*",
-        "127.0.0.1:*"
+        "https://yourdomain.com",
+        "https://admin.yourdomain.com"
       ]
     }
   }
   ```
 
-  | Field | Type | Default | Description |
-  |-------|------|---------|-------------|
-  | `allowed` | string[] | `["https://*", "http://*", "127.0.0.1:*"]` | List of allowed origins |
+  | Field | Type | Required | Description |
+  |-------|------|----------|-------------|
+  | `allowed` | string[] | **Yes** | List of allowed origins to be used in the CORS policy.|
 
   <Callout type="warning">
-    The default allows all origins. In production, specify exact domains.
+    Patterns and wildcards like <code>https://\*</code> or <code>127.0.0.1:*</code> are <b>not</b> accepted.<br/>
+    You <b>must</b> specify each allowed site exactly.<br/>
+    There is <b>no default</b> value; this field is required.
   </Callout>
 </ConfigComponent>
 
