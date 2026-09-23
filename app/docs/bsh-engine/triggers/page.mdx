@@ -24,7 +24,86 @@ Triggers provide a flexible way to enforce business logic, automate workflows, o
         | Trigger On | The event type that activates the trigger: `Insert`, `Update`, or `Delete`. |
         | Enabled    | Whether the trigger is currently active.                                     |
         | Criteria   | Conditions that must be met for the trigger to fire.                         |
+        | Lookups    | Optional searches that load related records before trigger events run.       |
         | Events     | Actions to execute when the trigger conditions are met.                  |
+
+        ## Lookups
+
+        ![Lookups](/images/bsh-egnine/triggers/lookup-popup.png)
+
+        **Lookups** let a trigger fetch related entity records with a standard BSH search object before any of its events run. Each lookup runs only after the trigger-level **criteria** passes. Results are grouped under a name you choose and exposed as the `lookups` object in event criteria and in event **input**, **output**, and **failed** JSON.
+
+        Lookups execute searches with system access so related data can be loaded reliably; restrict what you fetch with `fields` and filters, and avoid exposing sensitive lookup fields in logs or downstream outputs.
+
+        Configure lookups in the trigger form under **Lookups**. Each entry has:
+
+        | Field  | Description |
+        |--------|-------------|
+        | Key    | Name used to read the result (for example `user`, `relatedOrders`). |
+        | Search | A BSH search object (`entity`, `filters`, `fields`, `sort`, `pagination`, etc.). Values support `${}` and `$js()` like other trigger JSON. |
+
+        When the trigger fires, the engine resolves each lookup’s `search` against the current trigger context (`payload`, `entity`, `user`, and `variables`), runs the search, and stores matching rows as a **JSON array** at `lookups.<key>`. If a search fails or returns no rows, that key is omitted from `lookups`.
+
+        <Callout type="info">
+            Lookups are **not** available in trigger-level criteria; they run only after that criteria succeeds. Use them in **event** criteria and in event JSON configurations.
+        </Callout>
+
+        **Example lookup configuration:**
+
+        ```json
+        [
+            {
+                "key": "assignee",
+                "search": {
+                    "entity": "User",
+                    "filters": [
+                        {
+                            "field": "id",
+                            "operator": "eq",
+                            "value": "${payload.assigneeId}"
+                        }
+                    ],
+                    "fields": ["id", "email", "profile"]
+                }
+            },
+            {
+                "key": "openTasks",
+                "search": {
+                    "entity": "Task",
+                    "filters": [
+                        {
+                            "field": "orderId",
+                            "operator": "eq",
+                            "value": "${payload.id}"
+                        },
+                        {
+                            "field": "status",
+                            "operator": "eq",
+                            "value": "OPEN"
+                        }
+                    ]
+                }
+            }
+        ]
+        ```
+
+        **Using lookup results in event criteria:**
+
+        ```js
+        lookups.openTasks.length > 0
+
+        lookups.assignee[0]?.email?.endsWith('@company.com')
+        ```
+
+        **Using lookup results in event input:**
+
+        ```json
+        {
+            "taskCount": "$js(lookups.openTasks.length)",
+            "notifyEmail": "${lookups.assignee.0.email}",
+            "orderId": "${payload.id}"
+        }
+        ```
 
         ## Trigger Events
 
@@ -55,18 +134,20 @@ Triggers provide a flexible way to enforce business logic, automate workflows, o
         Criteria are JavaScript expressions that determine whether a trigger or event should execute. You have access to the following variables in your criteria expressions:
 
         ```js
-        const payload = {}  // The record that triggered the event
-        const entity = {}   // The BSH entity definition
-        const user = {      // The user triggered the event
+        const payload = {}   // The record that triggered the event
+        const entity = {}    // The BSH entity definition
+        const user = {       // The user triggered the event
             type: "User|ApiKey",
             userId: "string",
             email: "string",
             profile: {}
         }
+        const variables = {} // Engine configuration variables (when configured)
+        const lookups = {}   // Lookup results — event criteria only; keys map to arrays of records
         ```
 
         <Callout>
-            **Criteria** is a JavaScript expression that evaluates to a boolean value. For example: `payload.status == 'NEW'` or `user.email.includes('@company.com')`
+            **Criteria** is a JavaScript expression that evaluates to a boolean value. For example: `payload.status == 'NEW'` or `user.email.includes('@company.com')`. The `lookups` object is available in **event** criteria only, after trigger lookups have been resolved.
         </Callout>
 
         **Example:**
@@ -101,7 +182,9 @@ Triggers provide a flexible way to enforce business logic, automate workflows, o
                         "userId": "string",
                         "email": "string",
                         "profile": {}
-                    }
+                    },
+                    "variables": {},
+                    "lookups": {}
                 }
                 ```
 
@@ -111,7 +194,8 @@ Triggers provide a flexible way to enforce business logic, automate workflows, o
                     "recordId": "${payload.id}",
                     "status": "${payload.status}",
                     "triggeredBy": "${user.email}",
-                    "entityName": "${entity.name}"
+                    "entityName": "${entity.name}",
+                    "openTaskCount": "$js(lookups.openTasks?.length ?? 0)"
                 }
                 ```
             </Tabs.Tab>
@@ -129,6 +213,8 @@ Triggers provide a flexible way to enforce business logic, automate workflows, o
                         "email": "string",
                         "profile": {}
                     },
+                    "variables": {},
+                    "lookups": {},
                     "result": {},
                     "instance": {},
                     "error": {}
@@ -158,6 +244,8 @@ Triggers provide a flexible way to enforce business logic, automate workflows, o
                         "email": "string",
                         "profile": {}
                     },
+                    "variables": {},
+                    "lookups": {},
                     "result": {},
                     "instance": {},
                     "error": {}
@@ -235,6 +323,7 @@ Triggers provide a flexible way to enforce business logic, automate workflows, o
 
         ## Best Practices
         1. **Be Specific with Criteria**: Write precise criteria to avoid unnecessary trigger executions.
+        2. **Scope Lookups**: Fetch only the fields and rows events need; use filters tied to `payload` values to keep searches small.
         3. **Handle Failures Gracefully**: Always configure the `failed` JSON to capture and handle errors appropriately.
         4. **Avoid Circular Dependencies**: Design your trigger logic to prevent one trigger from creating conditions that fire another trigger in a loop.
         5. **Test Thoroughly**: Test triggers with various scenarios before enabling them in production.
@@ -244,6 +333,7 @@ Triggers provide a flexible way to enforce business logic, automate workflows, o
         ## Common Use Cases
         - **Notifications**: Send alerts when specific conditions are met
         - **Data Enrichment**: Automatically populate related fields
+        - **Related data**: Load users, line items, or child records via lookups before running events
         - **Workflow Automation**: Trigger downstream processes based on data changes
         - **Integration**: Sync data with external systems
         - ...
@@ -257,12 +347,18 @@ Triggers provide a flexible way to enforce business logic, automate workflows, o
         ### BshTrigger Type
 
         ```ts
+        export type BshTriggerLookup = {
+            key: string
+            search: BshSearch
+        }
+
         export type BshTrigger = {
             name: string
             label: string
             criteria?: string
             entity: string
             action: ('INSERT' | 'UPDATE' | 'DELETE')[]
+            lookups?: BshTriggerLookup[]
             events: BshTriggerEvent[]
             enabled: boolean
             bshPlugin?: string
@@ -297,13 +393,30 @@ Triggers provide a flexible way to enforce business logic, automate workflows, o
             action: ["UPDATE"],
             enabled: true,
             criteria: "payload.status == 'SHIPPED'",
+            lookups: [
+                {
+                    key: "customer",
+                    search: {
+                        entity: "Customer",
+                        filters: [
+                            {
+                                field: "id",
+                                operator: "eq",
+                                value: "${payload.customerId}"
+                            }
+                        ],
+                        fields: ["id", "email", "name"]
+                    }
+                }
+            ],
             events: [
                 {
                     name: "send-email",
                     function: "EmailSender",
                     enabled: true,
+                    criteria: "lookups.customer.length > 0",
                     input: {
-                        to: "${user.email}",
+                        to: "${lookups.customer.0.email}",
                         orderId: "${payload.id}",
                         status: "${payload.status}"
                     },
