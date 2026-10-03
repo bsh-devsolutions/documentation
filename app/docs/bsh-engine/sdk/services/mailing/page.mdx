@@ -21,6 +21,7 @@ Sends an email using either plain text, HTML content, or email templates.
       to: 'recipient@example.com',
       subject: 'Test Email',
       body: 'This is a test email body',
+      fromName: 'BSH Engine',
       html: false
     }
   });
@@ -65,5 +66,6 @@ Sends an email using either plain text, HTML content, or email templates.
 | `html` | boolean | no | Whether body contains HTML (default: false) |
 | `template` | string | no* | Template name for template-based emails. See [Email Templates](/docs/bsh-engine/mailing/email-templates) |
 | `data` | object | no | Template variables for dynamic content |
+| `fromName` | string | no | **From** display name; falls back to [provider `fromName`](/docs/bsh-engine/mailing/configurations#sender-display-name) |
 
 *Either `body` OR `template` must be provided.

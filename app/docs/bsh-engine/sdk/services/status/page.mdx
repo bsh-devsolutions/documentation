@@ -1,0 +1,19 @@
+---
+title: Status Service
+---
+
+# Status Service
+
+Public engine health and status checks.
+
+```typescript
+const health = await bshEngine.status.health();
+const status = await bshEngine.status.load();
+```
+
+| Method | API | Description |
+|--------|-----|-------------|
+| `health()` | `GET /api/status/health` | Lightweight health response |
+| `load()` | `GET /api/status` | Full engine status |
+
+See [Status API](/docs/bsh-engine/api/status).

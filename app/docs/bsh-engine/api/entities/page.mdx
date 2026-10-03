@@ -3,9 +3,18 @@ title: Entities API
 asIndexPage: true
 ---
 
+import { Callout } from 'nextra/components';
+
 # Entities API
 
-The Entities API provides comprehensive CRUD operations for dynamic entity management. It provides full CRUD operations for all entities, and `search`, `filtering`, and `export` capabilities.
+The Entities API provides CRUD, search, filtering, import/export, and count operations for **custom and most core** entity types at `/api/entities/{entityName}`.
+
+<Callout type="warning">
+  Some **managed core entities** cannot be accessed through this generic route; they have their own dedicated APIs:
+  - [`BshUsers`](/docs/bsh-engine/api/users)
+  - [`BshTenants`](/docs/bsh-engine/api/tenants)
+  - [`BshApiKeys`](/docs/bsh-engine/api/api-keys)
+</Callout>
 
 ## Base Endpoint
 

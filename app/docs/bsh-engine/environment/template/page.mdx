@@ -38,7 +38,8 @@ Use this as the baseline for your `BSH_CONFIG` value.
     "mailing": {
       "provider": "gmail",
       "email": "your@email.com",
-      "from": "BSH Engine <noreply@yourapp.com>",
+      "from": "noreply@yourapp.com",
+      "fromName": "BSH Engine",
       "password": "mail-app-password"
     },
     "cloudinary": {
@@ -53,9 +54,8 @@ Use this as the baseline for your `BSH_CONFIG` value.
   },
   "origins": {
     "allowed": [
-      "https://*",
-      "http://*",
-      "127.0.0.1:*"
+      "https://app.yourdomain.com",
+      "https://admin.yourdomain.com"
     ]
   },
   "variables": {

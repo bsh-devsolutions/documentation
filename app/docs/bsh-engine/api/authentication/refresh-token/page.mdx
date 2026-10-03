@@ -2,6 +2,8 @@
 title: Refresh Token
 ---
 
+import { Callout } from 'nextra/components';
+
 # Refresh Token
 
 Refresh an expired access token using a refresh token.
@@ -10,9 +12,18 @@ Refresh an expired access token using a refresh token.
 POST /api/auth/refresh
 ```
 
-<Callout type='info'>
-  When access token is expired, the system will automatically refresh it using the refresh token from the cookies.
+## Automatic refresh
+
+<Callout type="info">
+  You often <strong>do not</strong> need to call this endpoint on every expiry.
 </Callout>
+
+| Client style | Behavior |
+|--------------|----------|
+| **Cookies** | Expired access tokens are refreshed using the refresh cookie; new cookies are set on the response. |
+| **Headers** | Send `Authorization: Bearer <accessToken>` and `X-BSH-REFRESHTOKEN: <refreshToken>`. If the access token is expired, the engine refreshes and completes the original API call. The new access token may appear in **`meta.accessToken`**. |
+
+See [Authentication API — Token usage](/docs/bsh-engine/api/authentication#token-usage) and [SDK Auto Refresh](/docs/bsh-engine/sdk/authentication/auto-refresh).
 
 ## Request Body
 
@@ -29,9 +40,8 @@ POST /api/auth/refresh
   "data": [
     {
       "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     }
   ]
-  ...
 }
 ```

@@ -3,6 +3,8 @@ title: Authentication API
 asIndexPage: true
 ---
 
+import { Callout } from 'nextra/components';
+
 # Authentication API
 
 The Authentication API provides endpoints for user authentication, token management, and password operations.
@@ -12,10 +14,6 @@ The Authentication API provides endpoints for user authentication, token managem
 ```bash
 /api/auth
 ```
-
-<Callout type='info'>
-  The system will automatically set authentication cookies with the generated tokens upon login or refresh. You usually don't need to handle the tokens manually unless your use-case is purely token-based.
-</Callout>
 
 <Cards>
     <Cards.Card 
@@ -37,28 +35,61 @@ The Authentication API provides endpoints for user authentication, token managem
 | [POST](/docs/bsh-engine/api/authentication/reset-password) | `/api/auth/reset-password` | Reset password using verification code |
 | [POST](/docs/bsh-engine/api/authentication/resend-activation-email) | `/api/auth/resend-activation-email` | Resend activation email to the user |
 
-## Token Usage
+## Token usage
 
-The Engine API supports two methods of authentication. You can use either one depending on your use case.
+Choose one primary style per client. You can mix API keys and JWT in different apps, but a single request should use one method.
 
-<Tabs items={['bearer', 'cookies', 'ApiKeys']}>
+<Tabs items={['JWT (Bearer)', 'Cookies', 'API key']}>
   <Tabs.Tab>
-  Include the access token in the `Authorization` header:
+  Send the access token on each request:
+
   ```
   Authorization: Bearer {{accessToken}}
   ```
+
+  **Silent refresh (header clients):** also send the refresh token so the engine can renew an expired access token without a separate refresh call:
+
+  ```
+  X-BSH-REFRESHTOKEN: {{refreshToken}}
+  ```
+
+  When refresh happens during the request, the JSON body may include the new access token at **`meta.accessToken`**. See [Refresh Token](/docs/bsh-engine/api/authentication/refresh-token).
+
+  <Callout type="info">
+    If both `Authorization: Bearer …` and cookie session cookies are present, **header auth takes precedence** for that request.
+  </Callout>
   </Tabs.Tab>
   <Tabs.Tab>
-  Authentication can be handled automatically via `cookies`. This is useful when making requests from a browser where the session cookie is already present.
+  After [login](/docs/bsh-engine/api/authentication/login), the engine sets **`bsh_access_token`** and **`bsh_refresh_token`** cookies. Browsers can call protected routes with cookies and no `Authorization` header.
+
+  **CSRF:** For mutating requests (`POST`, `PUT`, `DELETE`, …) using cookie sessions, include the CSRF token:
+
+  ```
+  X-XSRF-TOKEN: {{value from XSRF-TOKEN cookie}}
+  ```
+
+  CSRF is **not** required when authenticating with `Authorization` (JWT Bearer or API key).
+
+  The default SDK `fetch` client sends `credentials: 'include'` and attaches `X-XSRF-TOKEN` for mutating calls when no JWT/API key auth is configured.
   </Tabs.Tab>
   <Tabs.Tab>
-  Include your API key in the [`X-BSH-APIKEY`](/docs/bsh-engine/security/api-keys#using-your-api-key) header for all API requests:
+  Send the API key as the **raw** `Authorization` value (not `Bearer`):
+
   ```
-  X-BSH-APIKEY: {{ApiKey}}
+  Authorization: {{ApiKey}}
   ```
+
+  See [Using your API key](/docs/bsh-engine/security/api-keys#using-your-api-key).
+
+  <Callout type="warning">
+    **Previous releases (before 0.0.6):** API keys used the **`X-BSH-APIKEY`** header. That header is **deprecated**—use **`Authorization`** with the raw key instead.
+  </Callout>
   </Tabs.Tab>
 </Tabs>
 
+<Callout type='info'>
+  If a JWT session is already established, API key authentication on the same request does not override it.
+</Callout>
 
 ## Authentication Flow
 
@@ -69,12 +100,12 @@ flowchart TD
     Z --> Y
     Y --> A[Login]
     A[Login] --> B{Tokens Received?}
-    B -- Yes --> C[Store tokens]
+    B -- Yes --> C[Store tokens or cookies]
     C --> D[Access Protected Endpoints]
     D --> E{Access Token Expired?}
     E -- No --> D
-    E -- Yes --> F[Refresh Token]
-    F -- No --> B
-    F -- Yes --> C
+    E -- Yes --> F[Silent refresh or POST /api/auth/refresh]
+    F -- Success --> C
+    F -- Fail --> A
     D --> G[Logout: discard tokens; no endpoint]
 ```

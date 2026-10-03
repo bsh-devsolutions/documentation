@@ -10,23 +10,25 @@ The `BshEngine` constructor accepts the following options:
 
 ```typescript
 interface BshEngineOptions {
-  host?: string;                    // Your BSH Engine instance URL
-  apiKey?: string;                  // API key for authentication
-  jwtToken?: string;                 // JWT access token
-  refreshToken?: string;             // Refresh token for JWT renewal
-  clientFn?: BshClientFn;           // Custom HTTP client function
-  authFn?: BshAuthFn;               // Custom authentication function
-  refreshTokenFn?: BshRefreshTokenFn; // Custom refresh token function
-  preInterceptors?: BshPreInterceptor[];   // Request interceptors
-  postInterceptors?: BshPostInterceptor[]; // Response interceptors
-  errorInterceptors?: BshErrorInterceptor[]; // Error interceptors
+  host?: string;
+  apiKey?: string;
+  jwtToken?: string;
+  refreshToken?: string;
+  clientFn?: BshClientFn;
+  authFn?: BshAuthFn;
+  refreshTokenFn?: BshRefreshTokenFn;
+  onTokenRefreshed?: BshOnTokenRefreshedFn;
+  tenantFn?: BshTenantFn;
+  preInterceptors?: BshPreInterceptor[];
+  postInterceptors?: BshPostInterceptor[];
+  errorInterceptors?: BshErrorInterceptor[];
 }
 
 const bshEngine = new BshEngine(options);
 ```
 
 | Option | Description | Reference |
-|--------|-------------|---------|
+|--------|-------------|-----------|
 | `host` | The URL of the BSH Engine instance |
 | `apiKey` | The API key for authentication | [API Key Authentication](/docs/bsh-engine/sdk/authentication/api-key) |
 | `jwtToken` | The JWT access token | [JWT Authentication](/docs/bsh-engine/sdk/authentication/jwt) |
@@ -34,6 +36,8 @@ const bshEngine = new BshEngine(options);
 | `clientFn` | The custom HTTP client function | [Custom HTTP Client](/docs/bsh-engine/sdk/custom-http-client) |
 | `authFn` | The custom authentication function | [Custom Authentication](/docs/bsh-engine/sdk/authentication/custom) |
 | `refreshTokenFn` | The custom refresh token function | [Auto Refresh](/docs/bsh-engine/sdk/authentication/auto-refresh) |
+| `onTokenRefreshed` | Optional callback invoked with the new access token when the engine silently refreshes JWT during a request; use it to persist the token for your next `authFn` or `jwtToken` read | [Auto Refresh](/docs/bsh-engine/sdk/authentication/auto-refresh) |
+| `tenantFn` | Optional async function that returns the active tenant id; when non-empty, the SDK sends `X-Tenant-Id` on every request (common for admin users operating in a selected tenant) | [Tenants Service](/docs/bsh-engine/sdk/services/tenants) |
 | `preInterceptors` | The request interceptors | [Pre-Interceptors](/docs/bsh-engine/sdk/interceptors/pre) |
 | `postInterceptors` | The response interceptors | [Post-Interceptors](/docs/bsh-engine/sdk/interceptors/post) |
 | `errorInterceptors` | The error interceptors | [Error Interceptors](/docs/bsh-engine/sdk/interceptors/error) |
@@ -45,21 +49,15 @@ You can also configure the engine using fluent methods:
 
 ```typescript
 const bshEngine = new BshEngine({ host: 'https://your-instance.com' })
-  .withClient(customClientFn)
   .withAuth(async () => ({ type: 'JWT', token: 'your-token' }))
   .withRefreshToken(async () => 'your-refresh-token')
-  .postInterceptor(async (response, params) => {
-    console.log('Response:', response);
-    return response;
+  .withOnTokenRefreshed(async (accessToken) => {
+    localStorage.setItem('accessToken', accessToken);
   })
-  .preInterceptor(async (params) => {
-    console.log('Request:', params);
-    return params;
-  })
-  .errorInterceptor(async (error, response, params) => {
-    console.error('Error:', error);
-    return error;
-  });
+  .withTenant(async () => 'tenant-id-for-admin-context')
+  .postInterceptor(async (response) => response)
+  .preInterceptor(async (params) => params)
+  .errorInterceptor(async (error) => error);
 ```
 	</Tabs.Tab>
 </Tabs>

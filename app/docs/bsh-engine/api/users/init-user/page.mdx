@@ -41,6 +41,7 @@ POST /api/users/init
 | `password` | string | no | The password of the user. |
 | `roles` | array | yes | The roles of the user. |
 | `profile` | object | yes | The profile of the user. |
+| `tenantId` | string | no | Tenant to assign when creating the user in a multi-tenant deployment. |
 
 <Callout type='important'>
     The `profile` object is customizable; define any fields you want to include in a user's profile. This allows you to tailor user data storage to your application's specific requirements.

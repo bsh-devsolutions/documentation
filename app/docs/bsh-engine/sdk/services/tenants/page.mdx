@@ -1,0 +1,40 @@
+---
+title: Tenants Service
+---
+
+# Tenants Service
+
+Maps to the [Tenants API](/docs/bsh-engine/api/tenants). Requires appropriate admin or tenant permissions.
+
+## Tenant header
+
+Use [Configuration](/docs/bsh-engine/sdk/configuration) **`withTenant()`** when a **`BSH_ADMIN`** must scope requests:
+
+```typescript
+new BshEngine({ host: 'https://your-instance.com', jwtToken })
+  .withTenant(async () => selectedTenantId);
+```
+
+See [Manage Tenants — X-Tenant-Id](/docs/bsh-engine/security/tenants#tenant-context-x-tenant-id).
+
+## Methods
+
+| Method | Description |
+|--------|-------------|
+| `create({ payload })` | Create tenant |
+| `update({ payload })` | Update tenant |
+| `getById({ id })` | Get by id |
+| `list({ page, size, sort, filter })` | List tenants |
+| `search({ payload })` | Search tenants |
+| `count()` / `countFiltered({ payload })` | Count |
+| `activate({ id })` / `deactivate({ id })` / `block({ id })` | Status changes |
+| `assignAdmin({ id, adminId })` | Assign tenant admin |
+| `delete({ id })` | Delete tenant |
+
+```typescript
+await bshEngine.tenants.search({
+  payload: {
+    pagination: { page: 1, size: 10 },
+  },
+});
+```

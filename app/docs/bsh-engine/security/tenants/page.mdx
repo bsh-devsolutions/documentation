@@ -44,3 +44,20 @@ The tenant status is used to determine if the tenant is active or not.
 <Callout type='info'>
     When a tenant is `blocked` or `inactive`, all users associated with the tenant will be logged out and will not be able to access the application.
 </Callout>
+
+## Tenant context (`X-Tenant-Id`)
+
+Multi-tenant requests can include an optional header:
+
+```
+X-Tenant-Id: {{tenantId}}
+```
+
+| Caller | Behavior |
+|--------|----------|
+| **Standard users** | Always scoped to their own tenant. If `X-Tenant-Id` does not match their tenant, the request is **denied**. |
+| **`BSH_ADMIN`** | May send `X-Tenant-Id` to operate in a specific tenant, or omit it for unscoped admin operations. |
+
+In the SDK, use **`tenantFn`** or **`withTenant()`** to attach this header. See [Configuration](/docs/bsh-engine/sdk/configuration) and [Tenants service](/docs/bsh-engine/sdk/services/tenants).
+
+Tenant records are **not** manageable through `/api/entities/BshTenants`; use the [Tenants API](/docs/bsh-engine/api/tenants).

@@ -1,0 +1,42 @@
+---
+title: Status API
+asIndexPage: true
+---
+
+import { Callout } from 'nextra/components';
+
+# Status API
+
+Public health and setup checks for your engine instance.
+
+## Base Endpoint
+
+```bash
+/api/status
+```
+
+<Callout type="info">
+  These routes are **public** (no authentication required). The HTML dashboard also exposes a **`/status`** view for operators.
+</Callout>
+
+## Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/status` | Full engine status payload (configuration sanity, version, etc.) |
+| GET | `/api/status/health` | Lightweight health check |
+
+## Example
+
+```bash
+curl https://your-instance.com/api/status/health
+```
+
+## SDK
+
+```typescript
+await bshEngine.status.health();
+await bshEngine.status.load();
+```
+
+See [Status service](/docs/bsh-engine/sdk/services/status).

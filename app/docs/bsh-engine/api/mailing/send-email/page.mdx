@@ -26,13 +26,14 @@ Here's the code in markdown format:
   <Tabs.Tab title="Direct">
     Send a simple plain text or HTML email directly.
 
-    ```json {6,7}
+    ```json {6,7,8}
     {
       "to": "recipient@example.com",
       "cc": ["colleague@example.com"],
       "bcc": ["archive@example.com"],
       "subject": "Test Email",
       "body": "This is a test email body",
+      "fromName": "BSH Engine",
       "html": false // or true for HTML
     }
     ```
@@ -72,5 +73,17 @@ Here's the code in markdown format:
 | `html`     | boolean      | No       | Whether body contains HTML (default: false)   |
 | `template` | string       | No*      | Template name for template-based emails       |
 | `data`     | object       | No       | Template variables for dynamic content        |
+| `fromName` | string       | No       | Human-readable **From** display name (e.g. `BSH Engine` → `BSH Engine <support@example.com>`) |
 
 \* Either `body` or `template` is required, but not both.
+
+## Sender display name
+
+Recipients see the SMTP **From** address from your [mail provider configuration](/docs/bsh-engine/mailing/configurations). When a display name is resolved, the message is sent as `Display Name <address>` instead of the bare address.
+
+Resolution order:
+
+1. **`fromName` in this request** — used when non-blank.
+2. **`fromName` in the active mail provider config** — otherwise.
+
+Set a global default via [environment mailing secrets](/docs/bsh-engine/environment#secrets) (`fromName`) or the provider **From Name** field in the admin panel.

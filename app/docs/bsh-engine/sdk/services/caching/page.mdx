@@ -2,4 +2,34 @@
 title: Caching Service
 ---
 
+import { Callout } from 'nextra/components';
+
 # Caching Service
+
+Admin-only helpers for the [Caching API](/docs/bsh-engine/caching).
+
+<Callout type="warning">
+  Requires **`BSH_ADMIN`** (or equivalent) on the authenticated client.
+</Callout>
+
+```typescript
+await bshEngine.caching.names({});
+```
+
+## Methods
+
+| Method | Description |
+|--------|-------------|
+| `names()` | `GET /api/caching/names` |
+| `findById({ id })` | `GET /api/caching/{id}` |
+| `search({ payload })` | `POST /api/caching/search` |
+| `clearById({ id })` | `DELETE /api/caching/{id}` |
+| `clearAll()` | `DELETE /api/caching/all` |
+
+```typescript
+await bshEngine.caching.search({
+  payload: {
+    pagination: { page: 1, size: 20 },
+  },
+});
+```
