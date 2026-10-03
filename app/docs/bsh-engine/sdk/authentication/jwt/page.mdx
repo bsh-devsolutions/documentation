@@ -14,5 +14,4 @@ const bshEngine = new BshEngine({
 });
 ```
 
-The JWT token will be automatically included in all requests as the `Authorization: Bearer <token>` header.
-
+The JWT token is sent as `Authorization: Bearer <token>`. Pair with a [refresh token](/docs/bsh-engine/sdk/authentication/auto-refresh) (`refreshToken` or `refreshTokenFn`) so the engine can renew expired access tokens and return `meta.accessToken`.

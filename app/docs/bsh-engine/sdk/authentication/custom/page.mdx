@@ -2,26 +2,49 @@
 title: Custom Auth
 ---
 
+import { Callout } from 'nextra/components';
+
 # Custom Authentication Function
 
 <Tabs items={['Docs', 'Types']}>
   <Tabs.Tab label="Docs">
+
 For more control, use a custom authentication function:
 
 ```typescript
 const bshEngine = new BshEngine({
   host: 'https://your-instance.com',
   authFn: async () => {
-    // Get token from wherever you store it
     const token = localStorage.getItem('accessToken');
     if (!token) return null;
-    
-    return { type: 'JWT', token: token};
-  }
-})
+    return { type: 'JWT', token };
+  },
+  refreshTokenFn: async () => localStorage.getItem('refreshToken'),
+  onTokenRefreshed: async (accessToken) => {
+    localStorage.setItem('accessToken', accessToken);
+  },
+});
 ```
 
-This allows you to dynamically retrieve tokens from any storage mechanism (localStorage, sessionStorage, cookies, secure storage, etc.).
+This allows you to dynamically retrieve tokens from any storage mechanism (localStorage, sessionStorage, secure storage, etc.).
+
+## Cookie sessions
+
+When the dashboard or your SPA logs in through the engine, session cookies are set automatically. For those clients you can **omit** `authFn` and rely on cookies:
+
+```typescript
+const bshEngine = new BshEngine({
+  host: 'https://your-instance.com',
+  // no authFn — cookies authenticate the session
+});
+```
+
+<Callout type="info">
+  The default HTTP client uses **`credentials: 'include'`** so cookies are sent cross-origin when CORS allows it. For mutating requests, the SDK reads the **`XSRF-TOKEN`** cookie and sends **`X-XSRF-TOKEN`**.
+</Callout>
+
+If you provide a custom `clientFn`, pass `credentials: 'include'` in your `fetch` options when using cookie auth.
+
   </Tabs.Tab>
   <Tabs.Tab label="Types">
 ```typescript

@@ -6,26 +6,28 @@ title: Changelog
 
 Track all notable changes to BSH Engine.
 
-## 0.0.6 - To be Determined TBD
+## 0.0.6 - 03 Oct 2026
 
 **Security & Access Controls**
 - Fixed vulnerabilities in dependencies.
-- Fixed vulnerability: Broken API authorization — anonymous access to privileged endpoints. [#419](https://github.com/bsh-devsolutions/bshengine/issues/419)
+- Fixed vulnerability: Broken API authorization; anonymous access to privileged endpoints. [#419](https://github.com/bsh-devsolutions/bshengine/issues/419)
 - Restricted access to X-Tenant-Id header to only authenticated users. Normal users can only access their assigned tenant. [#434](https://github.com/bsh-devsolutions/bshengine/issues/434)
 - Denied access to managed entities (users, tenants, etc.) from generic endpoints `/api/entitites/:entity`. [#420](https://github.com/bsh-devsolutions/bshengine/issues/420)
 - Required `BSH_ADMIN` to activate accounts; non-admins cannot set status to ACTIVATED via user update or the generic entity API. [#420](https://github.com/bsh-devsolutions/bshengine/issues/420)
 - Restricted assigning `BSH_ADMIN` role to only `BSH_ADMIN` users. [#420](https://github.com/bsh-devsolutions/bshengine/issues/420)
-- Improved CORS policy: Allow only exact origins and reject wildcard patterns like `https://*.example.com`. [#421](https://github.com/bsh-devsolutions/bshengine/issues/421)
+- Improved CORS policy: **`origins.allowed`** accepts only exact origins; wildcard patterns (for example `https://*`, `127.0.0.1:*`) supported before **0.0.6** are no longer valid. [#421](https://github.com/bsh-devsolutions/bshengine/issues/421)
 - Enabled CSRF protection for cookie sessions. [#421](https://github.com/bsh-devsolutions/bshengine/issues/421)
 - Improved JSON configuration to allow setting for CSRF and auth cookies. [#430](https://github.com/bsh-devsolutions/bshengine/issues/430)
 - Fixed access token refresh issue.
-
-**Testing**
-- Added tests to the engine for more robust development and deployment.
+- API keys authenticate with `Authorization: <api-key>`. The legacy `X-BSH-APIKEY` header is deprecated.
+- Header JWT clients: optional `X-BSH-REFRESHTOKEN`, silent refresh, and `meta.accessToken` on responses. [#443](https://github.com/bsh-devsolutions/bshengine/issues/443)
 
 **Features & Improvements**
 - Upgraded Trigger to support lookups. [#375](https://github.com/bsh-devsolutions/bshengine/issues/375)
 - Outgoing emails support a **From** display name via `fromName` on send, in [mail provider config](/docs/bsh-engine/mailing/configurations#sender-display-name), or `secrets.mailing.fromName`. [#416](https://github.com/bsh-devsolutions/bshengine/issues/416)
+
+**Testing**
+- Added tests to the engine for more robust development and deployment.
 
 ## 0.0.5 - 12 Apr 2026
 

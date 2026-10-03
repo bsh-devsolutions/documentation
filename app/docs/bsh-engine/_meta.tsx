@@ -10,7 +10,7 @@ export default {
   'mailing': 'Mailing',
   'triggers': 'Triggers',
   'settings': 'Engine Settings',
-  'caching': <Title title='Caching' badge='planned' />,
+  'caching': 'Caching',
   'real-time': <Title title='Real-time' badge='planned' />,
   'packaging': 'Packaging',
   'search': 'BSH Search',

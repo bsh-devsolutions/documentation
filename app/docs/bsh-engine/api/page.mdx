@@ -26,15 +26,18 @@ Here you can find all you need to know about the exposed API endpoints of the BS
     <Cards.Card title='Email Management' href='/docs/bsh-engine/api/email-management' />
     <Cards.Card title='API Keys' href='/docs/bsh-engine/api/api-keys' />
     <Cards.Card title='Settings' href='/docs/bsh-engine/api/settings' />
+    <Cards.Card title='Status' href='/docs/bsh-engine/api/status' />
 </Cards>
 
 ## Authentication
 
-All protected API endpoints require authentication. You can get the access token by logging in with the [authentication](/docs/bsh-engine/api/authentication) system.
+All protected API endpoints require authentication. See [Authentication API](/docs/bsh-engine/api/authentication) for JWT Bearer, cookie sessions, API keys, and refresh behavior.
 
 ```bash
 Authorization: Bearer {{accessToken}}
 ```
+
+API keys use the same header name with the raw key: `Authorization: bsh_…` (not `Bearer`).
 
 
 ## Response Format
@@ -47,12 +50,21 @@ All API responses follow a consistent JSON format:
   "timestamp": 1234567890,
   "code": 200,
   "status": "OK",
-  "meta": {},
+  "meta": {}
 }
 ```
 
+### Response `meta`
+
+| Field | Description |
+|-------|-------------|
+| `type` | Error or success category |
+| `accessToken` | New JWT access token after **silent refresh** (header-based clients) |
+| `sql` | SQL related to an error (when applicable) |
+| `tips` | Hints for fixing validation or query errors |
+
 <Callout type='info'>
-  The egnine always returns a **list** of items, even if there is only one item.
+  The engine always returns a **list** in `data`, even if there is only one item.
 </Callout>
 
 ## Pagination

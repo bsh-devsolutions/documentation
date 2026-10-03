@@ -53,3 +53,10 @@ The Users API provides comprehensive user management operations including profil
 ## Security
 
 All Users API endpoints are secured by the [authentication](/docs/bsh-engine/api/authentication) system. User management operations require proper authentication tokens and users can only access and modify their own profile data. Unauthorized requests will be denied accordingly.
+
+### Activation and admin roles
+
+- Setting account status to **ACTIVATED** is restricted to **`BSH_ADMIN`** (for example via [`/api/users/admin/activate-account/{email}`](/docs/bsh-engine/api/users/admin/activate-account)). Non-admins cannot activate accounts through profile update or the generic [Entities API](/docs/bsh-engine/api/entities).
+- Assigning the **`BSH_ADMIN`** role requires an authenticated user who already has **`BSH_ADMIN`**.
+
+User records are **not** manageable through `/api/entities/BshUsers`; use this Users API (or the [SDK User service](/docs/bsh-engine/sdk/services/users)).

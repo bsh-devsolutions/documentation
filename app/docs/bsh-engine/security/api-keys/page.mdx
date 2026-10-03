@@ -2,6 +2,8 @@
 title: API Keys
 ---
 
+import { Callout } from 'nextra/components';
+
 # API Keys
 
 API keys provide secure programmatic access to the BSH Engine API without requiring user login credentials. They are ideal for automated systems, third-party applications, or personal scripts.
@@ -79,12 +81,16 @@ Examples:
 
 ## Using Your API Key
 
-Include your API key in the `X-BSH-APIKEY` header for all API requests:
+Send the API key on the standard `Authorization` header:
+
+<Callout type='warning'>
+  API keys were sent with the custom header **`X-BSH-APIKEY`**. That header is **deprecated**—use **`Authorization`** with the raw key for all new integrations and when upgrading clients.
+</Callout>
 
 <Tabs items={['CURL', 'JavaScript', 'Python']}>
     <Tabs.Tab label='CURL'>
         ```bash
-        curl -H "X-BSH-APIKEY: bsh_********" \
+        curl -H "Authorization: bsh_********" \
              https://api.example.com/api/entities
         ```
     </Tabs.Tab>
@@ -92,7 +98,7 @@ Include your API key in the `X-BSH-APIKEY` header for all API requests:
         ```javascript
         const response = await fetch('https://api.example.com/api/entities', {
             headers: {
-                'X-BSH-APIKEY': 'bsh_********',
+                Authorization: 'bsh_********',
                 'Content-Type': 'application/json'
             }
         });
@@ -102,7 +108,7 @@ Include your API key in the `X-BSH-APIKEY` header for all API requests:
         ```python
         import requests
         headers = {
-            'X-BSH-APIKEY': 'bsh_********',
+            'Authorization': 'bsh_********',
             'Content-Type': 'application/json'
         }
         response = requests.get('https://api.example.com/api/entities', headers=headers)

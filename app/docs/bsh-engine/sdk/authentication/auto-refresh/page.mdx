@@ -7,68 +7,81 @@ title: Auto Refresh
 <Tabs items={['Docs', 'Types']}>
   <Tabs.Tab label="Docs">
 
-## Enable auto refresh
+## How refresh works
 
-When you provide a `refreshToken` or `refreshTokenFn`, the SDK automatically refreshes expired JWT tokens:
+The SDK does **not** check JWT expiry before each request. Instead, the **engine** validates the access token on every call. When the token is expired but a refresh token is available, the engine **silently refreshes** the session and completes your original request.
+
+For **header-based** clients (typical for mobile, server, or SPA apps using the SDK), configure:
+
+1. **`authFn`** or **`jwtToken`** — supplies the current access token (`Authorization: Bearer …`)
+2. **`refreshTokenFn`** or **`refreshToken`** — supplies the refresh token, sent as **`X-BSH-REFRESHTOKEN`** on each request
 
 ```typescript
 const bshEngine = new BshEngine({
   host: 'https://your-instance.com',
   jwtToken: 'initial-access-token',
-  refreshToken: 'refresh-token'
-})
+  refreshToken: 'refresh-token',
+});
 ```
+
+```typescript
+const bshEngine = new BshEngine({ host: 'https://your-instance.com' })
+  .withAuth(async () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return null;
+    return { type: 'JWT', token };
+  })
+  .withRefreshToken(async () => localStorage.getItem('refreshToken'));
+```
+
+When refresh succeeds during a request, the engine may return the new access token in **`response.meta.accessToken`**.
+
+## Persist the new access token
+
+Use **`onTokenRefreshed`** (recommended):
 
 ```typescript
 const bshEngine = new BshEngine({
   host: 'https://your-instance.com',
-})
-  .withAuth(async () => {
-    // Get token from wherever you store it
-    const token = localStorage.getItem('accessToken');
-    if (!token) return null;
-    return { type: 'JWT', token: token};
-  })
-  .withRefreshToken(async () => {
-    // Get refresh token from storage
-    return localStorage.getItem('refreshToken') || null;
+  jwtToken: accessToken,
+  refreshToken,
+  onTokenRefreshed: async (newAccessToken) => {
+    localStorage.setItem('accessToken', newAccessToken);
+  },
+});
+```
+
+Or the fluent helper:
+
+```typescript
+new BshEngine({ host: 'https://your-instance.com', jwtToken, refreshToken })
+  .withOnTokenRefreshed(async (newAccessToken) => {
+    localStorage.setItem('accessToken', newAccessToken);
   });
 ```
 
-The SDK will:
-1. Check if the JWT token is expired before each request
-2. Automatically call the refresh endpoint if expired
-3. Update the token for subsequent requests
+<Callout type="info">
+  Cookie-based sessions (browser login) refresh via **`bsh_access_token`** / **`bsh_refresh_token`** cookies instead of headers. See [Custom Authentication — Cookie sessions](/docs/bsh-engine/sdk/authentication/custom).
+</Callout>
 
-This ensures your requests always use a valid token without manual intervention.
+<Callout type="warning">
+  With cookie sessions, the engine returns an error on mutating requests (`POST`, `PUT`, `PATCH`, `DELETE`, …) when **`X-XSRF-TOKEN`** is missing or does not match the **`XSRF-TOKEN`** cookie. Set the header to the cookie value on every non-safe method. The default SDK client adds it automatically for mutating calls when JWT or API key auth is not configured; custom `clientFn` implementations must do the same. CSRF is not required when using **`Authorization`** (JWT Bearer or API key). See [Authentication API — cookie sessions](/docs/bsh-engine/api/authentication).
+</Callout>
 
-## Update storage after refresh
+## Explicit refresh endpoint
 
-To update the token storage after a refresh, you can use the following post interceptor:
+You can still call [`POST /api/auth/refresh`](/docs/bsh-engine/api/authentication/refresh-token) manually when building your own auth flow.
 
-```typescript
-async (response) => {
-  if (response.api == 'auth.refreshToken') { // check it refreshToken function was called
-    // your code to update the token storage
-    localStorage.setItem('accessToken', response.data[0].access);
-    localStorage.setItem('refreshToken', response.data[0].refresh);
-  }
-  return response;
-}
-```
   </Tabs.Tab>
   <Tabs.Tab label="Types">
 ```typescript
-type AuthTokens = {
-  access: string;
-  refresh: string;
-}
-```
-```typescript
-export type BshAuthFn = () => Promise<AuthToken | undefined | null>;
+export type BshOnTokenRefreshedFn = (accessToken: string) => void | Promise<void>;
 ```
 ```typescript
 export type BshRefreshTokenFn = () => Promise<string | undefined | null>;
+```
+```typescript
+export type BshAuthFn = () => Promise<AuthToken | undefined | null>;
 ```
   </Tabs.Tab>
 </Tabs>

@@ -2,6 +2,8 @@
 title: API Key
 ---
 
+import { Callout } from 'nextra/components';
+
 # API Key Authentication
 
 The simplest way to authenticate is using an API key:
@@ -13,5 +15,9 @@ const bshEngine = new BshEngine({
 });
 ```
 
-The API key will be automatically included in all requests as the `X-BSH-APIKEY` header.
+The SDK sends the key on every request as `Authorization: <your-api-key>`. See [Using your API key](/docs/bsh-engine/security/api-keys#using-your-api-key).
+
+<Callout type="warning">
+  Integrations built for engine 0.0.5 and earlier may still send `X-BSH-APIKEY`. That header is deprecated as of 0.0.6; migrate to the SDK default or set `Authorization` manually.
+</Callout>
 

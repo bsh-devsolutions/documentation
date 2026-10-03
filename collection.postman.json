@@ -3729,7 +3729,7 @@
     },
     {
       "key": "apikey_header",
-      "value": "X-BSH-APIKEY",
+      "value": "Authorization",
       "type": "default"
     }
   ]

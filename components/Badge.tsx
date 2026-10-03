@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type BadgeVariant = 'soon' | 'new' | 'beta' | 'deprecated' | 'experimental' | 'planned';
+export type BadgeVariant = 'soon' | 'new' | 'updated' | 'beta' | 'deprecated' | 'experimental' | 'planned';
 
 export interface BadgeProps {
   label?: string;
@@ -18,6 +18,10 @@ const badgeVariants = {
   new: {
     background: '#28a7451a',
     color: '#28a745',
+  },
+  updated: {
+    background: '#0d6efd1a',
+    color: '#0a58ca',
   },
   beta: {
     background: '#7C3AED1A',
@@ -45,7 +49,8 @@ export const Badge: React.FC<BadgeProps> = ({
   className = '',
 }) => {
   const variantStyles = badgeVariants[variant];
-  
+  const displayLabel = label ?? variant;
+
   const badgeStyle: React.CSSProperties = {
     background: customBackground || variantStyles.background,
     color: customColor || variantStyles.color,
@@ -60,7 +65,7 @@ export const Badge: React.FC<BadgeProps> = ({
 
   return (
     <span style={badgeStyle} className={className}>
-      {label || variant}
+      {displayLabel}
     </span>
   );
 };

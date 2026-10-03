@@ -6,16 +6,34 @@ import { Callout } from 'nextra/components';
 
 # Caching
 
-<Callout>
-  **Caching** feature is planned and is **not yet available**.
+The engine exposes an **admin-only** cache management API at `/api/caching` for inspecting and clearing in-memory caches (for example entity or plugin caches).
+
+<Callout type="warning">
+  All caching endpoints require an authenticated **`BSH_ADMIN`** session or equivalent admin credentials.
 </Callout>
 
-The upcoming **Caching** system will enable the Bsh Engine to store frequently accessed data in memory, significantly reducing database load and speeding up response times for your application.
+<Callout type="info">
+  The Engine Dashboard provides a UI for managing caches.
+</Callout>
 
-### What Caching Will Enable
+## Capabilities
 
-- **Improved Performance:** Reduce the number of database queries by serving data from a fast, in-memory cache.
-- **Scalability:** Handle more user requests efficiently by minimizing redundant data fetching.
-- **Configurable Strategies:** Choose what data gets cached and define eviction policies that suit your application's needs.
+- List cache names
+- Search cache metadata
+- Read cache info by name
+- Clear one cache, a list of caches, or all caches
 
-> More details, configuration examples, and best practices will be added as development progresses. Stay tuned for updates!
+## API
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/caching?name=…` | Create/register a cache (query params: `maximumSize`, `expireAfterWriteSeconds`, `expireAfterAccessSeconds`) |
+| GET | `/api/caching/names` | List cache names |
+| GET | `/api/caching/{cacheName}` | Cache details |
+| POST | `/api/caching/search` | Search caches ([BSH Search](/docs/bsh-engine/search) body) |
+| DELETE | `/api/caching/{cacheName}` | Clear a cache |
+| DELETE | `/api/caching/all` | Clear all caches |
+
+## SDK
+
+Use `bshEngine.caching` — see [Caching service](/docs/bsh-engine/sdk/services/caching).
