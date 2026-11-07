@@ -19,6 +19,7 @@ interface BshEngineOptions {
   refreshTokenFn?: BshRefreshTokenFn;
   onTokenRefreshed?: BshOnTokenRefreshedFn;
   tenantFn?: BshTenantFn;
+  clientName?: string;
   preInterceptors?: BshPreInterceptor[];
   postInterceptors?: BshPostInterceptor[];
   errorInterceptors?: BshErrorInterceptor[];
@@ -38,6 +39,7 @@ const bshEngine = new BshEngine(options);
 | `refreshTokenFn` | The custom refresh token function | [Auto Refresh](/docs/bsh-engine/sdk/authentication/auto-refresh) |
 | `onTokenRefreshed` | Called when the session is silently refreshed. Persist both tokens for subsequent authFn and refreshTokenFn reads. | [Auto Refresh](/docs/bsh-engine/sdk/authentication/auto-refresh) |
 | `tenantFn` | Optional async function returning the active tenant ID. When provided, the SDK includes X-Tenant-Id in every request. | [Tenants Service](/docs/bsh-engine/sdk/services/tenants) |
+| `clientName` | Optional name of your app, sent as the `X-Bsh-Client` header on every request. | [Sessions](/docs/bsh-engine/auth/sessions#device-details) |
 | `preInterceptors` | The request interceptors | [Pre-Interceptors](/docs/bsh-engine/sdk/interceptors/pre) |
 | `postInterceptors` | The response interceptors | [Post-Interceptors](/docs/bsh-engine/sdk/interceptors/post) |
 | `errorInterceptors` | The error interceptors | [Error Interceptors](/docs/bsh-engine/sdk/interceptors/error) |
@@ -56,6 +58,7 @@ const bshEngine = new BshEngine({ host: 'https://your-instance.com' })
     if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
   })
   .withTenant(async () => 'tenant-id-for-admin-context')
+  .withClientName('My App')
   .postInterceptor(async (response) => response)
   .preInterceptor(async (params) => params)
   .errorInterceptor(async (error) => error);

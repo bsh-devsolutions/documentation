@@ -31,6 +31,9 @@ This release focuses on fixig vulnerabilities in the authentication system and a
 
 **Features & Improvements**
 - New [Auth Sessions API](/docs/bsh-engine/api/sessions) to list, inspect, count and revoke sessions, and the matching [SDK service](/docs/bsh-engine/sdk/services/auth-sessions). [#481](https://github.com/bsh-devsolutions/bshengine/issues/481)
+- Sessions record the [device details](/docs/bsh-engine/auth/sessions#device-details) at login: browser, OS, device type and the app name from the new `X-Bsh-Client` header. The client IP is not stored.
+- Dashboard: new **Security → Auth Sessions** page for `BSH_ADMIN` users, and a **Sessions** section in the profile to revoke other sessions. [#482](https://github.com/bsh-devsolutions/bshengine/issues/482) [#483](https://github.com/bsh-devsolutions/bshengine/issues/483)
+- SDK: `clientName` option and `withClientName()` to send `X-Bsh-Client`, `BshSessionMetaData` with the possible browser, OS and device values, and the `metadata` field on `BshAuthSession`.
 - SDK: `isExpired()` helper and `BshErrorCode` type.
 - `GET /api/utils/version` no longer requires authentication.
 - More flexible [date parsing](/docs/bsh-engine/modeling/types#date-values): ISO variants, short offsets, epoch seconds and milliseconds. Values without an offset are treated as UTC.

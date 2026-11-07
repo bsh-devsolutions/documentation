@@ -45,6 +45,15 @@ The Auth Sessions API lets a logged-in user list, inspect and revoke their [auth
   "iat": { "$date": 1794045600000 },
   "exp": { "$date": 1796637600000 },
   "status": "Active",
+  "metadata": {
+    "label": "Chrome 131 on macOS",
+    "browser": "Chrome",
+    "browserVersion": "131",
+    "os": "macOS",
+    "device": "Desktop",
+    "client": "My App",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+  },
   "current": true,
   "CreatedAt": { "$date": 1794045600000 },
   "LastUpdatedAt": { "$date": 1794046500000 }
@@ -58,4 +67,5 @@ The Auth Sessions API lets a logged-in user list, inspect and revoke their [auth
 | `iat` | When the session was created or last refreshed (UTC) |
 | `exp` | When the session ends at the latest (UTC), see `auth.config.sessionTtl` |
 | `status` | `Active`, `Expired`, `Revoked` or `LoggedOut` |
+| `metadata` | Device and app captured at login (browser, OS, device type, `X-Bsh-Client` name). Every field is optional. See [Device details](/docs/bsh-engine/auth/sessions#device-details). |
 | `current` | `true` when this is the session used by the request |
