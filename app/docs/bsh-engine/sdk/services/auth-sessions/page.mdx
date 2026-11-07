@@ -1,0 +1,139 @@
+---
+title: Auth Sessions Service
+---
+
+# Auth Sessions Service
+
+The Auth Sessions Service lists, inspects and revokes the [auth sessions](/docs/bsh-engine/auth/sessions) of the logged-in user, for example to build a "Devices" or "Active sessions" screen.
+
+<Callout type="info">
+  These methods require a user login (JWT or cookie session); API keys are rejected. Regular users only see their own sessions, while `BSH_ADMIN` users see the sessions of every user. See [Auth Sessions API](/docs/bsh-engine/api/sessions).
+</Callout>
+
+<Tabs items={['Docs', 'Types']}>
+  <Tabs.Tab label="Docs">
+
+## Methods
+
+### current
+
+Returns the session the SDK is currently authenticated with.
+
+```typescript
+const response = await bshEngine.authSessions.current({});
+const session = response?.data[0];
+```
+
+### list
+
+Lists sessions with query parameters.
+
+```typescript
+await bshEngine.authSessions.list({
+  queryParams: {
+    page: '0',
+    size: '10',
+    sort: 'iat:desc',
+    filter: 'status:eq:Active'
+  }
+});
+```
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `queryParams.page` | string | no | Page number |
+| `queryParams.size` | string | no | Page size |
+| `queryParams.sort` | string | no | Sort, for example `iat:desc` |
+| `queryParams.filter` | string | no | Filter, for example `status:eq:Active` |
+
+### search
+
+Searches sessions with a [BSH Search](/docs/bsh-engine/search) payload.
+
+```typescript
+await bshEngine.authSessions.search({
+  payload: {
+    filters: [{ field: 'status', operator: 'eq', value: 'Active' }]
+  }
+});
+```
+
+### details
+
+Gets a session by id.
+
+```typescript
+await bshEngine.authSessions.details({ sid: 'session-id' });
+```
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `sid` | string | yes | The session id |
+
+### revoke
+
+Revokes another session of the user. Its tokens stop working immediately.
+
+```typescript
+await bshEngine.authSessions.revoke({ sid: 'session-id' });
+```
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `sid` | string | yes | The session id |
+
+<Callout type="warning">
+  The current session can't be revoked; use [`bshEngine.auth.logout`](/docs/bsh-engine/sdk/services/auth#logout) instead.
+</Callout>
+
+### count / countFiltered
+
+Counts all visible sessions, or the ones matching a search payload.
+
+```typescript
+await bshEngine.authSessions.count({});
+
+await bshEngine.authSessions.countFiltered({
+  payload: {
+    filters: [{ field: 'status', operator: 'eq', value: 'Active' }]
+  }
+});
+```
+
+## Example: sign out other devices
+
+```typescript
+const response = await bshEngine.authSessions.list({
+  queryParams: { filter: 'status:eq:Active' }
+});
+
+for (const session of response?.data ?? []) {
+  if (!session.current) {
+    await bshEngine.authSessions.revoke({ sid: session.sid });
+  }
+}
+```
+
+  </Tabs.Tab>
+  <Tabs.Tab label="Types">
+```typescript
+export type BshAuthSessionStatus = 'Active' | 'Expired' | 'Revoked' | 'LoggedOut';
+```
+```typescript
+export type BshAuthSession = Omit<BshObject, 'persistenceId'> & {
+    sid: string;
+    sub?: string;
+    iat: BshDate;
+    exp: BshDate;
+    status: BshAuthSessionStatus;
+    current: boolean;
+}
+```
+```typescript
+export type BshRevokeSessionResult = {
+    sid: string;
+    message: string;
+}
+```
+  </Tabs.Tab>
+</Tabs>

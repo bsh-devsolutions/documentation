@@ -1,0 +1,61 @@
+---
+title: Auth Sessions API
+asIndexPage: true
+---
+
+# Auth Sessions API
+
+The Auth Sessions API lets a logged-in user list, inspect and revoke their [auth sessions](/docs/bsh-engine/auth/sessions), one per device or browser they logged in from.
+
+<Callout type='info'>
+    For how sessions, tokens and rotation work, see the [Sessions documentation](/docs/bsh-engine/auth/sessions).
+</Callout>
+
+## Base Endpoint
+
+```bash
+/api/auth/sessions
+```
+
+## Endpoints
+
+| Method | Endpoint | Description | |
+|--------|----------|-------------|-|
+| [GET](/docs/bsh-engine/api/sessions/current) | `/api/auth/sessions/current` | Get the session of the current request | |
+| [GET](/docs/bsh-engine/api/sessions/get) | `/api/auth/sessions/{sid}` | Get a session by ID | |
+| [DELETE](/docs/bsh-engine/api/sessions/revoke) | `/api/auth/sessions/{sid}/revoke` | Revoke a session | |
+| [GET](/docs/bsh-engine/api/entities/search-entities-by-query) | `/api/auth/sessions?query` | List and filter by URI parameters | Similar to Entities API |
+| [POST](/docs/bsh-engine/api/entities/search-entities) | `/api/auth/sessions/search` | Search sessions by POST | Similar to Entities API |
+| [GET](/docs/bsh-engine/api/entities/count-entities) | `/api/auth/sessions/count` | Count sessions | Similar to Entities API |
+| [POST](/docs/bsh-engine/api/entities/count-filtered-entities) | `/api/auth/sessions/count` | Count filtered sessions | Similar to Entities API |
+
+## Access rules
+
+- These endpoints require a **user** session (JWT bearer token or cookie session). Requests authenticated with an API key get `401 Only user authentication can manage sessions`.
+- Regular users only see and revoke **their own** sessions.
+- Users with the `BSH_ADMIN` role see and can revoke the sessions of **every** user.
+- Cookie sessions must send the **`X-XSRF-TOKEN`** header on `POST` and `DELETE` requests here.
+
+## Session object
+
+```json
+{
+  "sid": "4c0f7a1e-2f6b-4d5e-9a63-7f1f0b0e9c2d",
+  "sub": "user-id",
+  "iat": { "$date": 1794045600000 },
+  "exp": { "$date": 1796637600000 },
+  "status": "Active",
+  "current": true,
+  "CreatedAt": { "$date": 1794045600000 },
+  "LastUpdatedAt": { "$date": 1794046500000 }
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `sid` | Session ID |
+| `sub` | ID of the user who owns the session |
+| `iat` | When the session was created or last refreshed (UTC) |
+| `exp` | When the session ends at the latest (UTC), see `auth.config.sessionTtl` |
+| `status` | `Active`, `Expired`, `Revoked` or `LoggedOut` |
+| `current` | `true` when this is the session used by the request |

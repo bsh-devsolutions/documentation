@@ -13,6 +13,8 @@ To access the BSH Engine admin panel or protected APIs, users must authenticate 
 </Callout>
 
 <Callout type="error">
-  The system uses the secret `env:jwt.secret` to generate access tokens.  
-  Before starting the instance, make sure to provide your JWT secret via environment variables as described [here](/docs/bsh-engine/settings#secrets).
+  The engine signs tokens with `auth.config.secret`.
+  Before starting the instance, set it in your configuration as described in [Authentication configuration](/docs/bsh-engine/environment/compoenents#auth).
 </Callout>
+
+Each login opens a new [session](/docs/bsh-engine/auth/sessions). Logging in on another device or browser opens another session; the existing ones stay active.

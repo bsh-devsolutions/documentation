@@ -283,11 +283,12 @@ The `BshEngine` exposes core entities that are part of the core system, you can 
 | `BshPlugins`      |
 
 <Callout type="warning">
-  **`BshUsers`**, **`BshTenants`**, and **`BshApiKeys`** are managed core types. They are **not** accessed through generic entity CRUD (`bshEngine.entity('…')`, `entities.create`, or `/api/entities/{entityName}`). Use the dedicated SDK services instead:
+  **`BshUsers`**, **`BshTenants`**, **`BshApiKeys`**, and **`BshAuthSessions`** are managed core types. They are **not** accessed through generic entity CRUD (`bshEngine.entity('…')`, `entities.create`, or `/api/entities/{entityName}`). Use the dedicated SDK services instead:
 
   - **`BshUsers`** : [`bshEngine.users`](/docs/bsh-engine/sdk/services/users) (even though `BshUsers` appears on `core`, prefer the Users service for account and lifecycle operations)
   - **`BshTenants`** : [`bshEngine.tenants`](/docs/bsh-engine/sdk/services/tenants)
   - **`BshApiKeys`** : [`bshEngine.apiKey`](/docs/bsh-engine/sdk/services/api-key)
+  - **`BshAuthSessions`** : [`bshEngine.authSessions`](/docs/bsh-engine/sdk/services/auth-sessions)
 
   See the matching [Entities API](/docs/bsh-engine/api/entities) callout for the REST routes.
 </Callout>

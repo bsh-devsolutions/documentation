@@ -33,6 +33,17 @@ title: Error Interceptors
   });
   ```
 
+  To tell an ended session apart from other `401` errors, use `isExpired` from `@bshsolutions/sdk/types`. It checks `meta.bshError === 'JWT__SESSION_EXPIRED'`:
+
+  ```typescript
+  import { isExpired } from '@bshsolutions/sdk/types';
+
+  bshEngine.errorInterceptor(async (error) => {
+    if (isExpired(error)) window.location.href = '/login';
+    return error;
+  });
+  ```
+
   Error interceptors allow you to handle errors globally. You can:
   - Log errors to external services
   - Handle specific HTTP status codes

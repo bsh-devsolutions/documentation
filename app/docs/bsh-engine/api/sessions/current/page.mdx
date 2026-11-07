@@ -1,0 +1,64 @@
+---
+title: Current Session
+---
+
+# Current Session
+
+Get the session the request is authenticated with.
+
+```bash
+GET /api/auth/sessions/current
+```
+
+## Authentication
+
+This endpoint requires a user session, sent as a JWT or with the auth cookies:
+
+```bash
+Authorization: Bearer <your-jwt-token>
+```
+
+## Response
+
+**Success Response (200 OK):**
+
+```json
+{
+  "code": 200,
+  "data": [
+    {
+      "sid": "4c0f7a1e-2f6b-4d5e-9a63-7f1f0b0e9c2d",
+      "sub": "user-id",
+      "iat": { "$date": 1794045600000 },
+      "exp": { "$date": 1796637600000 },
+      "status": "Active",
+      "current": true
+    }
+  ]
+}
+```
+
+See [Session object](/docs/bsh-engine/api/sessions#session-object) for the fields.
+
+## Error Responses
+
+**404 Not Found** - The request has no session:
+
+```json
+{
+  "code": 404,
+  "error": "No active session for the current request",
+  "meta": {
+    "type": "Session Not Found"
+  }
+}
+```
+
+**401 Unauthorized** - The request is authenticated with an API key:
+
+```json
+{
+  "code": 401,
+  "error": "Only user authentication can manage sessions"
+}
+```

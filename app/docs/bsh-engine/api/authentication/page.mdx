@@ -30,10 +30,23 @@ The Authentication API provides endpoints for user authentication, token managem
 | [POST](/docs/bsh-engine/api/authentication/register) | `/api/auth/register` | Register new user |
 | [POST](/docs/bsh-engine/api/authentication/activate-account) | `/api/auth/activate-account` | Activate user account using verification code |
 | [POST](/docs/bsh-engine/api/authentication/login) | `/api/auth/login` | Authenticate user with email and password |
-| [POST](/docs/bsh-engine/api/authentication/refresh-token) | `/api/auth/refresh` | Refresh expired access token |
+| [POST](/docs/bsh-engine/api/authentication/refresh-token) | `/api/auth/refresh` | Refresh the current session |
+| [POST](/docs/bsh-engine/api/authentication/logout) | `/api/auth/logout` | End the current session |
 | [POST](/docs/bsh-engine/api/authentication/forgot-password) | `/api/auth/forget-password` | Request password reset code via email |
 | [POST](/docs/bsh-engine/api/authentication/reset-password) | `/api/auth/reset-password` | Reset password using verification code |
 | [POST](/docs/bsh-engine/api/authentication/resend-activation-email) | `/api/auth/resend-activation-email` | Resend activation email to the user |
+
+To list, inspect or revoke sessions, see the [Auth Sessions API](/docs/bsh-engine/api/sessions).
+
+## Token delivery
+
+`auth.config.delivery` controls how the engine hands tokens to clients. See [Authentication configuration](/docs/bsh-engine/environment/compoenents#auth).
+
+| Mode | Auth cookies | Tokens in JSON responses | `Authorization: Bearer <jwt>` | CSRF |
+|------|--------------|--------------------------|-------------------------------|------|
+| `Default` | yes | yes | accepted | only for cookie sessions |
+| `Cookies` | yes | no | **not accepted** | for cookie sessions |
+| `Json` | no | yes | accepted | never |
 
 ## Token usage
 
@@ -53,7 +66,7 @@ Choose one primary style per client. You can mix API keys and JWT in different a
   X-BSH-REFRESHTOKEN: {{refreshToken}}
   ```
 
-  When refresh happens during the request, the JSON body may include the new access token at **`meta.accessToken`**. See [Refresh Token](/docs/bsh-engine/api/authentication/refresh-token).
+  When refresh happens during the request, the JSON body includes the new tokens at **`meta.accessToken`** and **`meta.refreshToken`**. Store both: the refresh token changes on every refresh. See [Refresh Token](/docs/bsh-engine/api/authentication/refresh-token).
 
   <Callout type="info">
     If both `Authorization: Bearer …` and cookie session cookies are present, **header auth takes precedence** for that request.
@@ -73,11 +86,14 @@ Choose one primary style per client. You can mix API keys and JWT in different a
   The default SDK `fetch` client sends `credentials: 'include'` and attaches `X-XSRF-TOKEN` for mutating calls when no JWT/API key auth is configured.
   </Tabs.Tab>
   <Tabs.Tab>
-  Send the API key as the **raw** `Authorization` value (not `Bearer`):
+  Send the API key on the `Authorization` header, either raw or as a bearer token:
 
   ```
   Authorization: {{ApiKey}}
+  Authorization: Bearer {{ApiKey}}
   ```
+
+  API keys start with `bsh_`, which is how the engine tells them apart from JWTs.
 
   See [Using your API key](/docs/bsh-engine/security/api-keys#using-your-api-key).
 
@@ -105,7 +121,7 @@ flowchart TD
     D --> E{Access Token Expired?}
     E -- No --> D
     E -- Yes --> F[Silent refresh or POST /api/auth/refresh]
-    F -- Success --> C
+    F -- Success, new tokens --> C
     F -- Fail --> A
-    D --> G[Logout: discard tokens; no endpoint]
+    D --> G[Logout closes the session]
 ```

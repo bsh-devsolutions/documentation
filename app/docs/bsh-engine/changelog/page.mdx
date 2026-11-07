@@ -6,6 +6,35 @@ title: Changelog
 
 Track all notable changes to BSH Engine.
 
+## 0.0.7 - To be determined (TBD)
+
+This release focuses on fixig vulnerabilities in the authentication system and adds long-lived sessions with refresh token rotation.
+
+**Breaking changes**
+- The JWT secret moved from `secrets.jwt.secret` to [`auth.config.secret`](/docs/bsh-engine/environment/compoenents#auth). Tokens issued by earlier versions are rejected, so every user has to log in again after the upgrade.
+- Access and refresh tokens no longer include `tenantId`, `roles`, `profile`, `email` or `status`. Use [Get Current User](/docs/bsh-engine/api/users/get-current-user) to read them.
+- [`POST /api/auth/refresh`](/docs/bsh-engine/api/authentication/refresh-token) only refreshes the current session: it reads the refresh token from the `X-BSH-REFRESHTOKEN` header or the refresh cookie, and ignores the request body. The SDK's `auth.refreshToken()` no longer takes a payload.
+- Refresh tokens rotate on every refresh. Clients must store the new refresh token (`data.refresh` or `meta.refreshToken`).
+- Built-in policies were reorganized: `ROLE_BSH_ADMIN_ALLOW_ALL` is now `Bsh_Admin`, `EngineSettingsAccess` and `ACCESS_ALL_DEV` were removed, and `Bsh_UserTenantAccess` was added. See [Built-in Policies](/docs/bsh-engine/security/policies#built-in-policies).
+- Auth cookies now use `Path=/api`.
+- The expired session `meta.type` is now `Session expired` (was `Session Expired`). Check `meta.bshError` instead.
+
+**Security & Sessions**
+- Long sessions with short-lived tokens: access tokens last 15 minutes, refresh tokens 7 days and sessions 30 days by default, all configurable. [#450](https://github.com/bsh-devsolutions/bshengine/issues/450) [#460](https://github.com/bsh-devsolutions/bshengine/issues/460)
+- [Auth sessions](/docs/bsh-engine/auth/sessions) are stored on the engine (`BshAuthSessions`), with refresh token rotation and reuse detection. [#463](https://github.com/bsh-devsolutions/bshengine/issues/463) [#480](https://github.com/bsh-devsolutions/bshengine/issues/480)
+- Logout ends the session on the engine. [#461](https://github.com/bsh-devsolutions/bshengine/issues/461)
+- The token type is enforced, so access and refresh tokens can't be used in place of each other. [#459](https://github.com/bsh-devsolutions/bshengine/issues/459)
+- New `auth.config.delivery` option to deliver tokens through cookies, JSON responses or both. [#456](https://github.com/bsh-devsolutions/bshengine/issues/456) [#457](https://github.com/bsh-devsolutions/bshengine/issues/457)
+- Silent refresh returns both `meta.accessToken` and `meta.refreshToken`.
+- API keys are also accepted as `Authorization: Bearer bsh_…`. [#442](https://github.com/bsh-devsolutions/bshengine/issues/442)
+- Clearer `401` errors, with a stable code in `meta.bshError`. See [Authentication errors](/docs/bsh-engine/api/authentication#authentication-errors).
+
+**Features & Improvements**
+- New [Auth Sessions API](/docs/bsh-engine/api/sessions) to list, inspect, count and revoke sessions, and the matching [SDK service](/docs/bsh-engine/sdk/services/auth-sessions). [#481](https://github.com/bsh-devsolutions/bshengine/issues/481)
+- SDK: `isExpired()` helper and `BshErrorCode` type.
+- `GET /api/utils/version` no longer requires authentication.
+- More flexible [date parsing](/docs/bsh-engine/modeling/types#date-values): ISO variants, short offsets, epoch seconds and milliseconds. Values without an offset are treated as UTC.
+
 ## 0.0.6 - 03 Oct 2026
 
 **Security & Access Controls**

@@ -34,6 +34,16 @@ Use this as the baseline for your `BSH_CONFIG` value.
       "useServerPrepStmts": "true"
     }
   },
+  "auth": {
+    "provider": "self",
+    "config": {
+      "secret": "your-long-random-jwt-secret",
+      "delivery": "Default",
+      "accessTtl": 15,
+      "refreshTtl": 7,
+      "sessionTtl": 30
+    }
+  },
   "secrets": {
     "mailing": {
       "provider": "gmail",
@@ -47,9 +57,6 @@ Use this as the baseline for your `BSH_CONFIG` value.
       "apiSecret": "your-api-secret",
       "cloudName": "your-cloud-name",
       "folder": "uploads"
-    },
-    "jwt": {
-      "secret": "your-long-random-jwt-secret"
     }
   },
   "origins": {

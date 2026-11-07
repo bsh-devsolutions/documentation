@@ -10,8 +10,13 @@ Authenticate a user with email and password.
 POST /api/auth/login
 ```
 
+Each successful login opens a new [auth session](/docs/bsh-engine/auth/sessions) on the engine and returns an access token and a refresh token for it.
+
 <Callout type='info'>
-  The system will automatically set authentication cookies `bsh_access_token` and `bsh_refresh_token` with the generated tokens upon login.
+  How the tokens are returned depends on [`auth.config.delivery`](/docs/bsh-engine/environment/compoenents#auth):
+  - `Default`: tokens in the response body **and** in the `bsh_access_token` / `bsh_refresh_token` cookies.
+  - `Cookies`: cookies only. The response `data` is empty.
+  - `Json`: response body only, no cookies.
 </Callout>
 
 <Callout type='important'>
@@ -23,8 +28,8 @@ POST /api/auth/login
 </Callout>
 
 <Callout type="error">
-  The system uses the secret `env:jwt.secret` to generate access tokens.  
-  Before starting the instance, make sure to provide your JWT secret via environment variables as described [here](/docs/bsh-engine/settings#secrets).
+  The engine signs tokens with `auth.config.secret`.
+  Before starting the instance, set it in your configuration as described in [Authentication configuration](/docs/bsh-engine/environment/compoenents#auth).
 </Callout>
 
 ## Request Body
@@ -42,13 +47,24 @@ POST /api/auth/login
 {
   "data": [
     {
-      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     }
-  ]
+  ],
+  "message": "Login successful",
+  "meta": { "type": "Login" }
   ...
 }
 ```
+
+| Field | Description |
+|-------|-------------|
+| `access` | Access token. Short-lived (`auth.config.accessTtl`, 15 minutes by default). |
+| `refresh` | Refresh token. Used to get new tokens for the same session (`auth.config.refreshTtl`, 7 days by default). |
+
+<Callout type='warning'>
+  The tokens only carry session identifiers (`sub`, `sid`, `jti`), not the user's roles, tenant or profile. Use [Get Current User](/docs/bsh-engine/api/users/get-current-user) to read the user.
+</Callout>
 
 ## User Status
 

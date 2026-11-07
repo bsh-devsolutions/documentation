@@ -81,7 +81,14 @@ Examples:
 
 ## Using Your API Key
 
-Send the API key on the standard `Authorization` header:
+Send the API key on the standard `Authorization` header, either raw or as a bearer token:
+
+```
+Authorization: bsh_********
+Authorization: Bearer bsh_********
+```
+
+API keys always start with `bsh_`, which is how the engine tells them apart from JWT access tokens. If a request sends both the deprecated `X-BSH-APIKEY` header and `Authorization`, `X-BSH-APIKEY` is used.
 
 <Callout type='warning'>
   API keys were sent with the custom header **`X-BSH-APIKEY`**. That header is **deprecated**—use **`Authorization`** with the raw key for all new integrations and when upgrading clients.
@@ -118,6 +125,10 @@ Send the API key on the standard `Authorization` header:
 
 <Callout type='info'>
     If both a JWT token and an API key are present in a request, the JWT token takes precedence. The API key authentication only applies when no JWT authentication is already established.
+</Callout>
+
+<Callout type='info'>
+    API keys can't manage [auth sessions](/docs/bsh-engine/api/sessions): those endpoints require a user login.
 </Callout>
 
 ## Revoking API Keys

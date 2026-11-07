@@ -13,6 +13,7 @@ Use the cards below to understand each top-level configuration component quickly
   configKey="env"
   required
   defaultValue="Dev"
+  defaultOpen={false}
   summary="Selects cookie security behavior for auth tokens and is reported in engine status."
 >
   ```json
@@ -42,6 +43,7 @@ Use the cards below to understand each top-level configuration component quickly
   configKey="datasource"
   required
   summary="Database connection configuration for PostgreSQL, including connection, pool, and query tuning settings."
+  defaultOpen={false}
 >
   ```json
   {
@@ -140,6 +142,7 @@ Use the cards below to understand each top-level configuration component quickly
   configKey="secrets"
   required
   summary="Stores sensitive credentials that can be referenced elsewhere using the env: prefix."
+  defaultOpen={false}
 >
   For built-in secrets, see [Settings secrets](/docs/bsh-engine/settings#used-secrets).
 
@@ -158,13 +161,60 @@ Use the cards below to understand each top-level configuration component quickly
         "apiSecret": "your-api-secret",
         "cloudName": "your-cloud-name",
         "folder": "uploads"
-      },
-      "jwt": {
-        "secret": "your-long-random-jwt-secret"
       }
     },
   }
   ```
+
+  <Callout type="warning">
+    Since **0.0.7**, the JWT secret is no longer read from `secrets.jwt.secret`. Move it to [`auth.config.secret`](#auth).
+  </Callout>
+</ConfigComponent>
+
+<ConfigComponent
+  title="Authentication"
+  configKey="auth"
+  required
+  summary="Configures the auth provider: token signing secret, how tokens are delivered and how long sessions last."
+  defaultOpen={false}
+>
+  ```json
+  {
+    "auth": {
+      "provider": "self",
+      "config": {
+        "secret": "your-long-random-jwt-secret",
+        "delivery": "Default",
+        "accessTtl": 15,
+        "refreshTtl": 7,
+        "sessionTtl": 30
+      }
+    }
+  }
+  ```
+
+  | Field | Type | Default | Description |
+  |-------|------|---------|-------------|
+  | `provider` | string | `"self"` | Auth provider. Only `self` (the engine issues its own tokens) is available. |
+  | `config.secret` | string | — (**required**) | Secret used to sign tokens. Use a long random value (at least 32 characters). Without it, auth endpoints return `503 Missing Configuration`. |
+  | `config.delivery` | string | `"Default"` | How tokens reach clients: `Default`, `Cookies` or `Json` (case-sensitive). See below. |
+  | `config.accessTtl` | number | `15` | Access token lifetime, in **minutes**. |
+  | `config.refreshTtl` | number | `7` | Refresh token lifetime, in **days**. |
+  | `config.sessionTtl` | number | `30` | Maximum session lifetime, in **days**. Refreshing doesn't extend it. |
+
+  Delivery modes:
+
+  | Value | Auth cookies | Tokens in JSON responses | `Authorization: Bearer <jwt>` | Typical use |
+  |-------|--------------|--------------------------|-------------------------------|-------------|
+  | `Default` | yes | yes | accepted | Mixed clients (browser and mobile or server) |
+  | `Cookies` | yes | no | not accepted | Browser-only apps; tokens never reach JavaScript |
+  | `Json` | no | yes | accepted | Mobile, server or SPA clients that store tokens themselves; no CSRF |
+
+  An unknown `delivery` value falls back to `Default`. See [Sessions](/docs/bsh-engine/auth/sessions) for how tokens and sessions work.
+
+  <Callout type="info">
+    the `provider` field is to allow us to add more auth providers in the future.
+  </Callout>
 </ConfigComponent>
 
 <ConfigComponent
@@ -172,6 +222,7 @@ Use the cards below to understand each top-level configuration component quickly
   configKey="origins"
   required
   summary="Configure allowed origins for Cross-Origin Resource Sharing (CORS)."
+  defaultOpen={false}
 >
   ```json
   {
@@ -199,6 +250,7 @@ Use the cards below to understand each top-level configuration component quickly
   title="Variables"
   configKey="variables"
   summary="Application-level variables that can be reused by templates, flows, or integrations."
+  defaultOpen={false}
 >
   ```json
   {
@@ -220,6 +272,7 @@ Use the cards below to understand each top-level configuration component quickly
   configKey="admin"
   required
   summary="Initial admin user configuration. Required for first-time setup."
+  defaultOpen={false}
 >
   ```json
   {
@@ -240,6 +293,7 @@ Use the cards below to understand each top-level configuration component quickly
   configKey="plugin"
   defaultValue="coreInstallMode: Once"
   summary="Plugin system configuration."
+  defaultOpen={false}
 >
   ```json
   {

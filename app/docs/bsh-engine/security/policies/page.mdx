@@ -71,3 +71,18 @@ Permissions define **_WHAT_** actions the policy will allow or deny.
 Allowed actions include: `READ`, `WRITE`, `UPDATE`, `DELETE`, `SEARCH`.
 
 **Tip:** Use priorities to determine which policy takes effect when multiple policies apply to the same entity and principal.
+
+## Built-in Policies
+
+The core plugin installs these policies:
+
+| Name | Principals | Permissions | Priority |
+|------|------------|-------------|----------|
+| `Bsh_Admin` | Role `BSH_ADMIN` | All actions on all entities | — |
+| `Bsh_UserTenantAccess` | Every user | `BshTenants`: `READ`, `SEARCH`. `BshUsers`: `READ`, `WRITE`, `UPDATE`, `SEARCH` | 50 |
+
+`Bsh_UserTenantAccess` is a baseline: the tenant and user endpoints still check that users only reach their own tenant and their own account.
+
+<Callout type='warning'>
+  **Changed in 0.0.7:** `ROLE_BSH_ADMIN_ALLOW_ALL` was renamed to `Bsh_Admin`, and `EngineSettingsAccess` and `ACCESS_ALL_DEV` were removed. Update anything that refers to these policies by name.
+</Callout>

@@ -13,75 +13,93 @@ The SDK does **not** check JWT expiry before each request. Instead, the **engine
 
 For **header-based** clients (typical for mobile, server, or SPA apps using the SDK), configure:
 
-1. **`authFn`** or **`jwtToken`** — supplies the current access token (`Authorization: Bearer …`)
-2. **`refreshTokenFn`** or **`refreshToken`** — supplies the refresh token, sent as **`X-BSH-REFRESHTOKEN`** on each request
+1. **`authFn`** or **`jwtToken`**: supplies the current access token (`Authorization: Bearer …`)
+2. **`refreshTokenFn`** or **`refreshToken`**: supplies the refresh token, sent as **`X-BSH-REFRESHTOKEN`** on each request
+
+When refresh succeeds during a request, the engine returns the new tokens in **`response.meta.accessToken`** and **`response.meta.refreshToken`**, and the SDK passes them to **`onTokenRefreshed`**.
+
+<Callout type="warning">
+  **The SDK doesn't store tokens.** Your app keeps them and saves the new ones in `onTokenRefreshed`. The refresh token **changes on every refresh**, and the old one stops working about 10 seconds later. If you only save the access token, the user is logged out on the next refresh. See [Sessions](/docs/bsh-engine/auth/sessions#token-rotation).
+</Callout>
+
+## Recommended setup
+
+Read the tokens from your storage on every request, and write **both** back when they're refreshed:
 
 ```typescript
 const bshEngine = new BshEngine({
   host: 'https://your-instance.com',
-  jwtToken: 'initial-access-token',
-  refreshToken: 'refresh-token',
+  authFn: async () => {
+    const token = localStorage.getItem('accessToken');
+    return token ? { type: 'JWT', token } : null;
+  },
+  refreshTokenFn: async () => localStorage.getItem('refreshToken'),
+  onTokenRefreshed: async ({ accessToken, refreshToken }) => {
+    if (accessToken) localStorage.setItem('accessToken', accessToken);
+    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+  },
 });
 ```
+
+Or with the fluent helpers:
 
 ```typescript
 const bshEngine = new BshEngine({ host: 'https://your-instance.com' })
   .withAuth(async () => {
     const token = localStorage.getItem('accessToken');
-    if (!token) return null;
-    return { type: 'JWT', token };
+    return token ? { type: 'JWT', token } : null;
   })
-  .withRefreshToken(async () => localStorage.getItem('refreshToken'));
-```
-
-When refresh succeeds during a request, the engine may return the new access token in **`response.meta.accessToken`**.
-
-## Persist the new access token
-
-Use **`onTokenRefreshed`** (recommended):
-
-```typescript
-const bshEngine = new BshEngine({
-  host: 'https://your-instance.com',
-  jwtToken: accessToken,
-  refreshToken,
-  onTokenRefreshed: async (newAccessToken) => {
-    localStorage.setItem('accessToken', newAccessToken);
-  },
-});
-```
-
-Or the fluent helper:
-
-```typescript
-new BshEngine({ host: 'https://your-instance.com', jwtToken, refreshToken })
-  .withOnTokenRefreshed(async (newAccessToken) => {
-    localStorage.setItem('accessToken', newAccessToken);
+  .withRefreshToken(async () => localStorage.getItem('refreshToken'))
+  .withOnTokenRefreshed(async ({ accessToken, refreshToken }) => {
+    if (accessToken) localStorage.setItem('accessToken', accessToken);
+    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
   });
 ```
 
+## Cookie sessions
+
 <Callout type="info">
-  Cookie-based sessions (browser login) refresh via **`bsh_access_token`** / **`bsh_refresh_token`** cookies instead of headers. See [Custom Authentication — Cookie sessions](/docs/bsh-engine/sdk/authentication/custom).
+  Cookie-based sessions (browser login) refresh via **`bsh_access_token`** / **`bsh_refresh_token`** cookies instead of headers, and the engine sets the new cookies itself. See [Custom Authentication: Cookie sessions](/docs/bsh-engine/sdk/authentication/custom).
 </Callout>
 
 <Callout type="warning">
-  With cookie sessions, the engine returns an error on mutating requests (`POST`, `PUT`, `PATCH`, `DELETE`, …) when **`X-XSRF-TOKEN`** is missing or does not match the **`XSRF-TOKEN`** cookie. Set the header to the cookie value on every non-safe method. The default SDK client adds it automatically for mutating calls when JWT or API key auth is not configured; custom `clientFn` implementations must do the same. CSRF is not required when using **`Authorization`** (JWT Bearer or API key). See [Authentication API — cookie sessions](/docs/bsh-engine/api/authentication).
+  With cookie sessions, the engine returns an error on mutating requests (`POST`, `PUT`, `PATCH`, `DELETE`, …) when **`X-XSRF-TOKEN`** is missing or does not match the **`XSRF-TOKEN`** cookie. Set the header to the cookie value on every non-safe method. The default SDK client adds it automatically for mutating calls when JWT or API key auth is not configured; custom `clientFn` implementations must do the same. CSRF is not required when using **`Authorization`** (JWT Bearer or API key). See [Authentication API: cookie sessions](/docs/bsh-engine/api/authentication).
 </Callout>
 
-## Explicit refresh endpoint
+## Explicit refresh
 
-You can still call [`POST /api/auth/refresh`](/docs/bsh-engine/api/authentication/refresh-token) manually when building your own auth flow.
+You can also refresh the current session yourself with [`bshEngine.auth.refreshToken()`](/docs/bsh-engine/sdk/services/auth#refreshtoken). It uses the refresh token from `refreshTokenFn` (or the refresh cookie), and returns the new tokens in `data`; save them yourself, `onTokenRefreshed` isn't called for this response.
+
+## Detect an ended session
+
+When the session can't be refreshed any more (expired, revoked or logged out), requests fail with `401` and `meta.bshError: "JWT__SESSION_EXPIRED"`. Use `isExpired` to send the user back to login:
+
+```typescript
+import { isExpired } from '@bshsolutions/sdk/types';
+
+bshEngine.errorInterceptor(async (error) => {
+  if (isExpired(error)) {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    window.location.href = '/login';
+  }
+  return error;
+});
+```
 
   </Tabs.Tab>
   <Tabs.Tab label="Types">
 ```typescript
-export type BshOnTokenRefreshedFn = (accessToken: string) => void | Promise<void>;
+export type BshOnTokenRefreshedFn = (tokens: { accessToken?: string; refreshToken?: string; }) => void | Promise<void>;
 ```
 ```typescript
 export type BshRefreshTokenFn = () => Promise<string | undefined | null>;
 ```
 ```typescript
 export type BshAuthFn = () => Promise<AuthToken | undefined | null>;
+```
+```typescript
+export const isExpired: (error: BshError | BshResponse<unknown> | undefined) => boolean;
 ```
   </Tabs.Tab>
 </Tabs>

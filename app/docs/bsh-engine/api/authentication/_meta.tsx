@@ -5,6 +5,7 @@ export default {
   'login': <EndpointTitle method='POST' title='Login'/>,
   'register': <EndpointTitle method='POST' title='Register'/>,
   'refresh-token': <EndpointTitle method='POST' title='Refresh Token'/>,
+  'logout': <EndpointTitle method='POST' title='Logout'/>,
   'activate-account': <EndpointTitle method='POST' title='Activate Account'/>,
   'resend-activation-email': <EndpointTitle method='POST' title='Resend Activation Email'/>,
   'forgot-password': <EndpointTitle method='POST' title='Forgot Password'/>,

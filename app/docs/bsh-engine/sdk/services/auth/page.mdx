@@ -26,6 +26,16 @@ await bshEngine.auth.login({
 | `email` | string | yes | The user's email address |
 | `password` | string | yes | The user's password |
 
+Returns `{ access, refresh }` in `data`. Store both tokens; see [Auto Refresh](/docs/bsh-engine/sdk/authentication/auto-refresh). When the engine uses `Cookies` [delivery](/docs/bsh-engine/environment/compoenents#auth), `data` is empty and the tokens are only set as cookies.
+
+### logout
+
+Ends the current session on the engine (status `LoggedOut`) and clears the auth cookies. Other sessions of the user stay active.
+
+```typescript
+await bshEngine.auth.logout({});
+```
+
 ---
 
 ### register
@@ -57,21 +67,18 @@ await bshEngine.auth.register({
 
 ### refreshToken
 
-Refreshes an expired access token using a refresh token.
+Refreshes the **current session** and returns new `{ access, refresh }` tokens in `data`.
 
 ```typescript
-await bshEngine.auth.refreshToken({
-  payload: {
-    refresh: 'your-refresh-token'
-  }
-});
+const response = await bshEngine.auth.refreshToken();
+const tokens = response?.data[0];
+if (tokens) {
+  localStorage.setItem('accessToken', tokens.access);
+  localStorage.setItem('refreshToken', tokens.refresh);
+}
 ```
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `refresh` | string | yes | The refresh token to use for obtaining new access tokens |
-
----
+The previous refresh token stops working shortly after, so always store the new one. See [Refresh Token](/docs/bsh-engine/api/authentication/refresh-token#token-rotation).
 
 ### forgetPassword
 

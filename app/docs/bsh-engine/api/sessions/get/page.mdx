@@ -1,0 +1,61 @@
+---
+title: Get Session
+---
+
+# Get Session
+
+Get a session by its ID.
+
+```bash
+GET /api/auth/sessions/{sid}
+```
+
+## Authentication
+
+This endpoint requires a user session, sent as a JWT or with the auth cookies:
+
+```bash
+Authorization: Bearer <your-jwt-token>
+```
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `sid` | string | yes | The session ID |
+
+## Response
+
+**Success Response (200 OK):**
+
+```json
+{
+  "code": 200,
+  "data": [
+    {
+      "sid": "9a1d2c3b-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+      "sub": "user-id",
+      "iat": { "$date": 1794045600000 },
+      "exp": { "$date": 1796637600000 },
+      "status": "Active",
+      "current": false
+    }
+  ]
+}
+```
+
+See [Session object](/docs/bsh-engine/api/sessions#session-object) for the fields.
+
+## Error Responses
+
+**404 Not Found** - The session doesn't exist:
+
+```json
+{
+  "code": 404,
+  "error": "Session not found",
+  "meta": {
+    "type": "Session Not Found"
+  }
+}
+```

@@ -1,0 +1,86 @@
+---
+title: Revoke Session
+---
+
+# Revoke Session
+
+End a session, for example one opened on a lost device. This action cannot be undone.
+
+```bash
+DELETE /api/auth/sessions/{sid}/revoke
+```
+
+## Authentication
+
+This endpoint requires a user session, sent as a JWT or with the auth cookies:
+
+```bash
+Authorization: Bearer <your-jwt-token>
+```
+
+Cookie sessions must also send the CSRF token:
+
+```bash
+X-XSRF-TOKEN: <value of the XSRF-TOKEN cookie>
+```
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `sid` | string | yes | The ID of the session to revoke |
+
+## Response
+
+**Success Response (200 OK):**
+
+```json
+{
+  "code": 200,
+  "message": "Session revoked",
+  "data": [
+    {
+      "sid": "9a1d2c3b-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+      "message": "Session revoked"
+    }
+  ],
+  "meta": {
+    "type": "Revoke Session"
+  }
+}
+```
+
+After revocation, the session's `status` is `Revoked` and its tokens are rejected immediately. The device using it has to log in again.
+
+## Error Responses
+
+**400 Bad Request** - The session is the current one:
+
+```json
+{
+  "code": 400,
+  "error": "Cannot revoke the current session, use logout instead",
+  "meta": {
+    "type": "Revoke Session",
+    "tips": { "logout": "POST /api/auth/logout" }
+  }
+}
+```
+
+**404 Not Found** - The session doesn't exist:
+
+```json
+{
+  "code": 404,
+  "error": "Session not found",
+  "meta": {
+    "type": "Session Not Found"
+  }
+}
+```
+
+## Important Notes
+
+- Revoking a session is **permanent**; the user has to log in again on that device.
+- To end the current session, use [Logout](/docs/bsh-engine/api/authentication/logout).
+- Regular users can only revoke their own sessions; `BSH_ADMIN` users can revoke any session.

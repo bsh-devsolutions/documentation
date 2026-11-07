@@ -41,7 +41,7 @@ For sensitive data that needs to be stored securely, you can use secrets to mana
 
 ### Used Secrets
 
-The engine uses built-in secrets to configure various services (mailing, storage, JWT) via environment variables.<br/>
+The engine uses built-in secrets to configure various services (mailing, storage) via environment variables.<br/>
 See [environment secrets](/docs/bsh-engine/environment#secrets) to learn how to pass those secrets to the engine.
 
 ```json
@@ -55,9 +55,6 @@ See [environment secrets](/docs/bsh-engine/environment#secrets) to learn how to 
     "apiSecret": "",
     "cloudName": "",
     "folder": ""
-  },
-  "jwt": {
-    "secret": ""
   }
 }
 ```

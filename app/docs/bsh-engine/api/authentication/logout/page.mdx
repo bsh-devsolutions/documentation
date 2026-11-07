@@ -1,0 +1,39 @@
+---
+title: Logout
+---
+
+# Logout
+
+End the current session.
+
+```bash
+POST /api/auth/logout
+```
+
+## Behavior
+
+- Marks the current [auth session](/docs/bsh-engine/auth/sessions) as `LoggedOut` on the engine. Its access and refresh tokens stop working immediately.
+- Clears the `bsh_access_token`, `bsh_refresh_token` and `XSRF-TOKEN` cookies.
+- Other sessions of the same user (other devices or browsers) are not affected. To end them, use [Revoke Session](/docs/bsh-engine/api/sessions/revoke).
+
+## Authentication
+
+Send the tokens of the session to close, the same way as for any other request:
+
+```bash
+Authorization: Bearer {{accessToken}}
+X-BSH-REFRESHTOKEN: {{refreshToken}}
+```
+
+Cookie sessions send the auth cookies automatically. Requests without a session still get a successful response, but no session is closed.
+
+## Response
+
+```json
+{
+  "data": [
+    { "message": "Logged out" }
+  ],
+  "message": "Logged out"
+}
+```

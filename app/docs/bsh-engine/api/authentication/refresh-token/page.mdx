@@ -6,7 +6,7 @@ import { Callout } from 'nextra/components';
 
 # Refresh Token
 
-Refresh an expired access token using a refresh token.
+Refresh the **current session** and get a new access token and refresh token.
 
 ```bash
 POST /api/auth/refresh
@@ -20,18 +20,34 @@ POST /api/auth/refresh
 
 | Client style | Behavior |
 |--------------|----------|
-| **Cookies** | Expired access tokens are refreshed using the refresh cookie; new cookies are set on the response. |
-| **Headers** | Send `Authorization: Bearer <accessToken>` and `X-BSH-REFRESHTOKEN: <refreshToken>`. If the access token is expired, the engine refreshes and completes the original API call. The new access token may appear in **`meta.accessToken`**. |
+| **Cookies** | Expired access tokens are refreshed using the refresh cookie; both cookies are set again on the response. |
+| **Headers** | Send `Authorization: Bearer <accessToken>` and `X-BSH-REFRESHTOKEN: <refreshToken>`. If the access token is expired, the engine refreshes the session and completes the original API call. The new tokens are returned in **`meta.accessToken`** and **`meta.refreshToken`**.|
 
 See [Authentication API — Token usage](/docs/bsh-engine/api/authentication#token-usage) and [SDK Auto Refresh](/docs/bsh-engine/sdk/authentication/auto-refresh).
 
-## Request Body
+## Request
 
-```json
-{
-  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
+This endpoint only refreshes the session attached to the request:
+
+1. The **`X-BSH-REFRESHTOKEN`** header (when `auth.config.delivery` is `Default` or `Json`).
+2. The **`bsh_refresh_token`** cookie (when `auth.config.delivery` is `Default` or `Cookies`).
+
+<Tabs items={['Headers', 'Cookies']}>
+  <Tabs.Tab>
+  ```bash
+  curl -X POST https://api.example.com/api/auth/refresh \
+       -H "X-BSH-REFRESHTOKEN: {{refreshToken}}"
+  ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+  ```javascript
+  await fetch('https://api.example.com/api/auth/refresh', {
+    method: 'POST',
+    credentials: 'include',
+  });
+  ```
+  </Tabs.Tab>
+</Tabs>
 
 ## Response
 
@@ -39,9 +55,50 @@ See [Authentication API — Token usage](/docs/bsh-engine/api/authentication#tok
 {
   "data": [
     {
-      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+      "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     }
-  ]
+  ],
+  "message": "Token refreshed",
+  "meta": { "type": "Token Refresh" }
+}
+```
+
+With `Cookies` delivery, `data` is empty and the new tokens are only set as cookies.
+
+## Token rotation
+
+Every refresh **rotates** the tokens of the session:
+
+- The response always contains a **new refresh token**. Store it and use it for the next refresh.
+- The previous refresh token stays valid for **10 seconds** (so parallel requests don't fail), then stops working.
+- Refreshing never extends the session past `auth.config.sessionTtl` (30 days by default). After that, the user has to log in again.
+
+See [Sessions](/docs/bsh-engine/auth/sessions) for the full lifecycle.
+
+## Error Responses
+
+**400 Bad Request** - No refresh token in the header or cookie:
+
+```json
+{
+  "code": 400,
+  "error": "No active session to refresh",
+  "meta": {
+    "type": "Token Refresh",
+    "tips": { "refresh": "Send the X-BSH-REFRESHTOKEN header or the refresh cookie" }
+  }
+}
+```
+
+**401 Unauthorized** - The refresh token or the session is expired, revoked or invalid:
+
+```json
+{
+  "code": 401,
+  "error": "Session expired",
+  "meta": {
+    "type": "Session expired"
+  }
 }
 ```

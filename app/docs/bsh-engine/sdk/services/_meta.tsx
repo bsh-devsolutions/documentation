@@ -2,6 +2,7 @@ import type { MetaRecord } from "nextra";
 
 export default {
     'auth': 'Authentication',
+    'auth-sessions': 'Auth Sessions',
     'entities': 'Entities',
     'users': 'Users',
     'tenants': 'Tenants',

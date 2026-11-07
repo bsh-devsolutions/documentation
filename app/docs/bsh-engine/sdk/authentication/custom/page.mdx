@@ -20,8 +20,9 @@ const bshEngine = new BshEngine({
     return { type: 'JWT', token };
   },
   refreshTokenFn: async () => localStorage.getItem('refreshToken'),
-  onTokenRefreshed: async (accessToken) => {
-    localStorage.setItem('accessToken', accessToken);
+  onTokenRefreshed: async ({ accessToken, refreshToken }) => {
+    if (accessToken) localStorage.setItem('accessToken', accessToken);
+    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
   },
 });
 ```

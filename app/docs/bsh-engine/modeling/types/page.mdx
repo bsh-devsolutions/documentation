@@ -70,3 +70,17 @@ to create a type you can use the **Create** button in the **Types** page, and yo
 | `Date`       | Date |
 | `json`       | JSON |
 | `object`     | Object |
+
+## Date values
+
+`Date` columns accept these input formats. Values without a time zone or offset are treated as **UTC**, and dates are stored as UTC.
+
+| Format | Example |
+|--------|---------|
+| ISO date-time with offset | `2026-11-07T10:00:00Z`, `2026-11-07T10:00:00+01:00`, `2026-11-07T10:00:00.123+01` |
+| ISO date-time with zone | `2026-11-07T10:00:00+01:00[Europe/Paris]` |
+| Local date-time (UTC) | `2026-11-07T10:00:00`, `2026-11-07 10:00:00` |
+| Date only (midnight UTC) | `2026-11-07`, `2026/11/07`, `2026.11.07` |
+| Epoch milliseconds | `1794045600000` |
+| Epoch seconds | `1794045600` |
+| BSH date object | `{ "$date": "2026-11-07T10:00:00Z" }` |

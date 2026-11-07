@@ -1,0 +1,47 @@
+---
+title: Sessions
+---
+
+import { Callout } from 'nextra/components';
+
+# Sessions
+
+Every login opens an **auth session** on the engine. Sessions let users stay logged in for weeks while the tokens they send stay short-lived, and they can be ended from the server at any time.
+
+## Session and tokens
+
+| | Lifetime (default) | Configured by | Purpose |
+|---|---|---|---|
+| **Session** | 30 days | `auth.config.sessionTtl` (days) | Absolute limit. After it, the user logs in again. Refreshing doesn't extend it. |
+| **Access token** | 15 minutes | `auth.config.accessTtl` (minutes) | Sent on every request (`Authorization: Bearer …` or `bsh_access_token` cookie). |
+| **Refresh token** | 7 days | `auth.config.refreshTtl` (days) | Used to get new tokens for the same session (`X-BSH-REFRESHTOKEN` header or `bsh_refresh_token` cookie). |
+
+Both tokens only carry the user id (`sub`), the session id (`sid`) and a token id (`jti`). Use [GET /api/users/me](/docs/bsh-engine/api/users/get-current-user) to fetch user details.
+
+## Lifecycle
+
+![Sessions Lifecycle](/images/bsh-egnine/auth//session-lifecycle.png)
+
+| Status | When |
+|--------|------|
+| `Active` | The session can be used and refreshed. |
+| `LoggedOut` | The user called [Logout](/docs/bsh-engine/api/authentication/logout) with this session. |
+| `Revoked` | The session was [revoked](/docs/bsh-engine/api/sessions/revoke) from another session, or by a `BSH_ADMIN`. |
+| `Expired` | The session reached `sessionTtl`, or a refresh token that was already replaced was used again. |
+
+Once a session leaves `Active`, its tokens are rejected with `401` and `meta.bshError: "JWT__SESSION_EXPIRED"`.
+
+## Token rotation
+
+Each refresh, automatic or through [`POST /api/auth/refresh`](/docs/bsh-engine/api/authentication/refresh-token), issues a **new access token and a new refresh token** for the same session.
+
+- The previous refresh token keeps working for **10 seconds**, so requests sent in parallel don't fail.
+- After that, using it again is treated as a stolen token: the whole session is closed as `Expired`.
+
+<Callout type="warning">
+  Clients that store tokens themselves must save **both** new tokens after each refresh. Keeping the old refresh token logs the user out on the next refresh. Cookie sessions are updated by the engine automatically. With the SDK, use [`onTokenRefreshed`](/docs/bsh-engine/sdk/authentication/auto-refresh).
+</Callout>
+
+## Managing sessions
+ 
+TODO: add content

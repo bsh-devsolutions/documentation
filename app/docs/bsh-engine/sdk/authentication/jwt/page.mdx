@@ -14,4 +14,10 @@ const bshEngine = new BshEngine({
 });
 ```
 
-The JWT token is sent as `Authorization: Bearer <token>`. Pair with a [refresh token](/docs/bsh-engine/sdk/authentication/auto-refresh) (`refreshToken` or `refreshTokenFn`) so the engine can renew expired access tokens and return `meta.accessToken`.
+The JWT token is sent as `Authorization: Bearer <token>`. Pair with a [refresh token](/docs/bsh-engine/sdk/authentication/auto-refresh) (`refreshToken` or `refreshTokenFn`) so the engine can renew expired access tokens and return the new tokens in `meta.accessToken` and `meta.refreshToken`.
+
+<Callout type="warning">
+  Refresh tokens change on every refresh, so for anything longer than a short script use `authFn`, `refreshTokenFn` and `onTokenRefreshed` as shown in [Auto Refresh](/docs/bsh-engine/sdk/authentication/auto-refresh#recommended-setup).
+</Callout>
+
+Tokens only work while delivery is `Default` or `Json`: with `auth.config.delivery: "Cookies"`, the engine ignores `Authorization: Bearer <jwt>`.

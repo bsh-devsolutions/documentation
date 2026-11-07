@@ -21,6 +21,7 @@ Here you can find all you need to know about the exposed API endpoints of the BS
     <Cards.Card title='Entities' href='/docs/bsh-engine/api/entities' />
     <Cards.Card title='Tenants' href='/docs/bsh-engine/api/tenants' />
     <Cards.Card title='Authentication' href='/docs/bsh-engine/api/authentication' />
+    <Cards.Card title='Auth Sessions' href='/docs/bsh-engine/api/sessions' />
     <Cards.Card title='User Management' href='/docs/bsh-engine/api/user-management' />
     <Cards.Card title='Image Management' href='/docs/bsh-engine/api/image-management' />
     <Cards.Card title='Email Management' href='/docs/bsh-engine/api/email-management' />
@@ -37,7 +38,7 @@ All protected API endpoints require authentication. See [Authentication API](/do
 Authorization: Bearer {{accessToken}}
 ```
 
-API keys use the same header name with the raw key: `Authorization: bsh_…` (not `Bearer`).
+API keys use the same header with the raw key or as a bearer token: `Authorization: bsh_…` or `Authorization: Bearer bsh_…`.
 
 
 ## Response Format
@@ -60,6 +61,8 @@ All API responses follow a consistent JSON format:
 |-------|-------------|
 | `type` | Error or success category |
 | `accessToken` | New JWT access token after **silent refresh** (header-based clients) |
+| `refreshToken` | New refresh token after **silent refresh**. |
+| `bshError` | Stable error code, for example `JWT__SESSION_EXPIRED`. |
 | `sql` | SQL related to an error (when applicable) |
 | `tips` | Hints for fixing validation or query errors |
 
