@@ -18,18 +18,49 @@ Every login opens an **auth session** on the engine. Sessions let users stay log
 
 Both tokens only carry the user id (`sub`), the session id (`sid`) and a token id (`jti`). Use [GET /api/users/me](/docs/bsh-engine/api/users/get-current-user) to fetch user details.
 
+<Callout>
+  Token expiry is based on the TTLs currently configured, so changing `accessTtl` or `refreshTtl` also applies to tokens already issued.
+</Callout>
+
 ## Lifecycle
 
-![Sessions Lifecycle](/images/bsh-egnine/auth//session-lifecycle.png)
+```mermaid
+%%{init: {"flowchart": {"curve": "linear"}}}%%
+flowchart LR
+    L(Login) --> A(Active)
+    N("Stays Active:<br/>refresh → new tokens<br/>old or unknown → 401") -.- A
+
+    A -- Logout --> O(LoggedOut)
+    A -- Revoked by user or admin --> R(Revoked)
+    A -- Session TTL reached or idle --> E(Expired)
+    A -- 10th old or unknown token --> B(Blocked)
+
+    classDef active fill:#dcfce7,stroke:#16a34a,color:#166534
+    classDef loggedOut fill:#e5e7eb,stroke:#6b7280,color:#374151
+    classDef revoked fill:#ffedd5,stroke:#ea580c,color:#9a3412
+    classDef expired fill:#fef3c7,stroke:#d97706,color:#92400e
+    classDef blocked fill:#fee2e2,stroke:#dc2626,color:#991b1b
+    classDef note fill:none,stroke:#9ca3af,stroke-dasharray:4 3,color:#6b7280
+
+    class A active
+    class O loggedOut
+    class R revoked
+    class E expired
+    class B blocked
+    class N note
+```
 
 | Status | When |
 |--------|------|
 | `Active` | The session can be used and refreshed. |
 | `LoggedOut` | The user called [Logout](/docs/bsh-engine/api/authentication/logout) with this session. |
 | `Revoked` | The session was [revoked](/docs/bsh-engine/api/sessions/revoke) from another session, or by a `BSH_ADMIN`. |
-| `Expired` | The session reached `sessionTtl`, or a refresh token that was already replaced was used again. |
+| `Expired` | The session reached `sessionTtl`, or was [idle](#session-and-tokens) for longer than `refreshTtl`. |
+| `Blocked` | Rotated or unknown tokens of this session were used too many times, a sign the tokens were stolen. See [Token rotation](#token-rotation). |
 
-Once a session leaves `Active`, its tokens are rejected with `401` and `meta.bshError: "JWT__SESSION_EXPIRED"`.
+<Callout>
+    When the engine closes a session itself, it records why in the session's `reason` field.
+</Callout>
 
 ## Token rotation
 

@@ -202,6 +202,10 @@ Use the cards below to understand each top-level configuration component quickly
   | `config.refreshTtl` | number | `7` | Refresh token lifetime, in **days**. |
   | `config.sessionTtl` | number | `30` | Maximum session lifetime, in **days**. Refreshing doesn't extend it. |
 
+  <Callout type="info">
+  Token expiry is computed from the token's issue date plus the current `accessTtl` or `refreshTtl`, so changing them also applies to tokens already issued. A session not refreshed within `refreshTtl` expires as idle. See [Session and tokens](/docs/bsh-engine/auth/sessions#session-and-tokens).
+  </Callout>
+
   Delivery modes:
 
   | Value | Auth cookies | Tokens in JSON responses | `Authorization: Bearer <jwt>` | Typical use |

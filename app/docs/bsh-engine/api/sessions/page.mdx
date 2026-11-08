@@ -66,6 +66,7 @@ The Auth Sessions API lets a logged-in user list, inspect and revoke their [auth
 | `sub` | ID of the user who owns the session |
 | `iat` | When the session was created or last refreshed (UTC) |
 | `exp` | When the session ends at the latest (UTC), see `auth.config.sessionTtl` |
-| `status` | `Active`, `Expired`, `Revoked` or `LoggedOut` |
+| `status` | `Active`, `Expired`, `Revoked`, `LoggedOut` or `Blocked`. See [Lifecycle](/docs/bsh-engine/auth/sessions#lifecycle). |
+| `reason` | Why the session was closed, when the engine closed it itself. |
 | `metadata` | Device and app captured at login (browser, OS, device type, `X-Bsh-Client` name). Every field is optional. See [Device details](/docs/bsh-engine/auth/sessions#device-details). |
 | `current` | `true` when this is the session used by the request |

@@ -151,7 +151,7 @@ for (const session of response?.data ?? []) {
   </Tabs.Tab>
   <Tabs.Tab label="Types">
 ```typescript
-export type BshAuthSessionStatus = 'Active' | 'Expired' | 'Revoked' | 'LoggedOut';
+export type BshAuthSessionStatus = 'Active' | 'Expired' | 'Revoked' | 'LoggedOut' | 'Blocked';
 ```
 ```typescript
 export const BshSessionMetaData = {
@@ -188,6 +188,7 @@ export type BshAuthSession = Omit<BshObject, 'persistenceId'> & {
     iat: BshDate;
     exp: BshDate;
     status: BshAuthSessionStatus;
+    reason?: string;
     metadata?: BshAuthSessionMetadata;
     current: boolean;
 }
