@@ -12,7 +12,7 @@ POST /api/auth/logout
 
 ## Behavior
 
-- Marks the current [auth session](/docs/bsh-engine/auth/sessions) as `LoggedOut` on the engine. Its access and refresh tokens stop working immediately.
+- Marks the current [auth session](/docs/bsh-engine/security/sessions) as `LoggedOut` on the engine. Its access and refresh tokens stop working immediately.
 - Clears the `bsh_access_token`, `bsh_refresh_token` and `XSRF-TOKEN` cookies.
 - Other sessions of the same user (other devices or browsers) are not affected. To end them, use [Revoke Session](/docs/bsh-engine/api/sessions/revoke).
 

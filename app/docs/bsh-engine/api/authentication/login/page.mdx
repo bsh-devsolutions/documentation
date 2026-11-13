@@ -10,7 +10,7 @@ Authenticate a user with email and password.
 POST /api/auth/login
 ```
 
-Each successful login opens a new [auth session](/docs/bsh-engine/auth/sessions) on the engine and returns an access token and a refresh token for it.
+Each successful login opens a new [auth session](/docs/bsh-engine/security/sessions) on the engine and returns an access token and a refresh token for it.
 
 <Callout type='info'>
   How the tokens are returned depends on [`auth.config.delivery`](/docs/bsh-engine/environment/compoenents#auth):
@@ -36,8 +36,8 @@ Each successful login opens a new [auth session](/docs/bsh-engine/auth/sessions)
 
 | Header | Required | Description |
 |--------|----------|-------------|
-| `X-Bsh-Client` | No | Identifies the application initiating login. Stored in the session's [device details](/docs/bsh-engine/auth/sessions#device-details). The SDK sends it when [`clientName`](/docs/bsh-engine/sdk/configuration) is set. |
-| `User-Agent` | No | Identifies the browser, operating system, and device. [device details](/docs/bsh-engine/auth/sessions#device-details). |
+| `X-Bsh-Client` | No | Identifies the application initiating login. Stored in the session's [device details](/docs/bsh-engine/security/sessions#device-details). The SDK sends it when [`clientName`](/docs/bsh-engine/sdk/configuration) is set. |
+| `User-Agent` | No | Identifies the browser, operating system, and device. [device details](/docs/bsh-engine/security/sessions#device-details). |
 
 ## Request Body
 

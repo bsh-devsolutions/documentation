@@ -74,7 +74,7 @@ Every refresh **rotates** the tokens of the session:
 - The previous refresh token stays valid for **10 seconds** (so parallel requests don't fail), then stops working.
 - Refreshing never extends the session past `auth.config.sessionTtl` (30 days by default). After that, the user has to log in again.
 
-See [Sessions](/docs/bsh-engine/auth/sessions) for the full lifecycle.
+See [Sessions](/docs/bsh-engine/security/sessions) for the full lifecycle.
 
 ## Error Responses
 

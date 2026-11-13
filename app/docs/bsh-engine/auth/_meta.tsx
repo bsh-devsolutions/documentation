@@ -5,7 +5,6 @@ export default {
   'login': 'Login',
   'forgot-password': 'Forgot Password',
   'activate-account': 'Activate Account',
-  'sessions': <Title title='Sessions' badge='new' />,
   'third-party-auth': <Title title='Third-Party' badge='planned' />,
   'mfa': <Title title='MFA' badge='planned' />,
 }

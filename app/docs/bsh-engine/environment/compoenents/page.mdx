@@ -203,7 +203,7 @@ Use the cards below to understand each top-level configuration component quickly
   | `config.sessionTtl` | number | `30` | Maximum session lifetime, in **days**. Refreshing doesn't extend it. |
 
   <Callout type="info">
-  Token expiry is computed from the token's issue date plus the current `accessTtl` or `refreshTtl`, so changing them also applies to tokens already issued. A session not refreshed within `refreshTtl` expires as idle. See [Session and tokens](/docs/bsh-engine/auth/sessions#session-and-tokens).
+  Token expiry is computed from the token's issue date plus the current `accessTtl` or `refreshTtl`, so changing them also applies to tokens already issued. A session not refreshed within `refreshTtl` expires as idle. See [Session and tokens](/docs/bsh-engine/security/sessions#session-and-tokens).
   </Callout>
 
   Delivery modes:
@@ -214,7 +214,7 @@ Use the cards below to understand each top-level configuration component quickly
   | `Cookies` | yes | no | not accepted | Browser-only apps; tokens never reach JavaScript |
   | `Json` | no | yes | accepted | Mobile, server or SPA clients that store tokens themselves; no CSRF |
 
-  An unknown `delivery` value falls back to `Default`. See [Sessions](/docs/bsh-engine/auth/sessions) for how tokens and sessions work.
+  An unknown `delivery` value falls back to `Default`. See [Sessions](/docs/bsh-engine/security/sessions) for how tokens and sessions work.
 
   <Callout type="info">
     the `provider` field is to allow us to add more auth providers in the future.

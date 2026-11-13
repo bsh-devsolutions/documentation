@@ -21,7 +21,7 @@ This release focuses on fixig vulnerabilities in the authentication system and a
 
 **Security & Sessions**
 - Long sessions with short-lived tokens: access tokens last 15 minutes, refresh tokens 7 days and sessions 30 days by default, all configurable. [#450](https://github.com/bsh-devsolutions/bshengine/issues/450) [#460](https://github.com/bsh-devsolutions/bshengine/issues/460)
-- [Auth sessions](/docs/bsh-engine/auth/sessions) are stored on the engine (`BshAuthSessions`), with refresh token rotation and reuse detection. [#463](https://github.com/bsh-devsolutions/bshengine/issues/463) [#480](https://github.com/bsh-devsolutions/bshengine/issues/480)
+- [Auth sessions](/docs/bsh-engine/security/sessions) are stored on the engine (`BshAuthSessions`), with refresh token rotation and reuse detection. [#463](https://github.com/bsh-devsolutions/bshengine/issues/463) [#480](https://github.com/bsh-devsolutions/bshengine/issues/480)
 - Sessions are **blocked** after 10 requests with rotated or unknown tokens (possible token theft). Using an old token once no longer closes the session. Closed sessions record a `reason`. [#489](https://github.com/bsh-devsolutions/bshengine/issues/489)
 - Token expiry is computed from the issue date (`iat`) plus the configured TTL, so TTL changes apply to tokens already issued. Sessions not refreshed within `refreshTtl` expire as idle (`reason: Idle timeout`). [#462](https://github.com/bsh-devsolutions/bshengine/issues/462)
 - Logout ends the session on the engine. [#461](https://github.com/bsh-devsolutions/bshengine/issues/461)
@@ -33,7 +33,7 @@ This release focuses on fixig vulnerabilities in the authentication system and a
 
 **Features & Improvements**
 - New [Auth Sessions API](/docs/bsh-engine/api/sessions) to list, inspect, count and revoke sessions, and the matching [SDK service](/docs/bsh-engine/sdk/services/auth-sessions). [#481](https://github.com/bsh-devsolutions/bshengine/issues/481)
-- Sessions record the [device details](/docs/bsh-engine/auth/sessions#device-details) at login: browser, OS, device type and the app name from the new `X-Bsh-Client` header. The client IP is not stored.
+- Sessions record the [device details](/docs/bsh-engine/security/sessions#device-details) at login: browser, OS, device type and the app name from the new `X-Bsh-Client` header. The client IP is not stored.
 - Dashboard: new **Security → Auth Sessions** page for `BSH_ADMIN` users, and a **Sessions** section in the profile to revoke other sessions. [#482](https://github.com/bsh-devsolutions/bshengine/issues/482) [#483](https://github.com/bsh-devsolutions/bshengine/issues/483)
 - SDK: `clientName` option and `withClientName()` to send `X-Bsh-Client`, `BshSessionMetaData` with the possible browser, OS and device values, and the `metadata` field on `BshAuthSession`.
 - SDK: `isExpired()` helper and `BshErrorCode` type.

@@ -19,7 +19,7 @@ For **header-based** clients (typical for mobile, server, or SPA apps using the 
 When refresh succeeds during a request, the engine returns the new tokens in **`response.meta.accessToken`** and **`response.meta.refreshToken`**, and the SDK passes them to **`onTokenRefreshed`**.
 
 <Callout type="warning">
-  **The SDK doesn't store tokens.** Your app keeps them and saves the new ones in `onTokenRefreshed`. The refresh token **changes on every refresh**, and the old one stops working about 10 seconds later. If you only save the access token, the user is logged out on the next refresh. See [Sessions](/docs/bsh-engine/auth/sessions#token-rotation).
+  **The SDK doesn't store tokens.** Your app keeps them and saves the new ones in `onTokenRefreshed`. The refresh token **changes on every refresh**, and the old one stops working about 10 seconds later. If you only save the access token, the user is logged out on the next refresh. See [Sessions](/docs/bsh-engine/security/sessions#token-rotation).
 </Callout>
 
 ## Recommended setup
