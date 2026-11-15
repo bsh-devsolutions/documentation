@@ -10,20 +10,6 @@ Replace the active signing key now. Optionally, expire the previous keys at the 
 POST /api/auth/signing-keys/rotate
 ```
 
-## Authentication
-
-This endpoint requires a `BSH_ADMIN` user, sent as a JWT, with the auth cookies or with an API key:
-
-```bash
-Authorization: Bearer <your-jwt-token>
-```
-
-Cookie sessions must also send the CSRF token:
-
-```bash
-X-XSRF-TOKEN: <value of the XSRF-TOKEN cookie>
-```
-
 ## Request Body
 
 The body is optional. Without it, the previous key stays valid.

@@ -10,20 +10,6 @@ End a session, for example one opened on a lost device. This action cannot be un
 DELETE /api/auth/sessions/{sid}/revoke
 ```
 
-## Authentication
-
-This endpoint requires a user session, sent as a JWT or with the auth cookies:
-
-```bash
-Authorization: Bearer <your-jwt-token>
-```
-
-Cookie sessions must also send the CSRF token:
-
-```bash
-X-XSRF-TOKEN: <value of the XSRF-TOKEN cookie>
-```
-
 ## Path Parameters
 
 | Parameter | Type | Required | Description |

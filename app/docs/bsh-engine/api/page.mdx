@@ -41,6 +41,12 @@ Authorization: Bearer {{accessToken}}
 
 API keys use the same header with the raw key or as a bearer token: `Authorization: bsh_…` or `Authorization: Bearer bsh_…`.
 
+Cookie sessions must also send the CSRF token on mutating requests (`POST`, `PUT`, `DELETE`, …):
+
+```bash
+X-XSRF-TOKEN: {{value from XSRF-TOKEN cookie}}
+```
+
 
 ## Response Format
 
