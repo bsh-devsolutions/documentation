@@ -12,7 +12,7 @@ export default {
   'settings': 'Engine Settings',
   'caching': 'Caching',
   'real-time': <Title title='Real-time' badge='planned' />,
-  'packaging': 'Packaging',
+  'packaging': <Title title='Packaging' badge='planned' />,
   'search': 'BSH Search',
   'api': 'API Reference',
   'sdk': 'SDK',
