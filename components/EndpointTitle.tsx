@@ -24,7 +24,7 @@ export const EndpointTitle: React.FC<EndpointTitleProps> = ({
     badgeLabel ?? (badge === 'updated' ? CURRENT_DOC_RELEASE_VERSION : undefined);
 
   return (
-    <Component className={className} style={{ pointerEvents: 'none' }}>
+    <Component className={`bsh-title ${className}`.trim()}>
       <HttpMethod method={method} /> {title}
       {badge && (
         <Badge variant={badge} label={resolvedBadgeLabel} />

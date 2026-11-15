@@ -1,0 +1,3 @@
+:is(.nextra-sidebar, .nextra-mobile-nav) a .bsh-title {
+  pointer-events: none;
+}
