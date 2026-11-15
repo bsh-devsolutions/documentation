@@ -18,6 +18,8 @@ This release focuses on fixig vulnerabilities in the authentication system and a
 - Built-in policies were reorganized: `ROLE_BSH_ADMIN_ALLOW_ALL` is now `Bsh_Admin`, `EngineSettingsAccess` and `ACCESS_ALL_DEV` were removed, and `Bsh_UserTenantAccess` was added. See [Built-in Policies](/docs/bsh-engine/security/policies#built-in-policies).
 - Auth cookies now use `Path=/api`.
 - The expired session `meta.type` is now `Session expired` (was `Session Expired`). Check `meta.bshError` instead.
+- Audit fields `CreatedBy` and `LastUpdatedBy` store users as `<id>` instead of `user:<id>`. API keys are still stored as `apikey:<id>`. See [Entity Auditing](/docs/bsh-engine/modeling/entities#entity-auditing). [#500](https://github.com/bsh-devsolutions/bshengine/issues/500)
+- Triggers fire only for entities with the new **Triggerable** option enabled, which is off by default. Enable it on existing entities that use triggers. See [Triggerable Entities](/docs/bsh-engine/modeling/entities#triggerable-entities). [#496](https://github.com/bsh-devsolutions/bshengine/issues/496)
 
 **Security & Sessions**
 - Long sessions with short-lived tokens: access tokens last 15 minutes, refresh tokens 7 days and sessions 30 days by default, all configurable. [#450](https://github.com/bsh-devsolutions/bshengine/issues/450) [#460](https://github.com/bsh-devsolutions/bshengine/issues/460)
@@ -43,6 +45,7 @@ This release focuses on fixig vulnerabilities in the authentication system and a
 - Dashboard: login shows a clear dialog when the account isn't activated, is disabled or locked, or needs a password reset. [#493](https://github.com/bsh-devsolutions/bshengine/issues/493)
 - SDK: `clientName` option and `withClientName()` to send `X-Bsh-Client`, `BshSessionMetaData` with the possible browser, OS and device values, and the `metadata` field on `BshAuthSession`.
 - SDK: `isExpired()` helper and `BshErrorCode` type.
+- New **Triggerable** entity option to choose whether an entity fires its triggers, available in the dashboard entity form and the SDK. [#496](https://github.com/bsh-devsolutions/bshengine/issues/496)
 - `GET /api/utils/version` no longer requires authentication.
 - More flexible [date parsing](/docs/bsh-engine/modeling/types#date-values): ISO variants, short offsets, epoch seconds and milliseconds. Values without an offset are treated as UTC.
 

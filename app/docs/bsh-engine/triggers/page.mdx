@@ -10,6 +10,10 @@ import {Callout, Tabs} from "nextra/components";
 
 Triggers provide a flexible way to enforce business logic, automate workflows, or integrate with external services without manual intervention.
 
+<Callout type="important">
+    Triggers fire only for entities with the [**Triggerable**](/docs/bsh-engine/modeling/entities#triggerable-entities) option enabled. On other entities, triggers are ignored even when they are enabled.
+</Callout>
+
 <Tabs items={['Docs', 'API']}>
     <Tabs.Tab>
         ## Creating a Trigger
