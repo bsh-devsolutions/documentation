@@ -6,7 +6,7 @@ import { Tabs } from 'nextra/components'
     <Tabs.Tab>
 In `@bshg/validation` the api that is responsible of validate the data is called `Validator`, this one is provide a lot of build in functionality to do the validation and more.
 
-The `v.validator()` function is the core method that allows you to create validators for your data types. As seen in the previous [Basic Usage](/ts-validation/basic-usage) example with the `User` type, this function requires the data type and accepts a configuration object as a parameter.
+The `v.validator()` function is the core method that allows you to create validators for your data types. As seen in the previous [Basic Usage](/docs/ts-validation/basic-usage) example with the `User` type, this function requires the data type and accepts a configuration object as a parameter.
 
 ### Function Signature
 
@@ -34,7 +34,7 @@ type ValidatorConfig<TV, TContext> = {
 | `nested`  | `NestedType<TV>`         | Allows you to define nested validation rules if your data type contains nested objects that also need validation.                                                                                        |
 | `options` | `ValidatorOptions`       | Additional options to configure the behavior of the validator.                                                                                                                                           |
 
-> **Note:** `TContext` is used to pass a type of the [context](/ts-validation/context-validation).
+> **Note:** `TContext` is used to pass a type of the [context](/docs/ts-validation/context-validation).
     </Tabs.Tab>
     <Tabs.Tab>
         ### Validator
@@ -53,7 +53,7 @@ type ValidatorConfig<TV, TContext> = {
 
 | Method                                 | Description                                                                                                                             |
 |----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| **options(options: ValidatorOptions)** | Updates the validator's configuration options after instantiation. [See options](/ts-validation/validator-options)  |
+| **options(options: ValidatorOptions)** | Updates the validator's configuration options after instantiation. [See options](/docs/ts-validation/validator-options)  |
 | **allGood()**                          | Checks if all validations pass. Returns `true` if all validations are successful, otherwise `false`.                                    |
 | **applyAll()**                         | Executes all defined validations on the items specified within the validator configuration.                                             |
 | **applyAllAsync()**                    | Asynchronously applies all validations on the items specified within the validator.                                                     |

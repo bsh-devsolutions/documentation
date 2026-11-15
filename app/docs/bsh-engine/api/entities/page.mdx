@@ -37,13 +37,13 @@ The Entities API provides CRUD, search, filtering, import/export, and count oper
 |--------|----------|-------------|
 | [GET](/docs/bsh-engine/api/entities/get-entity-by-id) | `/api/entities/:entityName/:entityId` | Get an entity by ID |
 | [POST](/docs/bsh-engine/api/entities/insert-entity) | `/api/entities/:entityName` | Create an entity |
-| [POST](/docs/bsh-engine/api/entities/batch-insert-entities) | `/api/entities/:entityName/batch` | Batch create entities |
+| [POST](/docs/bsh-engine/api/entities/insert-entities-batch) | `/api/entities/:entityName/batch` | Batch create entities |
 | [PUT](/docs/bsh-engine/api/entities/update-entity) | `/api/entities/:entityName` | Update an entity |
-| [PUT](/docs/bsh-engine/api/entities/batch-update-entities) | `/api/entities/:entityName/batch` | Batch update entities |
+| [PUT](/docs/bsh-engine/api/entities/update-entities-batch) | `/api/entities/:entityName/batch` | Batch update entities |
 | [POST](/docs/bsh-engine/api/entities/search-entities) | `/api/entities/:entityName/search` | Search entities |
 | [GET](/docs/bsh-engine/api/entities/search-entities-by-query) | `/api/entities/:entityName?query` | Search entities by query |
 | [DELETE](/docs/bsh-engine/api/entities/delete-entity) | `/api/entities/:entityName/:entityId` | Delete an entity |
-| [POST](/docs/bsh-engine/api/entities/batch-delete-entities) | `/api/entities/:entityName/delete` | Delete entities by search |
+| [POST](/docs/bsh-engine/api/entities/delete-entities-batch) | `/api/entities/:entityName/delete` | Delete entities by search |
 | [GET](/docs/bsh-engine/api/entities/count-entities) | `/api/entities/:entityName/count` | Count entities |
 | [POST](/docs/bsh-engine/api/entities/count-filtered-entities) | `/api/entities/:entityName/count` | Count filtered entities |
 | [POST](/docs/bsh-engine/api/entities/export-entities) | `/api/entities/:entityName/export?format={{format}}&name={{exportName}}` | Export entities |
