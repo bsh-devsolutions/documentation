@@ -42,8 +42,7 @@ export default async function RootLayout({ children }) {
       dir="ltr"
       suppressHydrationWarning
     >
-      <Head>
-      </Head>
+      <Head color={{ hue: 201, saturation: 100, lightness: { light: 35, dark: 55 } }} />
       <body>
         <Layout
           banner={banner}
@@ -52,6 +51,7 @@ export default async function RootLayout({ children }) {
           docsRepositoryBase="https://github.com/bsh-devsolutions/documentation"
           footer={footer}
           editLink={null}
+          feedback={{ content: null }}
           navigation={{
             prev: true,
             next: true
@@ -70,7 +70,6 @@ export default async function RootLayout({ children }) {
         >
           {children}
         </Layout>
-        <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
         <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt="" referrerPolicy="no-referrer-when-downgrade" /></noscript>
       </body>
     </html>

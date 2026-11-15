@@ -1,7 +1,5 @@
 import { NotFoundPage } from 'nextra-theme-docs'
 import { LogoIcon } from '../icons/Logo'
-import { Button } from 'nextra/components'
-import Link from 'next/link'
 
 export default function NotFound() {
   return (
