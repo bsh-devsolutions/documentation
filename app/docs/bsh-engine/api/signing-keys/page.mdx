@@ -1,0 +1,57 @@
+---
+title: Signing Keys API
+asIndexPage: true
+---
+
+# Signing Keys API
+
+The Signing Keys API lets `BSH_ADMIN` users list the [JWT signing keys](/docs/bsh-engine/security/signing-keys), force a rotation and expire a leaked key.
+
+<Callout type='info'>
+    For how keys are generated, rotated and expired, see the [Signing Keys documentation](/docs/bsh-engine/security/signing-keys).
+</Callout>
+
+## Base Endpoint
+
+```bash
+/api/auth/signing-keys
+```
+
+## Endpoints
+
+| Method | Endpoint | Description | |
+|--------|----------|-------------|-|
+| [POST](/docs/bsh-engine/api/signing-keys/rotate) | `/api/auth/signing-keys/rotate` | Rotate the active key now | |
+| [POST](/docs/bsh-engine/api/signing-keys/expire) | `/api/auth/signing-keys/{kid}/expire` | Expire a retired key | |
+| [GET](/docs/bsh-engine/api/entities/search-entities-by-query) | `/api/auth/signing-keys?query` | List and filter by URI parameters | Similar to Entities API |
+| [POST](/docs/bsh-engine/api/entities/search-entities) | `/api/auth/signing-keys/search` | Search keys by POST | Similar to Entities API |
+
+## Signing key object
+
+```json
+{
+  "kid": "a82791af-3c4d-4e5f-8a9b-0c1d2e3f4a5b",
+  "status": "Retired",
+  "activatedAt": { "$date": 1794045600000 },
+  "retiredAt": { "$date": 1794047160000 },
+  "verifyUntil": { "$date": 1794655560000 },
+  "rotation": "Manual",
+  "reason": "Routine rotation",
+  "updatedBy": "571eb380-bd72-4286-98b7-95505a98dc38",
+  "current": true
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `kid` | Key ID, also sent in the `kid` header of every token it signs |
+| `status` | `Active`, `Retired` or `Expired`. See [Lifecycle](/docs/bsh-engine/security/signing-keys#lifecycle). |
+| `activatedAt` | When the key started signing tokens (UTC) |
+| `rotatesAt` | when it will be rotated, `activatedAt + secretTtl` |
+| `retiredAt` | When a newer key took over. |
+| `verifyUntil` | until when it still verifies tokens, `retiredAt + refreshTtl + 1h` |
+| `expiredAt` | When the key was expired |
+| `rotation` | How the key became active: `Scheduled` or `Manual` |
+| `reason` | The reason given by the admin who rotated or expired it |
+| `updatedBy` | user who rotated or expired it. |
+| `current` | `true` when this key signed the token of the request. |

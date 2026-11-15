@@ -28,8 +28,8 @@ Each successful login opens a new [auth session](/docs/bsh-engine/security/sessi
 </Callout>
 
 <Callout type="error">
-  The engine signs tokens with `auth.config.secret`.
-  Before starting the instance, set it in your configuration as described in [Authentication configuration](/docs/bsh-engine/environment/compoenents#auth).
+  The engine signs tokens with [signing keys](/docs/bsh-engine/security/signing-keys) it generates itself, encrypted with `auth.masterKey`.
+  Before starting the instance, set `auth.masterKey` in your configuration as described in [Authentication configuration](/docs/bsh-engine/environment/compoenents#auth).
 </Callout>
 
 ## Request Headers

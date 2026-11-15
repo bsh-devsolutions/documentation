@@ -13,8 +13,8 @@ To access the BSH Engine admin panel or protected APIs, users must authenticate 
 </Callout>
 
 <Callout type="error">
-  The engine signs tokens with `auth.config.secret`.
-  Before starting the instance, set it in your configuration as described in [Authentication configuration](/docs/bsh-engine/environment/compoenents#auth).
+  The engine signs tokens with [signing keys](/docs/bsh-engine/security/signing-keys) it generates itself, encrypted with `auth.masterKey`.
+  Before starting the instance, set `auth.masterKey` in your configuration as described in [Authentication configuration](/docs/bsh-engine/environment/compoenents#auth).
 </Callout>
 
 Each login opens a new [session](/docs/bsh-engine/security/sessions). Logging in on another device or browser opens another session; the existing ones stay active.

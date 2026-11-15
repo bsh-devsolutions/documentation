@@ -35,13 +35,14 @@ Use this as the baseline for your `BSH_CONFIG` value.
     }
   },
   "auth": {
+    "masterKey": "random key use `openssl rand -base64 48`",
     "provider": "self",
     "config": {
-      "secret": "your-long-random-jwt-secret",
       "delivery": "Default",
       "accessTtl": 15,
       "refreshTtl": 7,
-      "sessionTtl": 30
+      "sessionTtl": 30,
+      "secretTtl": 30
     }
   },
   "secrets": {

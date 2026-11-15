@@ -8,4 +8,5 @@ export default {
   'policies': 'Policies',
   'api-keys': 'API Keys',
   'sessions': <Title title='Sessions' badge='new' />,
+  'signing-keys': <Title title='Signing Keys' badge='new' />,
 } satisfies MetaRecord;

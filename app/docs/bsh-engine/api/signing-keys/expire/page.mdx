@@ -1,0 +1,87 @@
+---
+title: Expire Signing Key
+---
+
+# Expire Signing Key
+
+Expire a retired signing key now, without waiting for its grace window to end. Use it when a retired key has leaked. This action cannot be undone.
+
+```bash
+POST /api/auth/signing-keys/{kid}/expire
+```
+
+## Authentication
+
+This endpoint requires a `BSH_ADMIN` user, sent as a JWT, with the auth cookies or with an API key:
+
+```bash
+Authorization: Bearer <your-jwt-token>
+```
+
+Cookie sessions must also send the CSRF token:
+
+```bash
+X-XSRF-TOKEN: <value of the XSRF-TOKEN cookie>
+```
+
+## Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `kid` | string | yes | The ID of the key to expire |
+
+## Request Body
+
+```json
+{
+  "reason": "Key exposed in a backup"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `reason` | string | yes | Why the key is expired. At least 5 characters. |
+
+## Response
+
+**Success Response (200 OK):**
+
+```json
+{
+  "code": 200,
+  "message": "JWT signing key expired",
+  "data": [
+    {
+      "kid": "a82791af-...",
+      ...
+      "status": "Expired",
+      "reason": "Key exposed in a backup"
+    }
+  ],
+  "meta": {
+    "type": "Signing Key Expiry"
+  }
+}
+```
+
+Tokens signed by the key are rejected immediately, and their users have to log in again. Expiring a key that is already `Expired` returns it unchanged.
+
+## Error Responses
+
+**400 Bad Request** - The key is the active one:
+
+```json
+{
+  "code": 400,
+  "error": "The active JWT signing key cannot be expired, rotate it instead",
+  "meta": {
+    "type": "Signing Key Expiry",
+    "tips": { "rotate": "POST /api/auth/signing-keys/rotate with {\"expire\": \"previous\"}" }
+  }
+}
+```
+
+<Callout type='info'>
+- To replace the active key and expire it in one step, use [Rotate](/docs/bsh-engine/api/signing-keys/rotate) with `"expire": "previous"`.
+- Expiring a key is **permanent**.
+</Callout>
