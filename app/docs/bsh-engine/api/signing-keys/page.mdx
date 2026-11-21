@@ -25,6 +25,7 @@ The Signing Keys API lets `BSH_ADMIN` users list the [JWT signing keys](/docs/bs
 | [POST](/docs/bsh-engine/api/signing-keys/expire) | `/api/auth/signing-keys/{kid}/expire` | Expire a retired key | |
 | [GET](/docs/bsh-engine/api/entities/search-entities-by-query) | `/api/auth/signing-keys?query` | List and filter by URI parameters | Similar to Entities API |
 | [POST](/docs/bsh-engine/api/entities/search-entities) | `/api/auth/signing-keys/search` | Search keys by POST | Similar to Entities API |
+| [GET](/docs/bsh-engine/api/signing-keys/jwks) | `/.well-known/jwks.json` | Public keys that verify access tokens (JWKS) | Public |
 
 ## Signing key object
 
