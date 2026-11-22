@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next --turbopack --port 7201",
     "build": "next build",
-    "postbuild": "pagefind && node scripts/check-search.mjs",
+    "postbuild": "node scripts/collect-html.mjs && pagefind && node scripts/check-search.mjs",
     "start": "next start",
     "watch": "node scripts/watch.mjs"
   },

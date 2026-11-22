@@ -1,10 +1,10 @@
-// Post-build check of the Pagefind index. Runs after `pagefind` in `npm run build` (postbuild).
+// Post-build check of the Pagefind index. Runs after `collect-html.mjs` and `pagefind` in `npm run build` (postbuild).
 // Every built page must be tagged exactly as classifyRoute() in components/search/config.mjs says.
 import { readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { FILTERS, UNSEARCHABLE, classifyRoute } from '../components/search/config.mjs'
 
-const SITE = '.next/server/app'
+const SITE = '.next/search-site' // filled by collect-html.mjs
 // Next.js internals that must never be indexed
 const INTERNAL = [/^\/_not-found/, /^\/_global-error/]
 

@@ -1,2 +1,2 @@
-site: .next/server/app
+site: .next/search-site
 output_path: public/_pagefind
