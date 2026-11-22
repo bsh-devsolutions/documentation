@@ -91,7 +91,7 @@ export const FeaturesMap: React.FC<FeaturesMapProps> = ({
     }, [features, filter]);
 
     return (
-        <div className={className}>
+        <div className={className} data-pagefind-ignore="all">
             <div className={styles.filterContainer}>
                 <button
                     onClick={() => setFilter('all')}

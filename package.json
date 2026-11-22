@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "next --turbopack --port 7201",
     "build": "next build",
-    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
+    "postbuild": "pagefind && node scripts/check-search.mjs",
     "start": "next start",
     "watch": "node scripts/watch.mjs"
   },
@@ -26,7 +26,7 @@
   "devDependencies": {
     "@types/node": "24.9.1",
     "@types/react": "19.2.2",
-    "pagefind": "^1.4.0"
+    "pagefind": "1.6.0"
   },
   "overrides": {
     "lodash-es": "^4.17.23",

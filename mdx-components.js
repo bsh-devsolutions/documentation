@@ -34,9 +34,16 @@ import {
   FeaturesMap,
   ConfigComponent
 } from './components'
+import { createSearchWrapper } from './components/search/search-wrapper'
 
 // Get the default MDX components
 const themeComponents = getThemeComponents()
+
+const Wrapper = createSearchWrapper(themeComponents.wrapper)
+
+// Card grids only link to other pages — keep their text out of search results
+const { Cards } = NextraComponents
+const SearchIgnoredCards = Object.assign((props) => <Cards data-pagefind-ignore="all" {...props} />, { Card: Cards.Card })
 
 const LucideIcons = {
   BoltIcon,
@@ -66,6 +73,7 @@ export function useMDXComponents(components) {
     ...LucideIcons,
     ...TechIcons,
     ...NextraComponents,
+    Cards: SearchIgnoredCards,
     Accordion,
     AccordionItem,
     Badge,
@@ -76,6 +84,7 @@ export function useMDXComponents(components) {
     TemplateCard,
     FeaturesMap,
     ConfigComponent,
+    wrapper: Wrapper,
     ...components
   }
 }

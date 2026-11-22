@@ -4,6 +4,7 @@ import { getPageMap } from 'nextra/page-map'
 import 'nextra-theme-docs/style.css'
 import './globals.css'
 import { Logo } from '../icons/Logo'
+import { ScopedSearch } from '../components/search/ScopedSearch'
 
 export const metadata = {
   title: 'BSH Solutions',
@@ -48,6 +49,7 @@ export default async function RootLayout({ children }) {
         <Layout
           banner={banner}
           navbar={navbar}
+          search={<ScopedSearch />}
           pageMap={await getPageMap()}
           docsRepositoryBase="https://github.com/bsh-devsolutions/documentation"
           footer={footer}
