@@ -5,6 +5,7 @@ import 'nextra-theme-docs/style.css'
 import './globals.css'
 import { Logo } from '../icons/Logo'
 import { ScopedSearch } from '../components/search/ScopedSearch'
+import { getReleases, releaseHref } from '../components/changelog/releases'
 
 export const metadata = {
   title: 'BSH Solutions',
@@ -14,11 +15,19 @@ export const metadata = {
   }
 }
 
-const banner = <Banner storageKey="0.0.7-release">
-<a href="/docs/bsh-engine/changelog/0.0.7">
-  🎉 New release with new features and improvements! V0.0.7 Release →
-</a>
-</Banner>
+async function ReleaseBanner() {
+  const [newest] = await getReleases()
+  if (!newest) return null
+  return (
+    <Banner storageKey={`${newest.version}-release`}>
+      <a href={releaseHref(newest.version)}>
+        {newest.date
+          ? `🎉 BSH Engine v${newest.version} is out with new features and improvements. See what's new →`
+          : `🚀 BSH Engine v${newest.version} is coming soon. See what's new →`}
+      </a>
+    </Banner>
+  )
+}
 
 const navbar = (
   <Navbar
@@ -47,7 +56,7 @@ export default async function RootLayout({ children }) {
       <Head color={{ hue: 201, saturation: 100, lightness: { light: 35, dark: 55 } }} />
       <body>
         <Layout
-          banner={banner}
+          banner={<ReleaseBanner />}
           navbar={navbar}
           search={<ScopedSearch />}
           pageMap={await getPageMap()}

@@ -1,11 +1,14 @@
 ---
 title: BSH Engine 0.0.5
+date: '2026-04-12'
+description: "Introduces tenant-based organization, a stable version of Triggers and file-based configuration, along with admin user management endpoints and API key rotation."
 ---
 
 # BSH Engine 0.0.5
 
 <ReleaseHeader version="0.0.5" />
 
+## New
 - Introduced [tenant-based organization](/docs/bsh-engine/security/tenants).
 - Released a stable version of [Triggers](/docs/bsh-engine/triggers).
 - Added support for [file-based configuration](/docs/bsh-engine/environment/setup#pass-configuration).
@@ -14,7 +17,11 @@ title: BSH Engine 0.0.5
   - [`/api/users/admin/resend-activation-email/{email}`](/docs/bsh-engine/api/users/admin/resend-activation-email)
   - [`/api/users/admin/forget-password/{email}`](/docs/bsh-engine/api/users/admin/forget-password)
 - Added [API key rotation](/docs/bsh-engine/api/api-keys/rotate).
-- Fixed CVSS findings in the built [Docker image](/docs/bsh-engine/installation).
+
+## Improved
 - Improved [Dashboard UI/UX](/docs/bsh-engine/settings).
+
+## Security
+- Fixed CVSS findings in the built [Docker image](/docs/bsh-engine/installation).
 
 <ReleaseNav version="0.0.5" />

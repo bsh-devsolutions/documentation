@@ -1,12 +1,11 @@
 ---
 title: BSH Engine 0.0.7
+description: "Hardens authentication: the engine now manages its own signing keys with automatic rotation, and adds long-lived sessions with refresh token rotation, plus new APIs and dashboard pages to manage them. Includes breaking changes."
 ---
 
 # BSH Engine 0.0.7
 
 <ReleaseHeader version="0.0.7" />
-
-This release focuses on fixing vulnerabilities in the authentication system and adds long-lived sessions with refresh token rotation.
 
 ## Breaking changes
 - The JWT secret (`secrets.jwt.secret`) was removed: the engine now generates its own [signing keys](/docs/bsh-engine/security/signing-keys) and stores them. The new [`auth.masterKey`](/docs/bsh-engine/environment/compoenents#auth) (at least 32 characters) is **required** to encrypt them.
@@ -19,7 +18,27 @@ This release focuses on fixing vulnerabilities in the authentication system and 
 - Audit fields `CreatedBy` and `LastUpdatedBy` store users as `<id>` instead of `user:<id>`. API keys are still stored as `apikey:<id>`. See [Entity Auditing](/docs/bsh-engine/modeling/entities#entity-auditing). [#500](https://github.com/bsh-devsolutions/bshengine/issues/500)
 - Triggers fire only for entities with the new **Triggerable** option enabled, which is off by default. Enable it on existing entities that use triggers. See [Triggerable Entities](/docs/bsh-engine/modeling/entities#triggerable-entities). [#496](https://github.com/bsh-devsolutions/bshengine/issues/496)
 
-## Security & Sessions
+## New
+- New `auth.config.delivery` option to deliver tokens through cookies, JSON responses or both. [#456](https://github.com/bsh-devsolutions/bshengine/issues/456) [#457](https://github.com/bsh-devsolutions/bshengine/issues/457)
+- New [Auth Sessions API](/docs/bsh-engine/api/sessions) to list, inspect, count and revoke sessions, and the matching [SDK service](/docs/bsh-engine/sdk/services/auth-sessions). [#481](https://github.com/bsh-devsolutions/bshengine/issues/481)
+- Sessions record the [device details](/docs/bsh-engine/security/sessions#device-details) at login: browser, OS, device type and the app name from the new `X-Bsh-Client` header. The client IP is not stored.
+- Dashboard: new **Security → Auth Sessions** page for `BSH_ADMIN` users, and a **Sessions** section in the profile to revoke other sessions. [#482](https://github.com/bsh-devsolutions/bshengine/issues/482) [#483](https://github.com/bsh-devsolutions/bshengine/issues/483)
+- New [Signing Keys API](/docs/bsh-engine/api/signing-keys) for `BSH_ADMIN` users to list keys, force a rotation and expire a leaked key, and the matching [SDK service](/docs/bsh-engine/sdk/services/signing-keys). [#499](https://github.com/bsh-devsolutions/bshengine/issues/499)
+- Dashboard: new **Security → Signing Keys** page to monitor, rotate and expire signing keys. [#499](https://github.com/bsh-devsolutions/bshengine/issues/499)
+- SDK: `clientName` option and `withClientName()` to send `X-Bsh-Client`, `BshSessionMetaData` with the possible browser, OS and device values, and the `metadata` field on `BshAuthSession`.
+- SDK: `isExpired()` helper and `BshErrorCode` type.
+- SDK: `bshEngine.jwks()` reads the public JWK Set, with the `BshJwk` and `BshJwks` types.
+- New **Triggerable** entity option to choose whether an entity fires its triggers, available in the dashboard entity form and the SDK. [#496](https://github.com/bsh-devsolutions/bshengine/issues/496)
+
+## Improved
+- Silent refresh returns both `meta.accessToken` and `meta.refreshToken`.
+- API keys are also accepted as `Authorization: Bearer bsh_…`. [#442](https://github.com/bsh-devsolutions/bshengine/issues/442)
+- Clearer `401` errors, with a stable code in `meta.bshError`. See [Authentication errors](/docs/bsh-engine/api/authentication#authentication-errors).
+- Dashboard: login shows a clear dialog when the account isn't activated, is disabled or locked, or needs a password reset. [#493](https://github.com/bsh-devsolutions/bshengine/issues/493)
+- `GET /api/utils/version` no longer requires authentication.
+- More flexible [date parsing](/docs/bsh-engine/modeling/types#date-values): ISO variants, short offsets, epoch seconds and milliseconds. Values without an offset are treated as UTC.
+
+## Security
 - Long sessions with short-lived tokens: access tokens last 15 minutes, refresh tokens 7 days and sessions 30 days by default, all configurable. [#450](https://github.com/bsh-devsolutions/bshengine/issues/450) [#460](https://github.com/bsh-devsolutions/bshengine/issues/460)
 - [Auth sessions](/docs/bsh-engine/security/sessions) are stored on the engine (`BshAuthSessions`), with refresh token rotation and reuse detection. [#463](https://github.com/bsh-devsolutions/bshengine/issues/463) [#480](https://github.com/bsh-devsolutions/bshengine/issues/480)
 - Sessions are **blocked** after 10 requests with rotated or unknown tokens (possible token theft). Using an old token once no longer closes the session. Closed sessions record a `reason`. [#489](https://github.com/bsh-devsolutions/bshengine/issues/489)
@@ -30,23 +49,5 @@ This release focuses on fixing vulnerabilities in the authentication system and 
 - No tokens are issued for a user that doesn't exist. [#465](https://github.com/bsh-devsolutions/bshengine/issues/465)
 - Logout ends the session on the engine. [#461](https://github.com/bsh-devsolutions/bshengine/issues/461)
 - The token type is enforced, so access and refresh tokens can't be used in place of each other. [#459](https://github.com/bsh-devsolutions/bshengine/issues/459)
-- New `auth.config.delivery` option to deliver tokens through cookies, JSON responses or both. [#456](https://github.com/bsh-devsolutions/bshengine/issues/456) [#457](https://github.com/bsh-devsolutions/bshengine/issues/457)
-- Silent refresh returns both `meta.accessToken` and `meta.refreshToken`.
-- API keys are also accepted as `Authorization: Bearer bsh_…`. [#442](https://github.com/bsh-devsolutions/bshengine/issues/442)
-- Clearer `401` errors, with a stable code in `meta.bshError`. See [Authentication errors](/docs/bsh-engine/api/authentication#authentication-errors).
-
-## Features & Improvements
-- New [Auth Sessions API](/docs/bsh-engine/api/sessions) to list, inspect, count and revoke sessions, and the matching [SDK service](/docs/bsh-engine/sdk/services/auth-sessions). [#481](https://github.com/bsh-devsolutions/bshengine/issues/481)
-- Sessions record the [device details](/docs/bsh-engine/security/sessions#device-details) at login: browser, OS, device type and the app name from the new `X-Bsh-Client` header. The client IP is not stored.
-- Dashboard: new **Security → Auth Sessions** page for `BSH_ADMIN` users, and a **Sessions** section in the profile to revoke other sessions. [#482](https://github.com/bsh-devsolutions/bshengine/issues/482) [#483](https://github.com/bsh-devsolutions/bshengine/issues/483)
-- New [Signing Keys API](/docs/bsh-engine/api/signing-keys) for `BSH_ADMIN` users to list keys, force a rotation and expire a leaked key, and the matching [SDK service](/docs/bsh-engine/sdk/services/signing-keys). [#499](https://github.com/bsh-devsolutions/bshengine/issues/499)
-- Dashboard: new **Security → Signing Keys** page to monitor, rotate and expire signing keys. [#499](https://github.com/bsh-devsolutions/bshengine/issues/499)
-- Dashboard: login shows a clear dialog when the account isn't activated, is disabled or locked, or needs a password reset. [#493](https://github.com/bsh-devsolutions/bshengine/issues/493)
-- SDK: `clientName` option and `withClientName()` to send `X-Bsh-Client`, `BshSessionMetaData` with the possible browser, OS and device values, and the `metadata` field on `BshAuthSession`.
-- SDK: `isExpired()` helper and `BshErrorCode` type.
-- SDK: `bshEngine.jwks()` reads the public JWK Set, with the `BshJwk` and `BshJwks` types.
-- New **Triggerable** entity option to choose whether an entity fires its triggers, available in the dashboard entity form and the SDK. [#496](https://github.com/bsh-devsolutions/bshengine/issues/496)
-- `GET /api/utils/version` no longer requires authentication.
-- More flexible [date parsing](/docs/bsh-engine/modeling/types#date-values): ISO variants, short offsets, epoch seconds and milliseconds. Values without an offset are treated as UTC.
 
 <ReleaseNav version="0.0.7" />
