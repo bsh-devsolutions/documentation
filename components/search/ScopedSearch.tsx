@@ -2,58 +2,78 @@
 
 import {Search} from 'nextra/components'
 import {usePathname} from 'next/navigation'
-import {useEffect, useRef, useState} from 'react'
+import {type CSSProperties, type RefObject, useEffect, useRef, useState} from 'react'
 import styles from './ScopedSearch.module.css'
-import {installPagefindLimit, preloadPagefind} from './pagefind'
+import {ScopeSelect} from './ScopeSelect'
+import {SCOPES, scopeForPath, searchPropsFor} from './scopes'
+import {installResultRanking, preloadPagefind} from './pagefind-client'
 
-installPagefindLimit()
+installResultRanking()
 
-type Scope = 'Docs' | 'Blogs' | 'All'
-
-const SCOPES: Scope[] = ['Docs', 'Blogs', 'All']
-
-const PLACEHOLDERS: Record<Scope, string> = {
-    Docs: 'Search docs…',
-    Blogs: 'Search blogs…',
-    All: 'Search everything…'
+/** The scope follows the section being read, until the user picks another */
+function useScope() {
+    const pathname = usePathname()
+    const [scope, setScope] = useState(() => scopeForPath(pathname))
+    useEffect(() => setScope(scopeForPath(pathname)), [pathname])
+    return [scope, setScope] as const
 }
 
-function scopeForPath(pathname: string | null): Scope {
-    if (pathname?.startsWith('/docs')) return 'Docs'
-    if (pathname?.startsWith('/blogs')) return 'Blogs'
-    return 'All'
+/** An element's width as the `--scope-width` CSS variable (undefined until measured) */
+function useWidthVar<T extends HTMLElement>() {
+    const ref = useRef<T>(null)
+    const [width, setWidth] = useState<number>()
+    useEffect(() => {
+        const el = ref.current
+        if (!el) return
+        const observer = new ResizeObserver(() => setWidth(el.offsetWidth))
+        observer.observe(el)
+        return () => observer.disconnect()
+    }, [])
+    const style = width ? ({'--scope-width': `${width}px`} as CSSProperties) : undefined
+    return [ref, style] as const
+}
+
+/** Set an input's value the way typing does, so React's onChange fires */
+function typeInto(input: HTMLInputElement, value: string) {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set?.call(input, value)
+    input.dispatchEvent(new Event('input', {bubbles: true}))
 }
 
 /**
- * Nextra's <Search> limited by the Pagefind `section` filter (set per page in mdx-components.js).
- * The scope defaults to the section you are reading, and can be switched from the pills.
+ * Nextra's <Search> only re-runs on text changes, so it is remounted whenever `key` changes.
+ * Call `carry()` before such a change: the typed query is re-typed into the new input, which gets focus.
+ */
+function useQueryCarryOver(container: RefObject<HTMLElement | null>, key: string) {
+    const carried = useRef<string | null>(null) // null = nothing to carry (e.g. scope changed by navigation)
+    const input = () => container.current?.querySelector('input')
+
+    useEffect(() => {
+        const query = carried.current
+        carried.current = null
+        const el = input()
+        if (query === null || !el) return
+        if (query) typeInto(el, query)
+        el.focus()
+    }, [key])
+
+    return function carry() {
+        carried.current = input()?.value ?? ''
+    }
+}
+
+/**
+ * Nextra's <Search>, limited to one section with the Pagefind `section` filter (see config.mjs).
+ * The scope defaults to the section being read, and can be changed from the dropdown inside the input.
  */
 export function ScopedSearch() {
-    const pathname = usePathname()
-    const [scope, setScope] = useState<Scope>(() => scopeForPath(pathname))
+    const [scope, setScope] = useScope()
     const containerRef = useRef<HTMLDivElement>(null)
-    const carriedQuery = useRef('')
+    const [selectRef, widthVar] = useWidthVar<HTMLDivElement>()
+    const carry = useQueryCarryOver(containerRef, scope)
 
-    useEffect(() => {
-        setScope(scopeForPath(pathname))
-    }, [pathname])
-
-    // <Search> only re-runs on text changes, so it is remounted per scope (see `key` below).
-    // Carry the typed query over to the new instance so switching scope re-runs the search.
-    useEffect(() => {
-        const query = carriedQuery.current
-        carriedQuery.current = ''
-        const input = containerRef.current?.querySelector('input')
-        if (!query || !input) return
-        const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
-        setValue?.call(input, query)
-        input.dispatchEvent(new Event('input', {bubbles: true}))
-        input.focus()
-    }, [scope])
-
-    function changeScope(next: Scope) {
+    function changeScope(next: string) {
         if (next === scope) return
-        carriedQuery.current = containerRef.current?.querySelector('input')?.value ?? ''
+        carry()
         setScope(next)
     }
 
@@ -61,31 +81,12 @@ export function ScopedSearch() {
         <div
             ref={containerRef}
             className={styles.container}
+            style={widthVar}
             onPointerEnter={preloadPagefind}
             onFocus={preloadPagefind}
         >
-            <div className={styles.scopes} role="radiogroup" aria-label="Search scope">
-                {SCOPES.map((s) => (
-                    <button
-                        key={s}
-                        type="button"
-                        role="radio"
-                        aria-checked={scope === s}
-                        className={styles.scope}
-                        data-active={scope === s || undefined}
-                        onClick={() => changeScope(s)}
-                    >
-                        {s}
-                    </button>
-                ))}
-            </div>
-            <Search
-                key={scope}
-                className={styles.search}
-                placeholder={PLACEHOLDERS[scope]}
-                searchOptions={scope === 'All' ? undefined : {filters: {section: scope}}}
-                emptyResult={`No results in ${scope === 'All' ? 'the site' : scope}.`}
-            />
+            <ScopeSelect ref={selectRef} value={scope} options={SCOPES} onChange={changeScope}/>
+            <Search key={scope} className={styles.search} {...searchPropsFor(scope)}/>
         </div>
     )
 }

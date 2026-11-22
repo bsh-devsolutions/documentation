@@ -1,53 +1,17 @@
+/* --scope-width is the measured width of the ScopeSelect overlaid on the input's start edge */
 .container {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  position: relative;
   min-width: 0;
+  --scope-width: 4.5rem;
 }
 
-.search {
-  flex: 1;
-  min-width: 0;
+.search input {
+  padding-inline-start: calc(var(--scope-width) + 0.75rem) !important;
+  padding-inline-end: 3.5rem !important; /* the Ctrl K hint */
 }
 
-.scopes {
-  display: inline-flex;
-  flex-shrink: 0;
-  padding: 2px;
-  border-radius: 0.5rem;
-  background: rgb(0 0 0 / 0.05);
-}
-
-:global(.dark) .scopes {
-  background: rgb(255 255 255 / 0.08);
-}
-
-.scope {
-  padding: 0.2rem 0.55rem;
-  border-radius: 0.375rem;
-  font-size: 0.75rem;
-  line-height: 1.25rem;
-  color: rgb(107 114 128);
-  cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
-}
-
-.scope:hover {
-  color: rgb(17 24 39);
-}
-
-:global(.dark) .scope:hover {
-  color: rgb(243 244 246);
-}
-
-.scope[data-active] {
-  background: rgb(var(--nextra-bg));
-  color: hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) var(--nextra-primary-lightness));
-  font-weight: 600;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
-}
-
-.scope:focus-visible {
-  outline: 2px solid hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) var(--nextra-primary-lightness));
-  outline-offset: 1px;
+@media (min-width: 768px) {
+  .search input {
+    width: 20rem !important; /* Nextra's default is 16rem; the dropdown takes part of it */
+  }
 }

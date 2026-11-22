@@ -1,18 +1,12 @@
-// Post-build check of what Pagefind indexes. Runs after `pagefind` in `npm run build` (postbuild).
-// Fails the build when an excluded page is indexed or an indexed page has no search section.
+// Post-build check of the Pagefind index. Runs after `pagefind` in `npm run build` (postbuild).
+// Every built page must be tagged exactly as classifyRoute() in components/search/config.mjs says.
 import { readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
-import { SEARCH_AREAS, SEARCH_SECTIONS, UNSEARCHABLE_PATHS } from '../components/search/search-config.mjs'
+import { FILTERS, UNSEARCHABLE, classifyRoute } from '../components/search/config.mjs'
 
 const SITE = '.next/server/app'
-// Pages that may be indexed without a Docs/Blogs section (they only show up under "All")
-const UNSECTIONED_ALLOWED = new Set(['/'])
 // Next.js internals that must never be indexed
 const INTERNAL = [/^\/_not-found/, /^\/_global-error/]
-
-/** app/docs/ts-validation/ → /docs/ts-validation */
-const sourceToRoute = (p) => '/' + p.replace(/^app\//, '').replace(/\/$/, '')
-const excluded = UNSEARCHABLE_PATHS.map(sourceToRoute)
 
 function* htmlFiles(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -27,32 +21,41 @@ const routeOf = (file) => {
   return route === '/index' ? '/' : route
 }
 
-const sections = Object.fromEntries(SEARCH_SECTIONS.map(([, name]) => [name, 0]))
-const areas = Object.fromEntries(SEARCH_AREAS.map(({ name }) => [name, 0]))
+const filterValue = (html, name) => html.match(new RegExp(`data-pagefind-filter="${name}:([^"]+)"`))?.[1]
+
+const counts = { section: {}, area: {} }
+const tally = (kind, value) => value && (counts[kind][value] = (counts[kind][value] ?? 0) + 1)
 const problems = []
 let indexed = 0
 
 for (const file of htmlFiles(SITE)) {
-  const html = readFileSync(file, 'utf8')
-  if (!html.includes('<main data-pagefind-body')) continue
   const route = routeOf(file)
+  const html = readFileSync(file, 'utf8')
+  const isIndexed = html.includes('<main data-pagefind-body')
+  if (INTERNAL.some((re) => re.test(route))) {
+    if (isIndexed) problems.push(`${route}: Next.js internal page is indexed`)
+    continue
+  }
+
+  const expected = classifyRoute(route)
+  if (isIndexed !== expected.searchable) {
+    // Pages can also opt out with `searchable: false` front matter, so only an unexpected *indexed* page fails
+    if (isIndexed) problems.push(`${route}: indexed, but listed in UNSEARCHABLE`)
+    continue
+  }
+  if (!isIndexed) continue
   indexed++
 
-  if (INTERNAL.some((re) => re.test(route))) problems.push(`${route}: Next.js internal page is indexed`)
-  if (excluded.some((r) => route === r || route.startsWith(r + '/'))) problems.push(`${route}: excluded page is indexed`)
-
-  const section = html.match(/data-pagefind-filter="section:([^"]+)"/)?.[1]
-  if (section) sections[section] = (sections[section] ?? 0) + 1
-  else if (!UNSECTIONED_ALLOWED.has(route)) problems.push(`${route}: indexed without a search section`)
-
-  const area = html.match(/data-pagefind-filter="area:([^"]+)"/)?.[1]
-  if (area) areas[area] = (areas[area] ?? 0) + 1
-  else if (section === 'Docs') problems.push(`${route}: docs page without a priority area`)
+  for (const kind of ['section', 'area']) {
+    const actual = filterValue(html, FILTERS[kind])
+    if (actual !== expected[kind]) problems.push(`${route}: ${kind} is ${actual ?? 'missing'}, expected ${expected[kind] ?? 'none'}`)
+    tally(kind, actual)
+  }
 }
 
-const counts = (obj) => Object.entries(obj).map(([name, n]) => `${name} ${n}`).join(', ')
-console.log(`[search] ${indexed} pages indexed (${counts(sections)}); docs priority: ${counts(areas)}`)
-console.log(`[search] excluded: ${excluded.join(', ')}`)
+const summary = (obj) => Object.entries(obj).map(([name, n]) => `${name} ${n}`).join(', ')
+console.log(`[search] ${indexed} pages indexed (${summary(counts.section)}); areas: ${summary(counts.area)}`)
+console.log(`[search] excluded: ${UNSEARCHABLE.join(', ')}`)
 
 if (problems.length) {
   console.error(`[search] ${problems.length} problem(s):\n  ${problems.join('\n  ')}`)

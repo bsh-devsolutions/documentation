@@ -1,4 +1,2 @@
-# Pagefind config, read by `pagefind` in the postbuild step (see package.json).
-# Nextra pages carry data-pagefind-body / -filter / -meta attributes, set in components/search/search-wrapper.jsx.
 site: .next/server/app
 output_path: public/_pagefind

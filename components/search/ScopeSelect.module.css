@@ -1,0 +1,63 @@
+.scope {
+  position: absolute;
+  z-index: 1;
+  inset-block: 0.3rem;
+  inset-inline-start: 0.3rem;
+  display: flex;
+  align-items: center;
+  color: rgb(75 85 99);
+}
+
+:global(.dark) .scope {
+  color: rgb(209 213 219);
+}
+
+/* divider between the dropdown and the typed text */
+.scope::after {
+  content: '';
+  position: absolute;
+  inset-block: 0.2rem;
+  inset-inline-end: -0.3rem;
+  border-inline-end: 1px solid rgb(0 0 0 / 0.12);
+}
+
+:global(.dark) .scope::after {
+  border-color: rgb(255 255 255 / 0.15);
+}
+
+.scope select {
+  appearance: none;
+  height: 100%;
+  padding-inline: 0.45rem 1.35rem; /* room for the chevron */
+  border-radius: 0.375rem;
+  background: transparent;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.scope select:hover {
+  background: rgb(0 0 0 / 0.06);
+}
+
+:global(.dark) .scope select:hover {
+  background: rgb(255 255 255 / 0.08);
+}
+
+.scope select:focus-visible {
+  outline: 2px solid hsl(var(--nextra-primary-hue) var(--nextra-primary-saturation) var(--nextra-primary-lightness));
+  outline-offset: 0;
+}
+
+.scope option {
+  color: initial;
+  background: initial;
+}
+
+.scope svg {
+  position: absolute;
+  inset-inline-end: 0.4rem;
+  pointer-events: none;
+}
