@@ -12,7 +12,8 @@
     "postbuild": "node scripts/collect-html.mjs && pagefind && node scripts/check-search.mjs",
     "start": "next start",
     "watch": "node scripts/watch.mjs",
-    "last-updated": "node scripts/last-updated.mjs"
+    "last-updated": "node scripts/last-updated.mjs",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "author": "Bousalih Hamza",
   "license": "ISC",

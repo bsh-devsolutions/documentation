@@ -3,6 +3,7 @@
 //   npm run last-updated                 pages changed since the last commit (staged, unstaged, new) → today
 //   npm run last-updated -- <files...>   the given pages → today
 //   npm run last-updated -- --from-git   every page → the date of its last git commit (one-time seeding)
+//   node scripts/last-updated.mjs --staged   staged pages → today, then re-stages them (run by .githooks/pre-commit)
 import {execFileSync} from 'node:child_process'
 import {existsSync, readFileSync, writeFileSync} from 'node:fs'
 import path from 'node:path'
@@ -34,9 +35,14 @@ function setLastUpdated(file, date) {
 }
 
 const args = process.argv.slice(2)
+const staged = args.includes('--staged')
 let targets // [file, date][]
 
-if (args.includes('--from-git')) {
+if (staged) {
+    targets = lines(git('diff', '--cached', '--name-only', '--diff-filter=ACMR', '--', 'app'))
+        .filter((f) => PAGE_RE.test(f))
+        .map((f) => [f, today()])
+} else if (args.includes('--from-git')) {
     targets = lines(git('ls-files', 'app'))
         .filter((f) => PAGE_RE.test(f))
         .map((f) => [f, git('log', '-1', '--format=%cs', '--', f) || today()])
@@ -51,5 +57,6 @@ if (args.includes('--from-git')) {
 }
 
 const changed = targets.filter(([file, date]) => setLastUpdated(file, date))
+if (staged && changed.length) git('add', '--', ...changed.map(([file]) => file))
 for (const [file, date] of changed) console.log(`${date}  ${file}`)
-console.log(`lastUpdated set on ${changed.length} page(s)`)
+if (!staged || changed.length) console.log(`lastUpdated set on ${changed.length} page(s)`)
