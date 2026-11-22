@@ -15,7 +15,7 @@ export const metadata = {
 }
 
 const banner = <Banner storageKey="0.0.7-release">
-<a href="/docs/bsh-engine/changelog#007---to-be-determined-tbd">
+<a href="/docs/bsh-engine/changelog/0.0.7">
   🎉 New release with new features and improvements! V0.0.7 Release →
 </a>
 </Banner>

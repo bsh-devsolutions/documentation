@@ -32,7 +32,10 @@ import {
     BlogAuthor,
     TemplateCard,
     FeaturesMap,
-    ConfigComponent
+    ConfigComponent,
+    ReleaseList,
+    ReleaseHeader,
+    ReleaseNav
 } from './components'
 import {searchMdxComponents} from './components/search/mdx'
 
@@ -84,6 +87,9 @@ export function useMDXComponents(components) {
         TemplateCard,
         FeaturesMap,
         ConfigComponent,
+        ReleaseList,
+        ReleaseHeader,
+        ReleaseNav,
         ...components
     }
 }

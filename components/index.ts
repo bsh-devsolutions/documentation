@@ -10,3 +10,4 @@ export * from './features-map/FeaturesMap';
 export * from './HomePage';
 export * from './trigger-function/TriggerFunction';
 export * from './environment/ConfigComponent';
+export * from './changelog/Changelog';

@@ -10,3 +10,4 @@ _pagefind/
 .DS_Store
 temp
 *.tsbuildinfo
+next-env.d.ts
