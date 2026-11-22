@@ -4,7 +4,7 @@ export default {
   '*': {
     type: 'page',
     theme: {
-      timestamp: false,
+      timestamp: true,
       pagination: true,
       copyPage: false
     }
