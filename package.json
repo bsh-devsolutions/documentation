@@ -11,7 +11,8 @@
     "build": "next build",
     "postbuild": "node scripts/collect-html.mjs && pagefind && node scripts/check-search.mjs",
     "start": "next start",
-    "watch": "node scripts/watch.mjs"
+    "watch": "node scripts/watch.mjs",
+    "last-updated": "node scripts/last-updated.mjs"
   },
   "author": "Bousalih Hamza",
   "license": "ISC",

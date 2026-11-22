@@ -38,12 +38,13 @@ import {
     ReleaseNav
 } from './components'
 import {searchMdxComponents} from './components/search/mdx'
+import {withLastUpdated} from './components/last-updated'
 
 // Get the default MDX components
 const themeComponents = getThemeComponents()
 
 const searchComponents = searchMdxComponents({
-        wrapper: themeComponents.wrapper,
+        wrapper: withLastUpdated(themeComponents.wrapper),
         Cards: NextraComponents.Cards
     }
 )
