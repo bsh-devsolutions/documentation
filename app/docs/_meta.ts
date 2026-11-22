@@ -5,5 +5,8 @@ export default {
     type: 'page'
   },
   'bsh-engine': 'Bsh Engine',
-  'ts-validation': 'Ts Validation',
+  'ts-validation': {
+    title: 'Ts Validation',
+    display: 'hidden'
+  },
 } satisfies MetaRecord
