@@ -1,0 +1,17 @@
+/* --scope-width is the measured width of the ScopeSelect overlaid on the input's start edge */
+.container {
+  position: relative;
+  min-width: 0;
+  --scope-width: 4.5rem;
+}
+
+.search input {
+  padding-inline-start: calc(var(--scope-width) + 0.75rem) !important;
+  padding-inline-end: 3.5rem !important; /* the Ctrl K hint */
+}
+
+@media (min-width: 768px) {
+  .search input {
+    width: 20rem !important; /* Nextra's default is 16rem; the dropdown takes part of it */
+  }
+}

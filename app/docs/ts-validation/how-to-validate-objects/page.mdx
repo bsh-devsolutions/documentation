@@ -1,3 +1,7 @@
+---
+lastUpdated: 2026-11-15
+---
+
 import { Callout } from 'nextra/components'
 import { Tabs } from 'nextra/components'
 
@@ -54,7 +58,7 @@ import { Tabs } from 'nextra/components'
 
 <Tabs.Tab>
     ### `ValidatorResult`
-    if you set the `resultType` [option](/ts-validation/validator-options) to `object` <i>(default)</i>,  the result will be like:
+    if you set the `resultType` [option](/docs/ts-validation/validator-options) to `object` <i>(default)</i>,  the result will be like:
     ```typescript
     type ValidatorResult<Type> = {
         items?: {
@@ -67,7 +71,7 @@ import { Tabs } from 'nextra/components'
     }
     ```
 
-    and if you choose the `array` [option](/ts-validation/validator-options), the result will be like:
+    and if you choose the `array` [option](/docs/ts-validation/validator-options), the result will be like:
     ```typescript
     type ValidatorResult<Type> = {
         items?: {
@@ -84,7 +88,7 @@ import { Tabs } from 'nextra/components'
     ```
 
     <Callout type="warning">
-        <em>Note:</em> The <code>resultsType</code> [option](/ts-validation/validator-options) has been added to support projects using multiple programming languages (not just TypeScript). It may be removed in future versions once other language versions (such as Java) are stabilized.
+        <em>Note:</em> The <code>resultsType</code> [option](/docs/ts-validation/validator-options) has been added to support projects using multiple programming languages (not just TypeScript). It may be removed in future versions once other language versions (such as Java) are stabilized.
     </Callout>
 </Tabs.Tab>
 

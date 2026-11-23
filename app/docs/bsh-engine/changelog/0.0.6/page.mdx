@@ -1,0 +1,37 @@
+---
+title: BSH Engine 0.0.6
+date: '2026-10-03'
+description: "A security release that closes several access-control vulnerabilities, tightens CORS and adds CSRF protection for cookie sessions. Triggers now support lookups, and emails can set a sender display name."
+lastUpdated: 2026-11-22
+---
+
+# BSH Engine 0.0.6
+
+<ReleaseHeader version="0.0.6" />
+
+## Breaking changes
+- Improved CORS policy: **`origins.allowed`** accepts only exact origins; wildcard patterns (for example `https://*`, `127.0.0.1:*`) supported before **0.0.6** are no longer valid. [#421](https://github.com/bsh-devsolutions/bshengine/issues/421)
+
+## New
+- Header JWT clients: optional `X-BSH-REFRESHTOKEN`, silent refresh, and `meta.accessToken` on responses. [#443](https://github.com/bsh-devsolutions/bshengine/issues/443)
+- Upgraded Trigger to support lookups. [#375](https://github.com/bsh-devsolutions/bshengine/issues/375)
+- Outgoing emails support a **From** display name via `fromName` on send, in [mail provider config](/docs/bsh-engine/mailing/configurations#sender-display-name), or `secrets.mailing.fromName`. [#416](https://github.com/bsh-devsolutions/bshengine/issues/416)
+
+## Improved
+- Improved JSON configuration to allow setting for CSRF and auth cookies. [#430](https://github.com/bsh-devsolutions/bshengine/issues/430)
+- API keys authenticate with `Authorization: <api-key>`. The legacy `X-BSH-APIKEY` header is deprecated.
+- Added tests to the engine for more robust development and deployment.
+
+## Fixed
+- Fixed access token refresh issue.
+
+## Security
+- Fixed vulnerabilities in dependencies.
+- Fixed vulnerability: Broken API authorization; anonymous access to privileged endpoints. [#419](https://github.com/bsh-devsolutions/bshengine/issues/419)
+- Restricted access to X-Tenant-Id header to only authenticated users. Normal users can only access their assigned tenant. [#434](https://github.com/bsh-devsolutions/bshengine/issues/434)
+- Denied access to managed entities (users, tenants, etc.) from generic endpoints `/api/entitites/:entity`. [#420](https://github.com/bsh-devsolutions/bshengine/issues/420)
+- Required `BSH_ADMIN` to activate accounts; non-admins cannot set status to ACTIVATED via user update or the generic entity API. [#420](https://github.com/bsh-devsolutions/bshengine/issues/420)
+- Restricted assigning `BSH_ADMIN` role to only `BSH_ADMIN` users. [#420](https://github.com/bsh-devsolutions/bshengine/issues/420)
+- Enabled CSRF protection for cookie sessions. [#421](https://github.com/bsh-devsolutions/bshengine/issues/421)
+
+<ReleaseNav version="0.0.6" />

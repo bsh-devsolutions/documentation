@@ -9,3 +9,7 @@ node_modules
 _pagefind/
 .DS_Store
 temp
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+.env*

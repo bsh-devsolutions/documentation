@@ -1,0 +1,204 @@
+---
+title: Auth Sessions Service
+lastUpdated: 2026-11-13
+---
+
+# Auth Sessions Service
+
+The Auth Sessions Service lists, inspects and revokes the [auth sessions](/docs/bsh-engine/security/sessions) of the logged-in user, for example to build a "Devices" or "Active sessions" screen.
+
+<Callout type="info">
+  These methods require a user login (JWT or cookie session); API keys are rejected. Regular users only see their own sessions, while `BSH_ADMIN` users see the sessions of every user. See [Auth Sessions API](/docs/bsh-engine/api/sessions).
+</Callout>
+
+<Tabs items={['Docs', 'Types']}>
+  <Tabs.Tab label="Docs">
+
+## Methods
+
+### current
+
+Returns the session the SDK is currently authenticated with.
+
+```typescript
+const response = await bshEngine.authSessions.current({});
+const session = response?.data[0];
+```
+
+### list
+
+Lists sessions with query parameters.
+
+```typescript
+await bshEngine.authSessions.list({
+  queryParams: {
+    page: '0',
+    size: '10',
+    sort: 'iat:desc',
+    filter: 'status:eq:Active'
+  }
+});
+```
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `queryParams.page` | string | no | Page number |
+| `queryParams.size` | string | no | Page size |
+| `queryParams.sort` | string | no | Sort, for example `iat:desc` |
+| `queryParams.filter` | string | no | Filter, for example `status:eq:Active` |
+
+### search
+
+Searches sessions with a [BSH Search](/docs/bsh-engine/search) payload.
+
+```typescript
+await bshEngine.authSessions.search({
+  payload: {
+    filters: [{ field: 'status', operator: 'eq', value: 'Active' }]
+  }
+});
+```
+
+### details
+
+Gets a session by id.
+
+```typescript
+await bshEngine.authSessions.details({ sid: 'session-id' });
+```
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `sid` | string | yes | The session id |
+
+### revoke
+
+Revokes another session of the user. Its tokens stop working immediately.
+
+```typescript
+await bshEngine.authSessions.revoke({ sid: 'session-id' });
+```
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `sid` | string | yes | The session id |
+
+<Callout type="warning">
+  The current session can't be revoked; use [`bshEngine.auth.logout`](/docs/bsh-engine/sdk/services/auth#logout) instead.
+</Callout>
+
+### count / countFiltered
+
+Counts all visible sessions, or the ones matching a search payload.
+
+```typescript
+await bshEngine.authSessions.count({});
+
+await bshEngine.authSessions.countFiltered({
+  payload: {
+    filters: [{ field: 'status', operator: 'eq', value: 'Active' }]
+  }
+});
+```
+
+## Session metadata
+
+Each session has an optional `metadata` object with the device and app it was created From.
+
+To fill `client`, give your app a name when creating the engine. The SDK then sends it as the `X-Bsh-Client` header:
+
+```typescript
+const bshEngine = new BshEngine({
+  host: 'https://your-instance.com',
+  clientName: 'My App',
+});
+```
+
+The values the engine can return are exported as `BshSessionMetaData`, for example to map each device type to an icon:
+
+```typescript
+import { BshDevice, BshSessionMetaData } from '@bshsolutions/sdk/types';
+
+const deviceIcons: Record<BshDevice, string> = {
+  Desktop: '🖥️',
+  Mobile: '📱',
+  Tablet: '📱',
+  Other: '⌨️',
+};
+
+const response = await bshEngine.authSessions.list({});
+for (const session of response?.data ?? []) {
+  const meta = session.metadata ?? {};
+  console.log(meta.device ? deviceIcons[meta.device] : '❔', meta.label ?? 'Unknown device');
+}
+
+BshSessionMetaData.browsers; // ['Edge', 'Opera', ..., 'Python']
+```
+
+## Example: sign out other devices
+
+```typescript
+const response = await bshEngine.authSessions.list({
+  queryParams: { filter: 'status:eq:Active' }
+});
+
+for (const session of response?.data ?? []) {
+  if (!session.current) {
+    await bshEngine.authSessions.revoke({ sid: session.sid });
+  }
+}
+```
+
+  </Tabs.Tab>
+  <Tabs.Tab label="Types">
+```typescript
+export type BshAuthSessionStatus = 'Active' | 'Expired' | 'Revoked' | 'LoggedOut' | 'Blocked';
+```
+```typescript
+export const BshSessionMetaData = {
+    browsers: [
+        'Edge', 'Opera', 'Samsung Internet', 'Firefox', 'Chrome', 'Safari',
+        'Postman', 'curl', 'axios', 'node-fetch', 'Java', 'Python',
+    ],
+    os: ['Windows', 'iOS', 'Android', 'ChromeOS', 'macOS', 'Linux'],
+    devices: ['Desktop', 'Mobile', 'Tablet', 'Other']
+} as const;
+
+export type BshBrowser = typeof BshSessionMetaData.browsers[number];
+export type BshOS = typeof BshSessionMetaData.os[number];
+export type BshDevice = typeof BshSessionMetaData.devices[number];
+```
+```typescript
+export type BshAuthSessionMetadata = {
+    /** Readable summary, e.g. "Chrome 131 on macOS". */
+    label?: string;
+    browser?: BshBrowser;
+    /** Major version for browsers, full version for HTTP clients. */
+    browserVersion?: string;
+    os?: BshOS;
+    device?: BshDevice;
+    /** Value of the X-Bsh-Client header sent at login. */
+    client?: string;
+    userAgent?: string;
+};
+```
+```typescript
+export type BshAuthSession = Omit<BshObject, 'persistenceId'> & {
+    sid: string;
+    sub?: string;
+    iat: BshDate;
+    exp: BshDate;
+    status: BshAuthSessionStatus;
+    reason?: string;
+    metadata?: BshAuthSessionMetadata;
+    current: boolean;
+}
+```
+```typescript
+export type BshRevokeSessionResult = {
+    sid: string;
+    message: string;
+}
+```
+  </Tabs.Tab>
+</Tabs>

@@ -1,0 +1,63 @@
+---
+title: JWKS
+lastUpdated: 2026-11-21
+---
+
+# JWKS
+
+Get the public keys that verify access tokens, as a standard JSON Web Key Set ([RFC 7517](https://www.rfc-editor.org/info/rfc7517/). Other services use it to verify the engine's access tokens without calling the engine for each request.
+
+```bash
+GET /.well-known/jwks.json
+```
+
+## Response
+
+```json
+{
+  "keys": [
+    {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "h7I0BWOoM31TIzIHRKgU4kzKGMSWofcwz1KU3_Az2as",
+      "y": "Owiaoq-WMdzojUajSxx4Z1ZgW6snsgbUZ_9uN5CRd3c",
+      "kid": "bb06fe1b-7d2e-4c1a-9f3b-2e4d6a8c0f12",
+      "alg": "ES256",
+      "use": "sig",
+      "key_ops": ["verify"]
+    },
+    {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "N3Eq3HOmgcC4GzwNClk7IkeJHkfutd6Z6GTN9qajWNI",
+      "y": "Sp8Q1bOLpiyB7D63Z1dHbMtLZM9Kp8m6ZMPUTk38cgw",
+      "kid": "a82791af-3c4d-4e5f-8a9b-0c1d2e3f4a5b",
+      "alg": "ES256",
+      "use": "sig",
+      "key_ops": ["verify"]
+    }
+  ]
+}
+```
+
+Keys are listed `Active` first, then the `Retired` keys still in their grace window, newest first. `Expired` keys are not listed. Only the keys of **access tokens** are published: refresh tokens are only read by the engine.
+
+## Verifying a token
+
+1. Read the `kid` from the token header.
+2. Take the key with the same `kid` from the set. If none matches, fetch the set again: the key may have been rotated since your last fetch.
+3. Verify the signature, then check `exp`.
+
+Most JWT libraries do all of this from the URL:
+
+```typescript
+import { createRemoteJWKSet, jwtVerify } from 'jose';
+
+const jwks = createRemoteJWKSet(new URL('https://<engine-host>/.well-known/jwks.json'));
+
+const { payload } = await jwtVerify(accessToken, jwks, { algorithms: ['ES256'] });
+```
+
+<Callout type='warning'>
+A valid signature does not mean the session is still open: a token keeps a valid signature after its session is revoked or logged out, until it expires. Call the engine when you need that check.
+</Callout>

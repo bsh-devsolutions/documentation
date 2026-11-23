@@ -1,0 +1,5 @@
+#!/bin/sh
+# Stamps `lastUpdated: <today>` on the staged MDX pages and re-stages them.
+# Enabled by `npm install` (the "prepare" script sets core.hooksPath to .githooks).
+# Skip once with `git commit --no-verify`.
+node scripts/last-updated.mjs --staged

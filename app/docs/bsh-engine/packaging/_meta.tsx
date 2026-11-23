@@ -1,6 +1,5 @@
 import type { MetaRecord } from 'nextra';
-import { Title } from '../../../../components';
 
 export default {
-    'index': <Title title='Packaging' badge='planned' />
+    'plugins': 'Plugins',
 } satisfies MetaRecord;

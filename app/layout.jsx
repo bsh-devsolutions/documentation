@@ -2,7 +2,10 @@ import { Footer, Layout, Navbar } from 'nextra-theme-docs'
 import { Banner, Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import 'nextra-theme-docs/style.css'
+import './globals.css'
 import { Logo } from '../icons/Logo'
+import { ScopedSearch } from '../components/search/ScopedSearch'
+import { getReleases, releaseHref } from '../components/changelog/releases'
 
 export const metadata = {
   title: 'BSH Solutions',
@@ -12,11 +15,19 @@ export const metadata = {
   }
 }
 
-const banner = <Banner storageKey="0.0.6-release">
-<a href="/docs/bsh-engine/changelog#006---03-oct-2026">
-  🎉 New release with new features and improvements! V0.0.6 Release →
-</a>
-</Banner>
+async function ReleaseBanner() {
+  const [newest] = await getReleases()
+  if (!newest) return null
+  return (
+    <Banner storageKey={`${newest.version}-release`}>
+      <a href={releaseHref(newest.version)}>
+        {newest.date
+          ? `🎉 BSH Engine v${newest.version} is out with new features and improvements. See what's new →`
+          : `🚀 BSH Engine v${newest.version} is coming soon. See what's new →`}
+      </a>
+    </Banner>
+  )
+}
 
 const navbar = (
   <Navbar
@@ -42,16 +53,17 @@ export default async function RootLayout({ children }) {
       dir="ltr"
       suppressHydrationWarning
     >
-      <Head>
-      </Head>
+      <Head color={{ hue: 201, saturation: 100, lightness: { light: 35, dark: 55 } }} />
       <body>
         <Layout
-          banner={banner}
+          banner={<ReleaseBanner />}
           navbar={navbar}
+          search={<ScopedSearch />}
           pageMap={await getPageMap()}
           docsRepositoryBase="https://github.com/bsh-devsolutions/documentation"
           footer={footer}
           editLink={null}
+          feedback={{ content: null }}
           navigation={{
             prev: true,
             next: true
@@ -70,7 +82,6 @@ export default async function RootLayout({ children }) {
         >
           {children}
         </Layout>
-        <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
         <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif?collect-dnt=true" alt="" referrerPolicy="no-referrer-when-downgrade" /></noscript>
       </body>
     </html>

@@ -1,5 +1,6 @@
 ---
 title: Triggers
+lastUpdated: 2026-11-15
 ---
 
 import {Callout, Tabs} from "nextra/components";
@@ -9,6 +10,10 @@ import {Callout, Tabs} from "nextra/components";
 **Triggers** are listeners that watch for changes on your entities and execute custom logic when those changes occur. They enable you to automatically respond to data modifications in your application by configuring actions that execute when specific events happen, such as the **creation**, **update**, or **deletion** of records.
 
 Triggers provide a flexible way to enforce business logic, automate workflows, or integrate with external services without manual intervention.
+
+<Callout type="important">
+    Triggers fire only for entities with the [**Triggerable**](/docs/bsh-engine/modeling/entities#triggerable-entities) option enabled. On other entities, triggers are ignored even when they are enabled.
+</Callout>
 
 <Tabs items={['Docs', 'API']}>
     <Tabs.Tab>

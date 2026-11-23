@@ -1,0 +1,51 @@
+---
+title: JWKS
+lastUpdated: 2026-11-21
+---
+
+# JWKS
+
+`bshEngine.jwks()` reads the public [JSON Web Key Set](/docs/bsh-engine/api/signing-keys/jwks) (`GET /.well-known/jwks.json`): the public keys that verify the engine's access tokens.
+
+<Tabs items={['Docs', 'Types']}>
+  <Tabs.Tab label="Docs">
+
+## Usage
+
+```typescript
+const jwks = await bshEngine.jwks();
+
+const key = jwks?.keys.find(k => k.kid === tokenKid);
+```
+
+It returns the raw JWK Set,
+
+<Callout type="info">
+  To verify tokens in a backend, you can also give the URL to your JWT library, which caches the set and fetches it again on an unknown `kid`. See [Verifying tokens in other services](/docs/bsh-engine/security/signing-keys#verifying-tokens-in-other-services).
+</Callout>
+
+  </Tabs.Tab>
+  <Tabs.Tab label="Types">
+```typescript
+export type BshJwk = {
+    kty: 'EC';
+    crv: 'P-256' | 'P-384' | 'P-521';
+    x: string;
+    y: string;
+    kid: string;
+    alg: 'ES256' | 'ES384' | 'ES512';
+    use: 'sig';
+    key_ops: ['verify'];
+}
+
+export type BshJwks = {
+    keys: BshJwk[];
+}
+
+export type BshJwksParams = {
+    onSuccess?: (jwks: BshJwks) => void;
+    onError?: (error: BshError) => void;
+}
+```
+  </Tabs.Tab>
+</Tabs>

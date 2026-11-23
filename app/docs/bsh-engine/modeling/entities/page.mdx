@@ -1,5 +1,6 @@
 ---
 title: Entities
+lastUpdated: 2026-11-15
 ---
 
 import { Callout } from 'nextra/components';
@@ -75,6 +76,10 @@ You can tailor these permissions to match your application's needs, ensuring use
 Entity auditing allows you to track changes made to your entities over time. When auditing is enabled for an entity, the system will automatically add and manage the following standard audit fields: `CreatedAt`, `CreatedBy`, `LastUpdatedAt`, and `LastUpdatedBy`. These fields help you identify who made changes and when those changes occurred.
 
 By default, auditing is turned off for new entities. If you want to track modification history, simply enable this option when creating or editing the entity.
+
+### Triggerable Entities
+
+The **Triggerable** option lets you choose whether data changes on an entity fire its [triggers](/docs/bsh-engine/triggers). Use it to turn on event processing only for the entities that need it, or to pause every trigger of an entity at once without disabling them one by one.
 
 ### Primary Keys
 

@@ -1,0 +1,96 @@
+---
+title: Rotate Signing Key
+lastUpdated: 2026-11-15
+---
+
+# Rotate Signing Key
+
+Replace the active signing key now. Optionally, expire the previous keys at the same time, for example when a key has leaked.
+
+```bash
+POST /api/auth/signing-keys/rotate
+```
+
+## Request Body
+
+The body is optional. Without it, the previous key stays valid.
+
+```json
+{
+  "expire": "previous",
+  "reason": "Key exposed in application logs"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `expire` | string | no | Keys to expire right away: `none`, `previous` or `all`. |
+| `reason` | string | when `expire` isn't `none` | Why the key is rotated. |
+
+| `expire` | Effect |
+|----------|--------|
+| `none` | The previous key becomes `Retired` and keeps verifying its tokens. No one is logged out. |
+| `previous` | The key that was active becomes `Expired`. Every user holding tokens signed by it is logged out. |
+| `all` | Every retired key becomes `Expired`. Every user holding tokens signed by them is logged out. |
+
+## Response
+
+**Success Response (200 OK):**
+
+```json
+{
+  "code": 200,
+  "message": "JWT signing key rotated",
+  "data": [
+    {
+      "active": {
+        "kid": "bb06fe1b-...",
+        "status": "Active",
+        ...
+      },
+      "previous": {
+        "kid": "a82791af-...",
+        ...
+        "status": "Expired",
+        "reason": "Key exposed in application logs"
+      },
+      "expired": ["a82791af-..."],
+      "sessionReissued": true
+    }
+  ],
+  "meta": {
+    "type": "Signing Key Rotation"
+  }
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `active` | The new active [key](/docs/bsh-engine/api/signing-keys#signing-key-object) |
+| `previous` | The key that was active before, if any |
+| `expired` | IDs of the keys expired by this rotation |
+| `sessionReissued` | `true` when your own tokens were signed by an expired key and were re-issued |
+
+<Callout type='info'>
+    When `sessionReissued` is `true`, the new tokens are delivered like a refresh: in the auth cookies, and in `meta.accessToken` / `meta.refreshToken` for JSON clients. Clients that store tokens themselves must save them.
+</Callout>
+
+## Error Responses
+
+**409 Conflict** - Another manual rotation happened less than 60 seconds ago:
+
+```json
+{
+  "code": 409,
+  "error": "The JWT signing key was manually rotated less than 60 seconds ago",
+  "meta": {
+    "type": "Signing Key Rotation"
+  }
+}
+```
+
+<Callout type='info'>
+- Expiring keys **cannot be undone**. Users holding tokens signed by them have to log in again.
+- API keys are not JWTs: they keep working after any rotation.
+- Scheduled rotation still happens every `auth.config.secretTtl` days, counted from the new key's activation.
+</Callout>

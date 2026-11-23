@@ -1,5 +1,4 @@
 import React from 'react';
-import { CURRENT_DOC_RELEASE_VERSION } from '../constants/doc-version';
 import { Badge, BadgeVariant } from './Badge';
 import { HttpMethod } from './HttpMethod';
 
@@ -20,14 +19,11 @@ export const EndpointTitle: React.FC<EndpointTitleProps> = ({
   className = '',
   as: Component = 'span',
 }) => {
-  const resolvedBadgeLabel =
-    badgeLabel ?? (badge === 'updated' ? CURRENT_DOC_RELEASE_VERSION : undefined);
-
   return (
-    <Component className={className}>
+    <Component className={`bsh-title ${className}`.trim()}>
       <HttpMethod method={method} /> {title}
       {badge && (
-        <Badge variant={badge} label={resolvedBadgeLabel} />
+        <Badge variant={badge} label={badgeLabel} />
       )}
     </Component>
   );

@@ -12,7 +12,7 @@ export const BlogAuthor = (
     const authorDetails = authors[author]
 
     return (
-        <div style={{marginTop: 10}}>
+        <div style={{marginTop: 10}} data-pagefind-ignore="all">
             <div style={{display: 'flex', alignItems: 'center', flexDirection: 'row', gap: 10}}>
                 <div style={{
                     borderRadius: '50%',

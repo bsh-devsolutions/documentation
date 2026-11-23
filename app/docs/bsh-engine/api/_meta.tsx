@@ -4,6 +4,8 @@ import { Title } from "../../../../components";
 export default {
   'persistence-id': 'Persistence ID',
   'authentication': 'Authentication',
+  'sessions': <Title title='Auth Sessions' badge='new' />,
+  'signing-keys': <Title title='Signing Keys' badge='new' />,
   'entities': 'Entities',
   'tenants': 'Tenants',
   'users': 'Users',

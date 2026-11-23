@@ -9,14 +9,17 @@
   "scripts": {
     "dev": "next --turbopack --port 7201",
     "build": "next build",
-    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
-    "start": "next start"
+    "postbuild": "node scripts/collect-html.mjs && pagefind && node scripts/check-search.mjs",
+    "start": "next start",
+    "watch": "node scripts/watch.mjs",
+    "last-updated": "node scripts/last-updated.mjs",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "author": "Bousalih Hamza",
   "license": "ISC",
   "dependencies": {
     "lucide-react": "^0.548.0",
-    "next": "^16.1.0-canary.17",
+    "next": "^16.4.6",
     "nextra": "^4.6.0",
     "nextra-theme-docs": "^4.6.0",
     "react": "^19.2.1",
@@ -25,9 +28,12 @@
   "devDependencies": {
     "@types/node": "24.9.1",
     "@types/react": "19.2.2",
-    "pagefind": "^1.4.0"
+    "pagefind": "1.6.0"
   },
   "overrides": {
-    "lodash-es": "^4.17.23"
+    "lodash-es": "^4.17.23",
+    "katex": "^0.19.1",
+    "minimatch": "^11.0.8",
+    "zod": "4.3.6"
   }
 }

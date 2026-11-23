@@ -1,3 +1,7 @@
+---
+lastUpdated: 2026-11-15
+---
+
 import { Tabs, Callout } from 'nextra/components'
 
 # How To Access the Validation Status?
@@ -6,7 +10,7 @@ import { Tabs, Callout } from 'nextra/components'
 <Tabs.Tab>
 You can access your object property status, either to read it or to do some action on it.
 
-<Callout type='info'>This will help you to use the validators inside your forms, [read more](/ts-validation/how-to-use-with-forms)</Callout>
+<Callout type='info'>This will help you to use the validators inside your forms, [read more](/docs/ts-validation/how-to-use-with-forms)</Callout>
 
 ### 1. Using provided methods:
 
@@ -67,7 +71,7 @@ const userValidator = v.validator<User>({
 });
 ```
 
-after that we are using <a href="/ts-validation/real-time-validation#init-method" target='_blank'>`init()`</a> method to give the validator our object to be validated:
+after that we are using <a href="/docs/ts-validation/real-time-validation#init-method" target='_blank'>`init()`</a> method to give the validator our object to be validated:
 ```ts {2-3}
 userValidator.init(() => ({
     email: 'example.com',

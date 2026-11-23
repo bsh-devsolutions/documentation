@@ -1,7 +1,11 @@
 import type { MetaRecord } from "nextra";
+import {Title} from "../../../../../components";
 
 export default {
     'auth': 'Authentication',
+    'auth-sessions': <Title title='Auth Sessions' badge='new' />,
+    'signing-keys': <Title title='Signing Keys' badge='new' />,
+    'jwks': <Title title='JWKS' badge='new' />,
     'entities': 'Entities',
     'users': 'Users',
     'tenants': 'Tenants',

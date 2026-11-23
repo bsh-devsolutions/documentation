@@ -1,0 +1,127 @@
+---
+title: Signing Keys Service
+lastUpdated: 2026-11-15
+---
+
+# Signing Keys Service
+
+The Signing Keys Service lists the [JWT signing keys](/docs/bsh-engine/security/signing-keys), forces a rotation and expires a leaked key.
+
+<Callout type="info">
+  These methods require a `BSH_ADMIN` user, or an API key owned by one. See [Signing Keys API](/docs/bsh-engine/api/signing-keys).
+</Callout>
+
+<Tabs items={['Docs', 'Types']}>
+  <Tabs.Tab label="Docs">
+
+## Methods
+
+### list
+
+Lists keys with query parameters. Keys are sorted by `activatedAt` descending by default.
+
+```typescript
+await bshEngine.signingKeys.list({
+  queryParams: {
+    page: '0',
+    size: '10',
+    sort: 'activatedAt:desc',
+    filter: 'status:eq:Retired'
+  }
+});
+```
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `queryParams.page` | string | no | Page number |
+| `queryParams.size` | string | no | Page size |
+| `queryParams.sort` | string | no | Sort, for example `activatedAt:desc` |
+| `queryParams.filter` | string | no | Filter, for example `status:eq:Active` |
+
+### search
+
+Searches keys with a [BSH Search](/docs/bsh-engine/search) payload.
+
+```typescript
+await bshEngine.signingKeys.search({
+  payload: {
+    filters: [{ field: 'status', operator: 'eq', value: 'Retired' }]
+  }
+});
+```
+
+### rotate
+
+Replaces the active key now. With `expire`, the previous key (`previous`) or every retired key (`all`) is expired at the same time, and every user holding tokens signed by them is logged out.
+
+```typescript
+// Routine rotation: no one is logged out
+await bshEngine.signingKeys.rotate({ payload: {} });
+
+// The current key leaked
+const response = await bshEngine.signingKeys.rotate({
+  payload: { expire: 'previous', reason: 'Key exposed in application logs' }
+});
+```
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `payload.expire` | `'none'\|'previous'\|'all'` | no | Keys to expire right away. |
+| `payload.reason` | string | when expiring | Why the key needs to expire |
+
+### expire
+
+Expires a retired key now.
+
+```typescript
+await bshEngine.signingKeys.expire({
+  kid: 'a82791af-3c4d-4e5f-8a9b-0c1d2e3f4a5b',
+  payload: { reason: 'Key exposed in a backup' }
+});
+```
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `kid` | string | yes | The key id |
+| `payload.reason` | string | yes | At least 5 characters |
+
+  </Tabs.Tab>
+  <Tabs.Tab label="Types">
+```typescript
+export type BshSigningKeyStatus = 'Active' | 'Retired' | 'Expired';
+export type BshSigningKeyExpireScope = 'none' | 'previous' | 'all';
+```
+```typescript
+export type BshSigningKey = {
+    kid: string;
+    status: BshSigningKeyStatus;
+    activatedAt: BshDate;
+    rotatesAt?: BshDate | null;
+    retiredAt?: BshDate | null;
+    verifyUntil?: BshDate | null;
+    expiredAt?: BshDate | null;
+    rotation?: 'Scheduled' | 'Manual';
+    reason?: string | null;
+    updatedBy?: string | null;
+    current?: boolean;
+}
+```
+```typescript
+export type BshRotateSigningKey = {
+    expire?: BshSigningKeyExpireScope;
+    reason?: string;
+}
+
+export type BshExpireSigningKey = {
+    reason: string;
+}
+
+export type BshRotateSigningKeyResult = {
+    active: BshSigningKey;
+    previous?: BshSigningKey | null;
+    expired: string[];
+    sessionReissued: boolean;
+}
+```
+  </Tabs.Tab>
+</Tabs>

@@ -1,0 +1,54 @@
+---
+title: BSH Engine 0.0.7
+description: "Hardens authentication: the engine now manages its own signing keys with automatic rotation, and adds long-lived sessions with refresh token rotation, plus new APIs and dashboard pages to manage them. Includes breaking changes."
+lastUpdated: 2026-11-22
+---
+
+# BSH Engine 0.0.7
+
+<ReleaseHeader version="0.0.7" />
+
+## Breaking changes
+- The JWT secret (`secrets.jwt.secret`) was removed: the engine now generates its own [signing keys](/docs/bsh-engine/security/signing-keys) and stores them. The new [`auth.masterKey`](/docs/bsh-engine/environment/compoenents#auth) (at least 32 characters) is **required** to encrypt them.
+- Access and refresh tokens no longer include `tenantId`, `roles`, `profile`, `email` or `status`. Use [Get Current User](/docs/bsh-engine/api/users/get-current-user) to read them.
+- [`POST /api/auth/refresh`](/docs/bsh-engine/api/authentication/refresh-token) only refreshes the current session: it reads the refresh token from the `X-BSH-REFRESHTOKEN` header or the refresh cookie, and ignores the request body. The SDK's `auth.refreshToken()` no longer takes a payload.
+- Refresh tokens rotate on every refresh. Clients must store the new refresh token (`data.refresh` or `meta.refreshToken`).
+- Built-in policies were reorganized: `ROLE_BSH_ADMIN_ALLOW_ALL` is now `Bsh_Admin`, `EngineSettingsAccess` and `ACCESS_ALL_DEV` were removed, and `Bsh_UserTenantAccess` was added. See [Built-in Policies](/docs/bsh-engine/security/policies#built-in-policies).
+- Auth cookies now use `Path=/api`.
+- The expired session `meta.type` is now `Session expired` (was `Session Expired`). Check `meta.bshError` instead.
+- Audit fields `CreatedBy` and `LastUpdatedBy` store users as `<id>` instead of `user:<id>`. API keys are still stored as `apikey:<id>`. See [Entity Auditing](/docs/bsh-engine/modeling/entities#entity-auditing). [#500](https://github.com/bsh-devsolutions/bshengine/issues/500)
+- Triggers fire only for entities with the new **Triggerable** option enabled, which is off by default. Enable it on existing entities that use triggers. See [Triggerable Entities](/docs/bsh-engine/modeling/entities#triggerable-entities). [#496](https://github.com/bsh-devsolutions/bshengine/issues/496)
+
+## New
+- New `auth.config.delivery` option to deliver tokens through cookies, JSON responses or both. [#456](https://github.com/bsh-devsolutions/bshengine/issues/456) [#457](https://github.com/bsh-devsolutions/bshengine/issues/457)
+- New [Auth Sessions API](/docs/bsh-engine/api/sessions) to list, inspect, count and revoke sessions, and the matching [SDK service](/docs/bsh-engine/sdk/services/auth-sessions). [#481](https://github.com/bsh-devsolutions/bshengine/issues/481)
+- Sessions record the [device details](/docs/bsh-engine/security/sessions#device-details) at login: browser, OS, device type and the app name from the new `X-Bsh-Client` header. The client IP is not stored.
+- Dashboard: new **Security → Auth Sessions** page for `BSH_ADMIN` users, and a **Sessions** section in the profile to revoke other sessions. [#482](https://github.com/bsh-devsolutions/bshengine/issues/482) [#483](https://github.com/bsh-devsolutions/bshengine/issues/483)
+- New [Signing Keys API](/docs/bsh-engine/api/signing-keys) for `BSH_ADMIN` users to list keys, force a rotation and expire a leaked key, and the matching [SDK service](/docs/bsh-engine/sdk/services/signing-keys). [#499](https://github.com/bsh-devsolutions/bshengine/issues/499)
+- Dashboard: new **Security → Signing Keys** page to monitor, rotate and expire signing keys. [#499](https://github.com/bsh-devsolutions/bshengine/issues/499)
+- SDK: `clientName` option and `withClientName()` to send `X-Bsh-Client`, `BshSessionMetaData` with the possible browser, OS and device values, and the `metadata` field on `BshAuthSession`.
+- SDK: `isExpired()` helper and `BshErrorCode` type.
+- SDK: `bshEngine.jwks()` reads the public JWK Set, with the `BshJwk` and `BshJwks` types.
+- New **Triggerable** entity option to choose whether an entity fires its triggers, available in the dashboard entity form and the SDK. [#496](https://github.com/bsh-devsolutions/bshengine/issues/496)
+
+## Improved
+- Silent refresh returns both `meta.accessToken` and `meta.refreshToken`.
+- API keys are also accepted as `Authorization: Bearer bsh_…`. [#442](https://github.com/bsh-devsolutions/bshengine/issues/442)
+- Clearer `401` errors, with a stable code in `meta.bshError`. See [Authentication errors](/docs/bsh-engine/api/authentication#authentication-errors).
+- Dashboard: login shows a clear dialog when the account isn't activated, is disabled or locked, or needs a password reset. [#493](https://github.com/bsh-devsolutions/bshengine/issues/493)
+- `GET /api/utils/version` no longer requires authentication.
+- More flexible [date parsing](/docs/bsh-engine/modeling/types#date-values): ISO variants, short offsets, epoch seconds and milliseconds. Values without an offset are treated as UTC.
+
+## Security
+- Long sessions with short-lived tokens: access tokens last 15 minutes, refresh tokens 7 days and sessions 30 days by default, all configurable. [#450](https://github.com/bsh-devsolutions/bshengine/issues/450) [#460](https://github.com/bsh-devsolutions/bshengine/issues/460)
+- [Auth sessions](/docs/bsh-engine/security/sessions) are stored on the engine (`BshAuthSessions`), with refresh token rotation and reuse detection. [#463](https://github.com/bsh-devsolutions/bshengine/issues/463) [#480](https://github.com/bsh-devsolutions/bshengine/issues/480)
+- Sessions are **blocked** after 10 requests with rotated or unknown tokens (possible token theft). Using an old token once no longer closes the session. Closed sessions record a `reason`. [#489](https://github.com/bsh-devsolutions/bshengine/issues/489)
+- Token expiry is computed from the issue date (`iat`) plus the configured TTL, so TTL changes apply to tokens already issued. Sessions not refreshed within `refreshTtl` expire as idle (`reason: Idle timeout`). [#462](https://github.com/bsh-devsolutions/bshengine/issues/462)
+- [JWT signing keys](/docs/bsh-engine/security/signing-keys) are generated by the engine, stored encrypted. Access and refresh tokens use separate keys, and every token carries the `kid` of its key. [#467](https://github.com/bsh-devsolutions/bshengine/issues/467) [#466](https://github.com/bsh-devsolutions/bshengine/issues/466)
+- Tokens are signed with key pairs. The public keys of access tokens are published at [`/.well-known/jwks.json`](/docs/bsh-engine/api/signing-keys/jwks) (public, JWKS format), so other services can verify access tokens without calling the engine.
+- Signing keys rotate automatically every `auth.config.secretTtl` days (30 by default). Retired keys keep verifying tokens until they're expired, so users stay logged in. [#472](https://github.com/bsh-devsolutions/bshengine/issues/472)
+- No tokens are issued for a user that doesn't exist. [#465](https://github.com/bsh-devsolutions/bshengine/issues/465)
+- Logout ends the session on the engine. [#461](https://github.com/bsh-devsolutions/bshengine/issues/461)
+- The token type is enforced, so access and refresh tokens can't be used in place of each other. [#459](https://github.com/bsh-devsolutions/bshengine/issues/459)
+
+<ReleaseNav version="0.0.7" />
