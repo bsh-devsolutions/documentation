@@ -19,6 +19,7 @@ export default {
   'cli': 'CLI',
   'starter': <Title title='Starter' badge='planned' />,
   'templates': 'Templates',
+  'telemetry': 'Telemetry',
   'features-map': 'Features Map',
   'changelog': 'Changelog',
 }

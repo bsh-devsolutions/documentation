@@ -1,0 +1,46 @@
+---
+title: Telemetry
+lastUpdated: 2026-11-23
+---
+
+import { Callout } from 'nextra/components';
+
+# Telemetry
+
+BSH Engine is in **early development**. To help us improve it and know where to focus, the engine collects
+**anonymous usage data**: which features are used, how often, and on which versions.
+
+<Callout type="info">
+  **No personal data is collected.** We never collect your data, names, emails, IP addresses, or anything that could
+  identify you, your users, or your company.
+</Callout>
+
+## What we collect
+
+- **Feature usage**: how many times operations are used per hour (for example entity create or search, logins, trigger
+  runs, emails sent, file uploads).
+- **Engine info**: engine version, Java and PostgreSQL versions, OS, and how the engine is deployed (Docker, Kubernetes,
+  JAR).
+- **Setup overview**: rough sizes only (for example "10-100 users"), and which built-in providers are used.
+- **A random instance id**: generated on first start and stored in your database. It is not linked to you in any way.
+
+## What we never collect
+
+- Your data: records, entity or field names, files, request contents.
+- Personal data: user ids, emails, names, passwords, API keys or tokens.
+- Network data: IP addresses, hostnames, URLs.
+
+## Disable telemetry
+
+Telemetry is enabled by default. To turn it off, add this to your [configuration](/docs/bsh-engine/environment/compoenents)
+and restart the engine:
+
+```json
+{
+  "telemetry": {
+    "enabled": false
+  }
+}
+```
+
+When disabled, nothing is collected and nothing is sent.
